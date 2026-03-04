@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="spring">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>癒しの庭 Admin / Healing Garden Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-body">
+  <div id="admin-app">
+    <aside id="admin-sidebar" class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div class="admin-logo">
+          <span class="admin-logo-icon">🌿</span>
+          <span class="admin-logo-text" data-t="adminTitle">Admin</span>
+        </div>
+        <button class="admin-sidebar-toggle" onclick="toggleAdminSidebar()" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+      <nav class="admin-nav" id="admin-nav"></nav>
+      <div class="admin-sidebar-footer">
+        <button class="admin-lang-btn" onclick="adminToggleLanguage()">
+          <span id="admin-lang-label">EN</span>
+        </button>
+        <a href="index.html" class="admin-back-link" data-t="adminBackToSite">Back to Site</a>
+      </div>
+    </aside>
+    <div class="admin-main">
+      <header class="admin-header" id="admin-header">
+        <button class="admin-mobile-toggle" onclick="toggleAdminSidebar()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="admin-header-title" id="admin-page-title"></h1>
+        <div class="admin-header-actions">
+          <select id="admin-theme-select" onchange="adminSetTheme(this.value)" class="admin-theme-select">
+            <option value="spring">🌸 Spring</option>
+            <option value="summer">🌻 Summer</option>
+            <option value="evening">🌙 Evening</option>
+          </select>
+        </div>
+      </header>
+      <main class="admin-content" id="admin-content"></main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/admin-data.js"></script>
+  <script src="js/admin-app.js"></script>
+</body>
+</html>

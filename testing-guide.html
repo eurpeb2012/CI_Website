@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healing Garden v2 — Testing Walkthrough Guide</title>
+  <style>
+    :root {
+      --green-50: #f0faf4;
+      --green-100: #d4f0e0;
+      --green-500: #3dba78;
+      --green-600: #2f9660;
+      --green-700: #237148;
+      --text: #1f2937;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --border: #e5e7eb;
+      --bg: #ffffff;
+      --bg-alt: #f9fafb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+      color: var(--text);
+      line-height: 1.7;
+      background: var(--green-50);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #5ac78d, #237148);
+      color: white;
+      padding: 48px 32px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .hero .app-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: white;
+      color: var(--green-700);
+      border-radius: 24px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s;
+    }
+
+    .hero .app-link:hover { transform: translateY(-2px); }
+
+    .content { padding: 32px; }
+
+    .note {
+      background: var(--green-50);
+      border-left: 4px solid var(--green-500);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 28px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--green-700);
+      margin-top: 40px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--green-100);
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    ol, ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+    }
+
+    li strong { color: var(--text); }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 10px;
+    }
+
+    .checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--green-500);
+      border-radius: 4px;
+      background: white;
+    }
+
+    code {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      color: var(--green-700);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: var(--green-50);
+      color: var(--green-700);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--green-100);
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tr:hover td { background: var(--bg-alt); }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-premium { background: #fff3e0; color: #c46a14; }
+    .badge-standard { background: #e0f0ff; color: #1a6fba; }
+    .badge-free { background: #e8f5ed; color: #2f9660; }
+    .badge-founding { background: linear-gradient(135deg, #fff3e0, #fde8c8); color: #9a5210; border: 1px solid #fbd5a0; }
+
+    .flow-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--green-500);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    .step-group {
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 24px 32px;
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .content { padding: 20px; }
+      .hero { padding: 32px 20px; }
+      .hero h1 { font-size: 1.4rem; }
+      table { font-size: 0.78rem; }
+      th, td { padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Healing Garden v2</h1>
+    <p>Testing Walkthrough Guide</p>
+    <a class="app-link" href="https://eurpeb2012.github.io/CI_Website/" target="_blank">Open the App &rarr;</a>
+    <a class="app-link" href="https://eurpeb2012.github.io/CI_Website/admin.html" target="_blank" style="margin-left:8px;background:rgba(255,255,255,0.15);color:white;border:2px solid white;">Open Admin &rarr;</a>
+  </div>
+
+  <div class="content">
+
+    <div class="note">
+      The main app is best viewed on mobile (375px / iPhone). The admin panel is best viewed at desktop width (960px+). All 11 test flows below cover 85 checkpoints across the full app and admin panel.
+    </div>
+
+    <!-- FLOW 1 -->
+    <h2><span class="flow-number">1</span> Anonymous Browsing</h2>
+    <p>The app should be fully browsable without logging in.</p>
+
+    <ol>
+      <li><strong>Landing Page</strong> &mdash; You see the Healing Garden logo, title, and two buttons</li>
+      <li>Tap <strong>"Find a Session"</strong> (or &ldquo;セッションを探す&rdquo;)</li>
+      <li>You see two search options: <strong>By Criteria</strong> and <strong>By Feeling</strong></li>
+    </ol>
+
+    <h3>Path A: Search by Feeling</h3>
+    <ol start="4">
+      <li>Tap <strong>"Search by Feeling"</strong> &rarr; pick any mood (e.g., &ldquo;Stressed&rdquo;)</li>
+      <li>Pick a category (e.g., &ldquo;Mental Relief&rdquo;)</li>
+      <li>Pick a delivery method (e.g., &ldquo;Video Call&rdquo;)</li>
+      <li>You see <strong>results</strong> &mdash; therapists sorted by tier (Premium first), each has a tier badge</li>
+      <li>Tap any therapist card to view their <strong>full profile</strong></li>
+    </ol>
+
+    <h3>Path B: Search by Criteria</h3>
+    <ol start="4">
+      <li>Tap <strong>"Search by Criteria"</strong></li>
+      <li>Set filters (type, method, price) and tap <strong>Search</strong></li>
+      <li>Browse results and tap into a profile</li>
+    </ol>
+
+    <h3>On the Therapist Profile, check:</h3>
+    <ul class="checklist">
+      <li>Tier badge (<span class="badge badge-free">🌱 Free</span> / <span class="badge badge-standard">🌿 Standard</span> / <span class="badge badge-premium">🌳 Premium</span>) and founding member star (<span class="badge badge-founding">⭐ Founding</span>) where applicable</li>
+      <li>Sessions listed with prices, duration, delivery tags</li>
+      <li>Calendar availability</li>
+      <li><strong>Review tabs</strong> &mdash; tap between &ldquo;Reviews from Clients&rdquo; and &ldquo;Reviews from Therapists&rdquo;</li>
+      <li><strong>Suggested Therapists</strong> section at the bottom (on Hanako, Mitsuki, Sakura, Ken)</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 2 -->
+    <h2><span class="flow-number">2</span> Auth Gate (Signup Required)</h2>
+    <p>While still anonymous:</p>
+    <ol start="9">
+      <li>On any therapist profile, tap <strong>"Book This Session"</strong> or <strong>"Send Message"</strong></li>
+      <li>You should be <strong>redirected to the Signup page</strong> with a notice that an account is required</li>
+      <li>You have two options:
+        <ul>
+          <li>Fill in name + email and tap <strong>Sign Up</strong></li>
+          <li>Or tap <strong>"⚡ Demo Login"</strong> for instant access as a test user</li>
+        </ul>
+      </li>
+      <li>After signing up/logging in, you should be <strong>automatically redirected back</strong> to the action you were trying to take (booking or chat)</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 3 -->
+    <h2><span class="flow-number">3</span> Logged-In Experience</h2>
+    <p>After logging in (use Demo Login for the quickest path):</p>
+
+    <div class="step-group">
+      <h3>Booking</h3>
+      <ol start="13">
+        <li>Navigate to a therapist &rarr; tap <strong>"Book This Session"</strong></li>
+        <li>Review booking summary (session, therapist, date, price)</li>
+        <li>Check the <strong>cancellation policy</strong> checkbox</li>
+        <li>Tap <strong>"Confirm &amp; Pay"</strong> &rarr; see success screen</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Chat</h3>
+      <ol start="17">
+        <li>On a therapist profile, tap <strong>"Send Message"</strong></li>
+        <li>You see the <strong>chat screen</strong> with mock conversation bubbles</li>
+        <li>Note the info bar (&ldquo;Messages are available for 3 days&rdquo;)</li>
+        <li>Tap <strong>"Start Video Call"</strong> at the top</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Video Call</h3>
+      <ol start="21">
+        <li>You see a <strong>dark full-screen layout</strong> with:
+          <ul>
+            <li>Remote video placeholder (therapist avatar + name)</li>
+            <li>Small self-view box (top right)</li>
+            <li>Control buttons: Mute, Camera, End, BG Blur</li>
+          </ul>
+        </li>
+        <li>Tap the control buttons &mdash; they <strong>toggle active state</strong> (visual feedback)</li>
+        <li>Tap <strong>End</strong> to return to chat</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Write a Review</h3>
+      <ol start="24">
+        <li>On a therapist profile, scroll to Reviews section</li>
+        <li>Tap <strong>"Write a Review"</strong></li>
+        <li>Tap stars to set rating, write a comment, submit</li>
+      </ol>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 4 -->
+    <h2><span class="flow-number">4</span> User Profile</h2>
+    <ol start="27">
+      <li>Tap <strong>Profile</strong> in the bottom nav</li>
+      <li>Check these sections:
+        <ul class="checklist">
+          <li><strong>Booking History</strong> &mdash; 5 bookings (3 completed, 2 upcoming) with status badges</li>
+          <li><strong>Your Reviews</strong> &mdash; 3 reviews you&rsquo;ve written (tappable, links to therapist)</li>
+          <li><strong>Reviews from Therapists</strong> &mdash; 3 reviews therapists wrote about you</li>
+        </ul>
+      </li>
+      <li>Tap <strong>Settings</strong> &rarr; see theme selector</li>
+      <li>Tap <strong>Log Out</strong> &rarr; profile returns to anonymous state</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 5 -->
+    <h2><span class="flow-number">5</span> Theme Switching</h2>
+    <ol start="31">
+      <li>Go to <strong>Profile &rarr; Settings</strong></li>
+      <li>You see 3 theme cards with color swatches:
+        <ul>
+          <li>🌸 <strong>Spring</strong> &mdash; soft pastel greens (default)</li>
+          <li>🌻 <strong>Summer</strong> &mdash; warm amber/orange</li>
+          <li>🌙 <strong>Evening</strong> &mdash; cool indigo/purple</li>
+        </ul>
+      </li>
+      <li>Tap each theme &mdash; the <strong>entire app updates instantly</strong> (header, buttons, cards, backgrounds)</li>
+      <li>One theme will show &ldquo;(suggested)&rdquo; based on time of day</li>
+      <li>Theme persists across page reloads</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 6 -->
+    <h2><span class="flow-number">6</span> Language Toggle</h2>
+    <ol start="36">
+      <li>Tap the <strong>EN/JP button</strong> in the top-right header</li>
+      <li>All text switches between Japanese and English</li>
+      <li>Works on every screen &mdash; try switching while on different pages</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 7 -->
+    <h2><span class="flow-number">7</span> Therapist Dashboard</h2>
+    <ol start="39">
+      <li>Go to <strong>Profile &rarr; "Switch to Therapist Mode"</strong></li>
+      <li>The bottom nav changes to: <strong>Dashboard / Sessions / Profile</strong></li>
+      <li>Dashboard shows: booking count, rating, monthly earnings</li>
+    </ol>
+
+    <h3>Navigate all 7 sub-screens:</h3>
+    <table>
+      <thead>
+        <tr><th>Screen</th><th>What to Check</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Schedule</strong></td><td>7-day &times; time slot grid. If viewing as Free tier therapist, toggles are locked with upgrade prompt.</td></tr>
+        <tr><td><strong>Sessions</strong></td><td>List of sessions with edit buttons. Tap edit &rarr; form pre-filled with session data.</td></tr>
+        <tr><td><strong>Clients</strong></td><td>Client list with last booking date and review status (Reviewed / Pending).</td></tr>
+        <tr><td><strong>Earnings</strong></td><td>Total earnings, breakdown (revenue &minus; 9% fee + referral income = net), monthly history.</td></tr>
+        <tr><td><strong>Edit Profile</strong></td><td>Pre-filled form with therapist name, intro, location.</td></tr>
+        <tr><td><strong>Referral Program</strong></td><td>Unique referral code with copy button, referral stats, commission info.</td></tr>
+      </tbody>
+    </table>
+    <ol start="42">
+      <li>Tap <strong>"Back &rarr; Profile"</strong> at the bottom to exit therapist mode</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 8 -->
+    <h2><span class="flow-number">8</span> Therapist Apply Form</h2>
+    <ol start="43">
+      <li>From the landing page, tap <strong>"Apply as Therapist"</strong></li>
+      <li>Check the <strong>3-tier plan cards</strong> (Free / Standard / Premium) with feature lists</li>
+      <li>Note the <strong>platform fee info box</strong> (9% per transaction)</li>
+      <li>Fill in fields and tap Submit &rarr; success screen</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 9 -->
+    <h2><span class="flow-number">9</span> Referral Landing</h2>
+    <ol start="47">
+      <li>Navigate directly to: <code>#/referral/HANAKO2026</code></li>
+      <li>You see a referral landing page showing Hanako Yamada as the referrer</li>
+      <li>Tap &ldquo;Sign Up Now&rdquo; &rarr; goes to apply form</li>
+      <li>Try other codes: <code>MITSUKI2026</code>, <code>KEN2026</code>, <code>SAKURA2026</code></li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 10 -->
+    <h2><span class="flow-number">10</span> Edge Cases</h2>
+    <ol start="51">
+      <li>Try navigating to a <strong>non-existent route</strong> (e.g., <code>#/nonexistent</code>) &rarr; should show landing page</li>
+      <li>Try navigating to a <strong>non-existent therapist</strong> (e.g., <code>#/therapist/999</code>) &rarr; should redirect to search</li>
+      <li>Try <strong>booking without checking the agreement</strong> &rarr; button stays disabled</li>
+      <li>Try <strong>submitting a review with 0 stars</strong> &rarr; should not submit</li>
+      <li><strong>Refresh the page</strong> at any point &rarr; theme, auth state, and therapist mode should all persist</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <!-- FLOW 11 -->
+    <h2><span class="flow-number">11</span> Admin Panel</h2>
+    <p>The admin panel is a separate site for platform operators. Open <code>admin.html</code> from the project root.</p>
+
+    <div class="note">
+      Best viewed at desktop width (960px+). The admin layout uses a sidebar navigation instead of bottom nav.
+    </div>
+
+    <ol start="56">
+      <li><strong>Admin Dashboard</strong> &mdash; You land on <code>#/admin</code> showing platform stats grid (therapists, users, bookings, revenue, fees), quick links, and recent activity feed</li>
+    </ol>
+
+    <div class="step-group">
+      <h3>Therapist Management</h3>
+      <ol start="57">
+        <li>Click <strong>Therapists</strong> in the sidebar &rarr; table of 8 therapists with tier badges, status, founding star</li>
+        <li>Use the <strong>tier and status filters</strong> &rarr; table updates</li>
+        <li>Click <strong>View</strong> on any therapist &rarr; detail page with profile, tier management, booking window control, stats</li>
+        <li>Change the <strong>tier dropdown</strong> or <strong>booking window</strong> (14/30/60/90 days) &rarr; &ldquo;Saved&rdquo; toast appears</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>User Management</h3>
+      <ol start="61">
+        <li>Click <strong>Users</strong> &rarr; table of 20 users with email, join date, bookings count, status</li>
+        <li>Type in the <strong>search box</strong> &rarr; table filters in real-time by name or email</li>
+        <li>Click <strong>View</strong> on any user &rarr; detail page with profile and booking history</li>
+        <li>Change the <strong>status dropdown</strong> (Active/Suspended) &rarr; &ldquo;Saved&rdquo; toast</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Bookings</h3>
+      <ol start="65">
+        <li>Click <strong>Bookings</strong> &rarr; table of 18 bookings with ID, date, client, therapist, session, amount, status</li>
+        <li>Use the <strong>status filter</strong> (All / Upcoming / Completed / Cancelled) &rarr; table and totals row update</li>
+        <li>Click a therapist name &rarr; navigates to their detail page</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Revenue &amp; Analytics</h3>
+      <ol start="68">
+        <li>Click <strong>Revenue</strong> &rarr; stats grid showing gross revenue, platform fees (9%), referral payouts (2%), net income</li>
+        <li>Check the <strong>CSS bar chart</strong> showing 5 months of revenue trend</li>
+        <li>Check the <strong>per-therapist revenue table</strong> with links to therapist details</li>
+        <li>Check the <strong>fee structure</strong> summary card</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Content Moderation</h3>
+      <ol start="72">
+        <li>Click <strong>Moderation</strong> &rarr; pending queue (3 items) and resolved section (2 items)</li>
+        <li>Each card shows type badge (Review/Report), content, reporter, target therapist, reason</li>
+        <li>Click <strong>Approve</strong>, <strong>Remove</strong>, or <strong>Dismiss</strong> on a pending item &rarr; item moves to resolved section</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Referral Tracking</h3>
+      <ol start="75">
+        <li>Click <strong>Referrals</strong> &rarr; stats (total referred, total commission), all referral codes table</li>
+        <li>Click <strong>Disable</strong> on an active code &rarr; status changes, button becomes &ldquo;Enable&rdquo;</li>
+        <li>Check the <strong>referral chain</strong> visualization showing who referred whom</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Calendar Settings</h3>
+      <ol start="78">
+        <li>Click <strong>Calendar Settings</strong> &rarr; global max days, per-tier defaults, per-therapist overrides, blackout dates</li>
+        <li>Change any <strong>dropdown</strong> (global, tier, therapist) &rarr; &ldquo;Saved&rdquo; toast</li>
+        <li>Click <strong>&times;</strong> to remove a blackout date, use the date picker + &ldquo;Add&rdquo; to add one</li>
+      </ol>
+    </div>
+
+    <div class="step-group">
+      <h3>Admin Cross-Cutting</h3>
+      <ol start="81">
+        <li>Click the <strong>theme dropdown</strong> in the admin header &rarr; all screens update (Spring/Summer/Evening)</li>
+        <li>Click the <strong>language toggle</strong> (EN/JP) in the sidebar footer &rarr; all text switches</li>
+        <li>Test at <strong>desktop width</strong> (960px+) &mdash; sidebar visible, wide tables</li>
+        <li>Test at <strong>tablet width</strong> (768px) &mdash; sidebar hidden, hamburger menu appears</li>
+        <li>Click <strong>&ldquo;Back to Site&rdquo;</strong> in the sidebar &rarr; returns to main app</li>
+      </ol>
+    </div>
+
+    <h3>Admin screens checklist:</h3>
+    <table>
+      <thead>
+        <tr><th>Route</th><th>Screen</th><th>What to Check</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>#/admin</code></td><td>Dashboard</td><td>Stats grid, quick links, activity feed</td></tr>
+        <tr><td><code>#/admin/therapists</code></td><td>Therapists</td><td>Table, tier/status filters, view links</td></tr>
+        <tr><td><code>#/admin/therapist/:id</code></td><td>Therapist Detail</td><td>Profile, tier change, status, booking window, stats</td></tr>
+        <tr><td><code>#/admin/users</code></td><td>Users</td><td>Table, search, view links</td></tr>
+        <tr><td><code>#/admin/user/:id</code></td><td>User Detail</td><td>Profile, booking history, status toggle</td></tr>
+        <tr><td><code>#/admin/bookings</code></td><td>Bookings</td><td>Table, status filter, totals</td></tr>
+        <tr><td><code>#/admin/revenue</code></td><td>Revenue</td><td>Stats, bar chart, per-therapist table, fee structure</td></tr>
+        <tr><td><code>#/admin/moderation</code></td><td>Moderation</td><td>Pending queue, approve/remove/dismiss actions</td></tr>
+        <tr><td><code>#/admin/referrals</code></td><td>Referrals</td><td>Codes table, enable/disable, referral chain</td></tr>
+        <tr><td><code>#/admin/calendar-settings</code></td><td>Calendar</td><td>Global/tier/therapist windows, blackout dates</td></tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- REFERENCE TABLE -->
+    <h2>Therapist Quick Reference</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Tier</th><th>Founding</th><th>Referrals To</th><th>Categories</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>Hanako Yamada</td>
+          <td><span class="badge badge-premium">Premium</span></td>
+          <td><span class="badge badge-founding">⭐ Yes</span></td>
+          <td>Taro, Akari</td><td>Mental, Physical</td>
+        </tr>
+        <tr>
+          <td>2</td><td>Taro Suzuki</td>
+          <td><span class="badge badge-standard">Standard</span></td>
+          <td>&mdash;</td><td>&mdash;</td><td>Physical</td>
+        </tr>
+        <tr>
+          <td>3</td><td>Mitsuki Sato</td>
+          <td><span class="badge badge-premium">Premium</span></td>
+          <td><span class="badge badge-founding">⭐ Yes</span></td>
+          <td>Makoto, Ken</td><td>Playful, Mental</td>
+        </tr>
+        <tr>
+          <td>4</td><td>Makoto Tanaka</td>
+          <td><span class="badge badge-free">Free</span></td>
+          <td>&mdash;</td><td>&mdash;</td><td>Pro</td>
+        </tr>
+        <tr>
+          <td>5</td><td>Sakura Nakamura</td>
+          <td><span class="badge badge-standard">Standard</span></td>
+          <td>&mdash;</td><td>Rei</td><td>Physical, Mental</td>
+        </tr>
+        <tr>
+          <td>6</td><td>Rei Takahashi</td>
+          <td><span class="badge badge-free">Free</span></td>
+          <td>&mdash;</td><td>&mdash;</td><td>Mental</td>
+        </tr>
+        <tr>
+          <td>7</td><td>Ken Ito</td>
+          <td><span class="badge badge-premium">Premium</span></td>
+          <td><span class="badge badge-founding">⭐ Yes</span></td>
+          <td>Sakura</td><td>Playful, Mental</td>
+        </tr>
+        <tr>
+          <td>8</td><td>Akari Kobayashi</td>
+          <td><span class="badge badge-standard">Standard</span></td>
+          <td>&mdash;</td><td>&mdash;</td><td>Mental, Physical</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <h2>Reporting Issues</h2>
+    <p>Note the screen, steps to reproduce, and what you expected vs. what happened. Screenshots are helpful, especially for layout or theme issues.</p>
+
+  </div>
+
+  <div class="footer">
+    Healing Garden v2 + Admin &mdash; Testing Guide &mdash; March 2026
+  </div>
+
+</div>
+
+</body>
+</html>
