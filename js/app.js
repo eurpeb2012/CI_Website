@@ -759,9 +759,14 @@ function renderApplySuccess(el, header) {
 function renderUserProfile(el, header) {
   renderHeaderSimple(header, t('userProfileTitle'));
 
-  const userName = authState.isLoggedIn ? authState.user.name : t('userProfileAnon');
-  const userEmail = authState.isLoggedIn ? authState.user.email : '';
-  const userIdDisplay = authState.isLoggedIn ? authState.user.email : '#USR-29481';
+  const isLoggedIn = authState.isLoggedIn;
+  const userName = isLoggedIn ? authState.user.name : t('userProfileAnon');
+  const userIdDisplay = isLoggedIn ? authState.user.email : '#USR-29481';
+
+  // Show booking history and reviews only when logged in
+  const bookings = isLoggedIn ? mockBookingHistory : [];
+  const writtenReviews = isLoggedIn ? mockUserWrittenReviews : [];
+  const receivedReviews = isLoggedIn ? mockUserReviews : [];
 
   el.innerHTML = `
     <div class="page">
@@ -775,17 +780,39 @@ function renderUserProfile(el, header) {
 
       <div class="profile-section">
         <h2>${t('userProfileHistory')}</h2>
-        <div class="empty-state">${t('userProfileNoHistory')}</div>
+        ${bookings.length > 0 ? bookings.map(b => {
+          const statusClass = b.status === 'upcoming' ? 'pending' : 'reviewed';
+          const statusLabel = b.status === 'upcoming' ? t('bookingStatusUpcoming') : t('bookingStatusCompleted');
+          return `
+            <div class="client-item" onclick="navigate('#/therapist/${b.therapistId}')" style="cursor:pointer">
+              <div class="client-avatar-sm" style="background:var(--theme-primary-200);font-size:0.75rem">${b.date.slice(5)}</div>
+              <div class="client-info">
+                <h3>${getLocalizedText(b.sessionName)}</h3>
+                <p>${getLocalizedText(b.therapistName)} · ¥${b.price.toLocaleString()}</p>
+              </div>
+              <span class="client-review-status ${statusClass}">${statusLabel}</span>
+            </div>
+          `;
+        }).join('') : `<div class="empty-state">${t('userProfileNoHistory')}</div>`}
       </div>
 
       <div class="profile-section">
         <h2>${t('userProfileReviews')}</h2>
-        <div class="empty-state">${t('userProfileNoReviews')}</div>
+        ${writtenReviews.length > 0 ? writtenReviews.map(r => `
+          <div class="review-card" onclick="navigate('#/therapist/${r.therapistId}')" style="cursor:pointer">
+            <div class="review-header">
+              <span class="review-author">${getLocalizedText(r.therapistName)}</span>
+              <span class="review-date">${r.date}</span>
+            </div>
+            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+            <p class="review-text">${getLocalizedText(r.text)}</p>
+          </div>
+        `).join('') : `<div class="empty-state">${t('userProfileNoReviews')}</div>`}
       </div>
 
       <div class="profile-section">
         <h2>${t('userProfileReceivedReviews')}</h2>
-        ${mockUserReviews.length > 0 ? mockUserReviews.map(r => `
+        ${receivedReviews.length > 0 ? receivedReviews.map(r => `
           <div class="review-card">
             <div class="review-header">
               <span class="review-author">${getLocalizedText(r.therapistName)}</span>
@@ -805,7 +832,7 @@ function renderUserProfile(el, header) {
         <span>${t('userProfileSwitchTherapist')}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
-      ${authState.isLoggedIn ? `
+      ${isLoggedIn ? `
         <div class="profile-menu-item" onclick="onLogout()">
           <span>${t('userProfileLogout')}</span>
           <span class="arrow">${icons.chevron}</span>
@@ -815,9 +842,26 @@ function renderUserProfile(el, header) {
           <span>${t('signupSubmit')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
+        <div class="profile-menu-item" onclick="onDemoLogin()" style="color:var(--theme-primary-600)">
+          <span>⚡ ${t('demoLogin')}</span>
+          <span class="arrow" style="font-size:0.75rem;color:var(--text-muted)">${t('demoLoginDesc')}</span>
+        </div>
       `}
     </div>
   `;
+}
+
+function onDemoLogin() {
+  authState.isLoggedIn = true;
+  authState.user = { name: testUser.name, email: testUser.email };
+  const pending = authState.pendingAction;
+  authState.pendingAction = null;
+  saveAuth();
+  if (pending && pending.hash) {
+    navigate(pending.hash);
+  } else {
+    navigate('#/profile');
+  }
 }
 
 function onLogout() {
@@ -902,6 +946,9 @@ function renderSignup(el, header) {
         </div>
         <button class="btn-primary" onclick="onSignup()">${t('signupSubmit')}</button>
         <p class="signup-notice">${t('signupNotice')}</p>
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gray-200);text-align:center">
+          <button class="btn-secondary" style="margin:0 auto" onclick="onDemoLogin()">⚡ ${t('demoLogin')}</button>
+        </div>
       </div>
     </div>
   `;

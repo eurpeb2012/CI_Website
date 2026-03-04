@@ -271,6 +271,12 @@ const translations = {
     // Founding Member
     foundingMember: '創立メンバー',
 
+    // Booking History
+    bookingStatusCompleted: '完了',
+    bookingStatusUpcoming: '予定',
+    demoLogin: 'デモログイン',
+    demoLoginDesc: 'テストユーザーとしてログイン',
+
     // Calendar days
     calMon: '月',
     calTue: '火',
@@ -566,6 +572,12 @@ const translations = {
 
     // Founding Member
     foundingMember: 'Founding Member',
+
+    // Booking History
+    bookingStatusCompleted: 'Completed',
+    bookingStatusUpcoming: 'Upcoming',
+    demoLogin: 'Demo Login',
+    demoLoginDesc: 'Log in as test user',
 
     // Calendar days
     calMon: 'Mon',
