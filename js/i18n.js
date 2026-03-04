@@ -8,6 +8,8 @@ const translations = {
     navHome: 'ホーム',
     navSearch: '探す',
     navProfile: 'マイページ',
+    navDashboard: 'ダッシュボード',
+    navSessions: 'セッション',
 
     // Landing
     landingTitle: '癒しの庭',
@@ -76,6 +78,8 @@ const translations = {
     profileBook: 'このセッションを予約',
     profilePerSession: '/ セッション',
     profileMinutes: '分',
+    profileMessage: 'メッセージを送る',
+    profileSuggested: 'おすすめのセラピスト',
 
     // Booking
     bookingTitle: '予約確認',
@@ -111,14 +115,35 @@ const translations = {
     applySessionDuration: '時間（分）',
     applyAddSession: '+ セッションを追加',
     applyPlanTitle: 'プランを選択',
-    applyPlanFree: '無料プラン',
-    applyPlanFreeDesc: '基本掲載・月3件まで予約受付',
-    applyPlanPaid: 'プレミアムプラン',
-    applyPlanPaidDesc: '優先表示・無制限予約・分析機能',
-    applyPlanPaidPrice: '¥2,980/月',
     applySubmit: '申し込む',
     applySuccess: '申し込みありがとうございます！',
     applySuccessMsg: '審査後、ご連絡いたします。',
+
+    // Tier names
+    tierFree: '🌱 フリー',
+    tierFreeName: 'フリープラン',
+    tierFreeDesc: '基本掲載・月3件まで予約受付',
+    tierFreePrice: '無料',
+    tierStandard: '🌿 スタンダード',
+    tierStandardName: 'スタンダードプラン',
+    tierStandardDesc: '無制限予約・スケジュール編集・9%手数料',
+    tierStandardPrice: '¥1,980/月',
+    tierPremium: '🌳 プレミアム',
+    tierPremiumName: 'プレミアムプラン',
+    tierPremiumDesc: '優先表示・分析機能・スケジュール編集・9%手数料',
+    tierPremiumPrice: '¥4,980/月',
+    tierPlatformFee: 'すべての有料プランには、1取引あたり9%のプラットフォーム手数料がかかります。',
+    tierReentryNote: '※一度解約後の再加入には再登録手数料がかかる場合があります。',
+
+    // Tier features
+    tierFeatureBasicListing: '基本掲載',
+    tierFeature3Bookings: '月3件まで予約受付',
+    tierFeatureScheduleView: 'スケジュール表示',
+    tierFeatureUnlimitedBookings: '無制限予約受付',
+    tierFeatureScheduleEdit: 'スケジュール編集',
+    tierFeature9Fee: '9%手数料',
+    tierFeaturePriority: '優先表示',
+    tierFeatureAnalytics: '分析機能',
 
     // User Profile
     userProfileTitle: 'マイページ',
@@ -130,6 +155,121 @@ const translations = {
     userProfileNoReviews: 'まだレビューはありません',
     userProfileSettings: '設定',
     userProfileLogout: 'ログアウト',
+    userProfileReceivedReviews: 'セラピストからのレビュー',
+    userProfileNoReceivedReviews: 'まだセラピストからのレビューはありません',
+    userProfileSwitchTherapist: 'セラピストモードに切り替え',
+
+    // Signup
+    signupTitle: 'アカウント作成',
+    signupName: '名前',
+    signupNamePlaceholder: 'お名前を入力',
+    signupEmail: 'メールアドレス',
+    signupEmailPlaceholder: 'email@example.com',
+    signupSubmit: '登録する',
+    signupNotice: '登録は無料です。閲覧はログインなしでもできます。',
+    signupRequired: 'この操作にはアカウント登録が必要です',
+
+    // Settings
+    settingsTitle: '設定',
+    settingsTheme: 'テーマ',
+    settingsThemeDesc: 'アプリの見た目を変更',
+    themeSpring: '🌸 スプリング',
+    themeSpringDesc: 'やさしい緑のパステルカラー',
+    themeSummer: '🌻 サマー',
+    themeSummerDesc: '暖かいアンバー・オレンジ',
+    themeEvening: '🌙 イブニング',
+    themeEveningDesc: '落ち着いたインディゴ・パープル',
+    themeSuggested: '（おすすめ）',
+
+    // Chat
+    chatTitle: 'チャット',
+    chatInfoWindow: 'メッセージは3日間有効です',
+    chatPlaceholder: 'メッセージを入力...',
+    chatStartVideo: 'ビデオ通話を開始',
+
+    // Video Call
+    videoTitle: 'ビデオ通話',
+    videoConnecting: '接続中...',
+    videoMute: 'ミュート',
+    videoUnmute: 'ミュート解除',
+    videoCamera: 'カメラ',
+    videoCameraOff: 'カメラオフ',
+    videoEnd: '終了',
+    videoBlur: '背景ぼかし',
+    videoSelfView: 'あなた',
+
+    // Reviews
+    reviewsFromClients: 'クライアントからのレビュー',
+    reviewsFromTherapists: 'セラピストからのレビュー',
+    reviewSubmitTitle: 'レビューを書く',
+    reviewRating: '評価',
+    reviewText: 'コメント',
+    reviewTextPlaceholder: 'あなたの体験を教えてください...',
+    reviewSubmit: 'レビューを投稿',
+    reviewSuccess: 'レビューを投稿しました！',
+
+    // Therapist Dashboard
+    dashboardTitle: 'ダッシュボード',
+    dashboardBookings: '予約数',
+    dashboardRating: '評価',
+    dashboardEarnings: '今月の収益',
+    dashboardSchedule: 'スケジュール管理',
+    dashboardSessions: 'セッション管理',
+    dashboardClients: 'クライアント一覧',
+    dashboardEarningsMenu: '収益管理',
+    dashboardProfileEdit: 'プロフィール編集',
+    dashboardReferrals: '紹介プログラム',
+
+    // Schedule
+    scheduleTitle: 'スケジュール管理',
+    scheduleAvailable: '空き',
+    scheduleUnavailable: '—',
+    scheduleLocked: 'プランをアップグレードしてスケジュールを編集',
+    scheduleUpgrade: 'アップグレード',
+
+    // Sessions management
+    sessionsManageTitle: 'セッション管理',
+    sessionsAdd: '+ セッションを追加',
+    sessionEditTitle: 'セッション編集',
+    sessionSave: '保存',
+
+    // Clients
+    clientsTitle: 'クライアント一覧',
+    clientLastBooking: '最終予約',
+    clientReviewed: 'レビュー済み',
+    clientPendingReview: '未レビュー',
+    clientWriteReview: 'レビューを書く',
+
+    // Earnings
+    earningsTitle: '収益管理',
+    earningsThisMonth: '今月の収益',
+    earningsSessionRevenue: 'セッション収入',
+    earningsPlatformFee: 'プラットフォーム手数料 (9%)',
+    earningsReferralIncome: '紹介収入',
+    earningsNet: '純収益',
+    earningsHistory: '収益履歴',
+
+    // Profile Edit
+    profileEditTitle: 'プロフィール編集',
+    profileEditSave: '保存する',
+
+    // Referral Program
+    referralTitle: '紹介プログラム',
+    referralCode: 'あなたの紹介コード',
+    referralCopy: 'コピー',
+    referralCopied: 'コピーしました！',
+    referralTotalReferred: '紹介人数',
+    referralTotalEarnings: '紹介収入合計',
+    referralCommission: '紹介手数料: 2%',
+    referralDesc: 'あなたの紹介コードでセラピストが登録すると、そのセラピストの収益から2%のコミッションを受け取れます。',
+
+    // Referral Landing
+    referralLandingTitle: '紹介で登録',
+    referralLandingDesc: 'さんからの紹介で特別にご招待されました！',
+    referralLandingCTA: '今すぐ登録',
+
+    // Founding Member
+    foundingMember: '創立メンバー',
 
     // Calendar days
     calMon: '月',
@@ -139,6 +279,15 @@ const translations = {
     calFri: '金',
     calSat: '土',
     calSun: '日',
+
+    // Schedule days
+    schedMon: '月',
+    schedTue: '火',
+    schedWed: '水',
+    schedThu: '木',
+    schedFri: '金',
+    schedSat: '土',
+    schedSun: '日',
 
     // Misc
     back: '戻る',
@@ -155,6 +304,8 @@ const translations = {
     navHome: 'Home',
     navSearch: 'Search',
     navProfile: 'Profile',
+    navDashboard: 'Dashboard',
+    navSessions: 'Sessions',
 
     // Landing
     landingTitle: '癒しの庭',
@@ -223,6 +374,8 @@ const translations = {
     profileBook: 'Book This Session',
     profilePerSession: '/ session',
     profileMinutes: 'min',
+    profileMessage: 'Send Message',
+    profileSuggested: 'Suggested Therapists',
 
     // Booking
     bookingTitle: 'Booking Confirmation',
@@ -258,14 +411,35 @@ const translations = {
     applySessionDuration: 'Duration (min)',
     applyAddSession: '+ Add Session',
     applyPlanTitle: 'Choose a Plan',
-    applyPlanFree: 'Free Plan',
-    applyPlanFreeDesc: 'Basic listing, up to 3 bookings/month',
-    applyPlanPaid: 'Premium Plan',
-    applyPlanPaidDesc: 'Priority listing, unlimited bookings, analytics',
-    applyPlanPaidPrice: '¥2,980/mo',
     applySubmit: 'Submit Application',
     applySuccess: 'Thank you for applying!',
     applySuccessMsg: 'We\'ll contact you after review.',
+
+    // Tier names
+    tierFree: '🌱 Free',
+    tierFreeName: 'Free Plan',
+    tierFreeDesc: 'Basic listing, up to 3 bookings/month',
+    tierFreePrice: 'Free',
+    tierStandard: '🌿 Standard',
+    tierStandardName: 'Standard Plan',
+    tierStandardDesc: 'Unlimited bookings, schedule editing, 9% fee',
+    tierStandardPrice: '¥1,980/mo',
+    tierPremium: '🌳 Premium',
+    tierPremiumName: 'Premium Plan',
+    tierPremiumDesc: 'Priority ranking, analytics, schedule editing, 9% fee',
+    tierPremiumPrice: '¥4,980/mo',
+    tierPlatformFee: 'All paid plans include a 9% platform fee per transaction.',
+    tierReentryNote: '* Re-entry after cancellation may incur a re-registration fee.',
+
+    // Tier features
+    tierFeatureBasicListing: 'Basic listing',
+    tierFeature3Bookings: 'Up to 3 bookings/month',
+    tierFeatureScheduleView: 'Schedule display',
+    tierFeatureUnlimitedBookings: 'Unlimited bookings',
+    tierFeatureScheduleEdit: 'Schedule editing',
+    tierFeature9Fee: '9% platform fee',
+    tierFeaturePriority: 'Priority ranking',
+    tierFeatureAnalytics: 'Analytics dashboard',
 
     // User Profile
     userProfileTitle: 'My Profile',
@@ -277,6 +451,121 @@ const translations = {
     userProfileNoReviews: 'No reviews yet',
     userProfileSettings: 'Settings',
     userProfileLogout: 'Log Out',
+    userProfileReceivedReviews: 'Reviews from Therapists',
+    userProfileNoReceivedReviews: 'No reviews from therapists yet',
+    userProfileSwitchTherapist: 'Switch to Therapist Mode',
+
+    // Signup
+    signupTitle: 'Create Account',
+    signupName: 'Name',
+    signupNamePlaceholder: 'Enter your name',
+    signupEmail: 'Email',
+    signupEmailPlaceholder: 'email@example.com',
+    signupSubmit: 'Sign Up',
+    signupNotice: 'Registration is free. You can browse without logging in.',
+    signupRequired: 'This action requires an account',
+
+    // Settings
+    settingsTitle: 'Settings',
+    settingsTheme: 'Theme',
+    settingsThemeDesc: 'Change the app appearance',
+    themeSpring: '🌸 Spring',
+    themeSpringDesc: 'Soft pastel greens',
+    themeSummer: '🌻 Summer',
+    themeSummerDesc: 'Warm amber and orange',
+    themeEvening: '🌙 Evening',
+    themeEveningDesc: 'Cool indigo and purple',
+    themeSuggested: '(suggested)',
+
+    // Chat
+    chatTitle: 'Chat',
+    chatInfoWindow: 'Messages are available for 3 days',
+    chatPlaceholder: 'Type a message...',
+    chatStartVideo: 'Start Video Call',
+
+    // Video Call
+    videoTitle: 'Video Call',
+    videoConnecting: 'Connecting...',
+    videoMute: 'Mute',
+    videoUnmute: 'Unmute',
+    videoCamera: 'Camera',
+    videoCameraOff: 'Cam Off',
+    videoEnd: 'End',
+    videoBlur: 'BG Blur',
+    videoSelfView: 'You',
+
+    // Reviews
+    reviewsFromClients: 'Reviews from Clients',
+    reviewsFromTherapists: 'Reviews from Therapists',
+    reviewSubmitTitle: 'Write a Review',
+    reviewRating: 'Rating',
+    reviewText: 'Comment',
+    reviewTextPlaceholder: 'Tell us about your experience...',
+    reviewSubmit: 'Submit Review',
+    reviewSuccess: 'Review submitted!',
+
+    // Therapist Dashboard
+    dashboardTitle: 'Dashboard',
+    dashboardBookings: 'Bookings',
+    dashboardRating: 'Rating',
+    dashboardEarnings: 'This Month',
+    dashboardSchedule: 'Schedule',
+    dashboardSessions: 'Sessions',
+    dashboardClients: 'Clients',
+    dashboardEarningsMenu: 'Earnings',
+    dashboardProfileEdit: 'Edit Profile',
+    dashboardReferrals: 'Referral Program',
+
+    // Schedule
+    scheduleTitle: 'Schedule Management',
+    scheduleAvailable: 'Open',
+    scheduleUnavailable: '—',
+    scheduleLocked: 'Upgrade your plan to edit schedule',
+    scheduleUpgrade: 'Upgrade',
+
+    // Sessions management
+    sessionsManageTitle: 'Manage Sessions',
+    sessionsAdd: '+ Add Session',
+    sessionEditTitle: 'Edit Session',
+    sessionSave: 'Save',
+
+    // Clients
+    clientsTitle: 'Client List',
+    clientLastBooking: 'Last booking',
+    clientReviewed: 'Reviewed',
+    clientPendingReview: 'Pending',
+    clientWriteReview: 'Write Review',
+
+    // Earnings
+    earningsTitle: 'Earnings',
+    earningsThisMonth: 'This Month',
+    earningsSessionRevenue: 'Session Revenue',
+    earningsPlatformFee: 'Platform Fee (9%)',
+    earningsReferralIncome: 'Referral Income',
+    earningsNet: 'Net Earnings',
+    earningsHistory: 'Earnings History',
+
+    // Profile Edit
+    profileEditTitle: 'Edit Profile',
+    profileEditSave: 'Save Changes',
+
+    // Referral Program
+    referralTitle: 'Referral Program',
+    referralCode: 'Your Referral Code',
+    referralCopy: 'Copy',
+    referralCopied: 'Copied!',
+    referralTotalReferred: 'Total Referred',
+    referralTotalEarnings: 'Referral Earnings',
+    referralCommission: 'Referral commission: 2%',
+    referralDesc: 'When a therapist signs up with your referral code, you earn a 2% commission on their revenue.',
+
+    // Referral Landing
+    referralLandingTitle: 'Join via Referral',
+    referralLandingDesc: 'You\'ve been invited by ',
+    referralLandingCTA: 'Sign Up Now',
+
+    // Founding Member
+    foundingMember: 'Founding Member',
 
     // Calendar days
     calMon: 'Mon',
@@ -286,6 +575,15 @@ const translations = {
     calFri: 'Fri',
     calSat: 'Sat',
     calSun: 'Sun',
+
+    // Schedule days
+    schedMon: 'Mon',
+    schedTue: 'Tue',
+    schedWed: 'Wed',
+    schedThu: 'Thu',
+    schedFri: 'Fri',
+    schedSat: 'Sat',
+    schedSun: 'Sun',
 
     // Misc
     back: 'Back',

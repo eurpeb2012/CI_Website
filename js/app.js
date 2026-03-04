@@ -5,7 +5,59 @@ let state = {
   delivery: null,
   bookingSession: null,
   bookingTherapist: null,
+  criteriaFilters: null,
 };
+
+// ===== Auth State =====
+let authState = JSON.parse(localStorage.getItem('iyashi-user') || 'null') || {
+  isLoggedIn: false,
+  user: null,
+  pendingAction: null,
+};
+
+function saveAuth() {
+  localStorage.setItem('iyashi-user', JSON.stringify(authState));
+}
+
+function requireAuth(action, callback) {
+  if (authState.isLoggedIn) {
+    callback();
+  } else {
+    authState.pendingAction = { action, hash: window.location.hash };
+    saveAuth();
+    navigate('#/signup');
+  }
+}
+
+// ===== Therapist Mode =====
+let therapistMode = JSON.parse(localStorage.getItem('iyashi-therapist-mode') || 'null') || {
+  active: false,
+  therapistId: null,
+};
+
+function saveTherapistMode() {
+  localStorage.setItem('iyashi-therapist-mode', JSON.stringify(therapistMode));
+}
+
+// ===== Theme =====
+function getTheme() {
+  return localStorage.getItem('iyashi-theme') || 'spring';
+}
+
+function setTheme(theme) {
+  localStorage.setItem('iyashi-theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+function suggestThemeByTime() {
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour < 12) return 'spring';
+  if (hour >= 12 && hour < 18) return 'summer';
+  return 'evening';
+}
+
+// Initialize theme
+setTheme(getTheme());
 
 // ===== Icons (inline SVG) =====
 const icons = {
@@ -14,6 +66,8 @@ const icons = {
   user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
   chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+  dashboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  sessions: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
 };
 
 // ===== Router =====
@@ -26,68 +80,147 @@ function getRoute() {
   return hash.slice(1); // remove #
 }
 
+// Route table with regex matching
+const routes = [
+  { pattern: /^\/$/, handler: 'landing', nav: 'home' },
+  { pattern: /^\/search$/, handler: 'searchEntry', nav: 'search' },
+  { pattern: /^\/search\/feeling$/, handler: 'feelingStep1', nav: 'search' },
+  { pattern: /^\/search\/feeling\/category$/, handler: 'feelingStep2', nav: 'search' },
+  { pattern: /^\/search\/feeling\/delivery$/, handler: 'feelingStep3', nav: 'search' },
+  { pattern: /^\/search\/feeling\/results$/, handler: 'feelingResults', nav: 'search' },
+  { pattern: /^\/search\/criteria$/, handler: 'criteria', nav: 'search' },
+  { pattern: /^\/search\/criteria\/results$/, handler: 'criteriaResults', nav: 'search' },
+  { pattern: /^\/therapist\/(\d+)$/, handler: 'therapistProfile', nav: 'search' },
+  { pattern: /^\/booking$/, handler: 'booking', nav: 'search' },
+  { pattern: /^\/booking\/success$/, handler: 'bookingSuccess', nav: 'search' },
+  { pattern: /^\/apply$/, handler: 'apply', nav: 'home' },
+  { pattern: /^\/apply\/success$/, handler: 'applySuccess', nav: 'home' },
+  { pattern: /^\/profile$/, handler: 'userProfile', nav: 'profile' },
+  { pattern: /^\/settings$/, handler: 'settings', nav: 'profile' },
+  { pattern: /^\/signup$/, handler: 'signup', nav: 'profile' },
+  { pattern: /^\/chat\/(\d+)$/, handler: 'chat', nav: 'search' },
+  { pattern: /^\/videocall\/(\d+)$/, handler: 'videocall', nav: 'search' },
+  { pattern: /^\/review\/(\d+)$/, handler: 'reviewForm', nav: 'search' },
+  { pattern: /^\/therapist-dashboard$/, handler: 'therapistDashboard', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/schedule$/, handler: 'therapistSchedule', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/sessions$/, handler: 'therapistSessions', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/sessions\/edit\/(\d+)$/, handler: 'therapistSessionEdit', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/clients$/, handler: 'therapistClients', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/earnings$/, handler: 'therapistEarnings', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/profile-edit$/, handler: 'therapistProfileEdit', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/referrals$/, handler: 'therapistReferrals', nav: 'dashboard' },
+  { pattern: /^\/referral\/([A-Z0-9]+)$/, handler: 'referralLanding', nav: 'home' },
+];
+
 function router() {
   const route = getRoute();
   const content = document.getElementById('content');
   const header = document.getElementById('header');
 
-  // Parse route
-  if (route === '/') {
-    renderLanding(content, header);
-    setActiveNav('home');
-  } else if (route === '/search') {
-    renderSearchEntry(content, header);
-    setActiveNav('search');
-  } else if (route === '/search/feeling') {
-    renderFeelingStep1(content, header);
-    setActiveNav('search');
-  } else if (route === '/search/feeling/category') {
-    renderFeelingStep2(content, header);
-    setActiveNav('search');
-  } else if (route === '/search/feeling/delivery') {
-    renderFeelingStep3(content, header);
-    setActiveNav('search');
-  } else if (route === '/search/feeling/results') {
-    renderResults(content, header, { category: state.category, delivery: state.delivery });
-    setActiveNav('search');
-  } else if (route === '/search/criteria') {
-    renderCriteria(content, header);
-    setActiveNav('search');
-  } else if (route === '/search/criteria/results') {
-    renderResults(content, header, state.criteriaFilters || {});
-    setActiveNav('search');
-  } else if (route.startsWith('/therapist/')) {
-    const id = route.split('/')[2];
-    renderTherapistProfile(content, header, id);
-    setActiveNav('search');
-  } else if (route === '/booking') {
-    renderBooking(content, header);
-    setActiveNav('search');
-  } else if (route === '/booking/success') {
-    renderBookingSuccess(content, header);
-    setActiveNav('search');
-  } else if (route === '/apply') {
-    renderApply(content, header);
-    setActiveNav('home');
-  } else if (route === '/apply/success') {
-    renderApplySuccess(content, header);
-    setActiveNav('home');
-  } else if (route === '/profile') {
-    renderUserProfile(content, header);
-    setActiveNav('profile');
-  } else {
-    renderLanding(content, header);
+  let matched = false;
+  for (const r of routes) {
+    const match = route.match(r.pattern);
+    if (match) {
+      matched = true;
+      const params = match.slice(1);
+      renderRoute(r.handler, content, header, params);
+      setActiveNav(r.nav);
+      break;
+    }
+  }
+
+  if (!matched) {
+    renderRoute('landing', content, header, []);
     setActiveNav('home');
   }
 
-  // Scroll to top
+  updateBottomNav();
   window.scrollTo(0, 0);
+}
+
+function renderRoute(handler, el, header, params) {
+  const handlers = {
+    landing: () => renderLanding(el, header),
+    searchEntry: () => renderSearchEntry(el, header),
+    feelingStep1: () => renderFeelingStep1(el, header),
+    feelingStep2: () => renderFeelingStep2(el, header),
+    feelingStep3: () => renderFeelingStep3(el, header),
+    feelingResults: () => renderResults(el, header, { category: state.category, delivery: state.delivery }),
+    criteria: () => renderCriteria(el, header),
+    criteriaResults: () => renderResults(el, header, state.criteriaFilters || {}),
+    therapistProfile: () => renderTherapistProfile(el, header, params[0]),
+    booking: () => renderBooking(el, header),
+    bookingSuccess: () => renderBookingSuccess(el, header),
+    apply: () => renderApply(el, header),
+    applySuccess: () => renderApplySuccess(el, header),
+    userProfile: () => renderUserProfile(el, header),
+    settings: () => renderSettings(el, header),
+    signup: () => renderSignup(el, header),
+    chat: () => renderChat(el, header, params[0]),
+    videocall: () => renderVideoCall(el, header, params[0]),
+    reviewForm: () => renderReviewForm(el, header, params[0]),
+    therapistDashboard: () => renderTherapistDashboard(el, header),
+    therapistSchedule: () => renderTherapistSchedule(el, header),
+    therapistSessions: () => renderTherapistSessions(el, header),
+    therapistSessionEdit: () => renderTherapistSessionEdit(el, header, params[0]),
+    therapistClients: () => renderTherapistClients(el, header),
+    therapistEarnings: () => renderTherapistEarnings(el, header),
+    therapistProfileEdit: () => renderTherapistProfileEdit(el, header),
+    therapistReferrals: () => renderTherapistReferrals(el, header),
+    referralLanding: () => renderReferralLanding(el, header, params[0]),
+  };
+  (handlers[handler] || handlers.landing)();
 }
 
 function setActiveNav(tab) {
   document.querySelectorAll('.nav-item').forEach(el => {
     el.classList.toggle('active', el.dataset.tab === tab);
   });
+}
+
+function updateBottomNav() {
+  const nav = document.querySelector('.bottom-nav');
+  if (therapistMode.active) {
+    nav.innerHTML = `
+      <button class="nav-item" data-tab="dashboard" onclick="navigate('#/therapist-dashboard')">
+        ${icons.dashboard}
+        <span data-t="navDashboard">${t('navDashboard')}</span>
+      </button>
+      <button class="nav-item" data-tab="sessions" onclick="navigate('#/therapist-dashboard/sessions')">
+        ${icons.sessions}
+        <span data-t="navSessions">${t('navSessions')}</span>
+      </button>
+      <button class="nav-item" data-tab="profile" onclick="navigate('#/profile')">
+        ${icons.user}
+        <span data-t="navProfile">${t('navProfile')}</span>
+      </button>
+    `;
+  } else {
+    nav.innerHTML = `
+      <button class="nav-item" data-tab="home" onclick="navigate('#/')">
+        ${icons.home}
+        <span data-t="navHome">${t('navHome')}</span>
+      </button>
+      <button class="nav-item" data-tab="search" onclick="navigate('#/search')">
+        ${icons.search}
+        <span data-t="navSearch">${t('navSearch')}</span>
+      </button>
+      <button class="nav-item" data-tab="profile" onclick="navigate('#/profile')">
+        ${icons.user}
+        <span data-t="navProfile">${t('navProfile')}</span>
+      </button>
+    `;
+  }
+  // Re-apply active state
+  const route = getRoute();
+  let activeTab = 'home';
+  for (const r of routes) {
+    if (route.match(r.pattern)) {
+      activeTab = r.nav;
+      break;
+    }
+  }
+  setActiveNav(activeTab);
 }
 
 // ===== Header Helpers =====
@@ -109,14 +242,19 @@ function renderHeaderWithBack(header, title, backRoute) {
 // ===== Language Toggle =====
 function onToggleLang() {
   toggleLanguage();
-  updateNavLabels();
   router(); // re-render
 }
 
-function updateNavLabels() {
-  document.querySelectorAll('.bottom-nav [data-t]').forEach(el => {
-    el.textContent = t(el.dataset.t);
-  });
+// ===== Tier Badge Helper =====
+function renderTierBadge(tier, isFoundingMember) {
+  const tierInfo = therapistTiers[tier];
+  if (!tierInfo) return '';
+  const tierClass = `tier-${tier}`;
+  let badge = `<span class="tier-badge ${tierClass}">${tierInfo.icon} ${t('tier' + tier.charAt(0).toUpperCase() + tier.slice(1))}</span>`;
+  if (isFoundingMember) {
+    badge += ` <span class="tier-badge founding-member">⭐ ${t('foundingMember')}</span>`;
+  }
+  return badge;
 }
 
 // ===== Screen Renderers =====
@@ -158,7 +296,6 @@ function renderSearchEntry(el, header) {
   `;
 }
 
-// Feeling Flow Step 1: How are you feeling?
 function renderFeelingStep1(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search');
   const feelings = [
@@ -169,28 +306,21 @@ function renderFeelingStep1(el, header) {
     { key: 'overwhelmed', label: t('feelingOverwhelmed') },
     { key: 'curious', label: t('feelingCurious') },
   ];
-
   el.innerHTML = `
     <div class="page">
       <div class="step-indicator">
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
+        <div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div>
       </div>
       <h1 class="page-title">${t('feelingTitle')}</h1>
       <div class="feeling-options">
         ${feelings.map(f => `
-          <button class="feeling-btn" onclick="state.feeling='${f.key}'; navigate('#/search/feeling/category')">
-            ${f.label}
-          </button>
+          <button class="feeling-btn" onclick="state.feeling='${f.key}'; navigate('#/search/feeling/category')">${f.label}</button>
         `).join('')}
       </div>
     </div>
   `;
 }
 
-// Feeling Flow Step 2: Category
 function renderFeelingStep2(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search/feeling');
   const categories = [
@@ -199,24 +329,17 @@ function renderFeelingStep2(el, header) {
     { key: 'playful', icon: '🔮', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
     { key: 'pro', icon: '👨‍⚕️', label: t('categoryPro'), desc: t('categoryProDesc') },
   ];
-
   el.innerHTML = `
     <div class="page">
       <div class="step-indicator">
-        <div class="step-dot"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
+        <div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
       </div>
       <h1 class="page-title">${t('categoryTitle')}</h1>
       <div class="category-cards">
         ${categories.map(c => `
           <div class="category-card" onclick="state.category='${c.key}'; navigate('#/search/feeling/delivery')">
             <div class="category-icon">${c.icon}</div>
-            <div>
-              <h3>${c.label}</h3>
-              <p>${c.desc}</p>
-            </div>
+            <div><h3>${c.label}</h3><p>${c.desc}</p></div>
           </div>
         `).join('')}
       </div>
@@ -224,7 +347,6 @@ function renderFeelingStep2(el, header) {
   `;
 }
 
-// Feeling Flow Step 3: Delivery
 function renderFeelingStep3(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search/feeling/category');
   const deliveries = [
@@ -232,24 +354,17 @@ function renderFeelingStep3(el, header) {
     { key: 'video', icon: '💻', label: t('deliveryVideo'), desc: t('deliveryVideoDesc') },
     { key: 'email', icon: '✉️', label: t('deliveryEmail'), desc: t('deliveryEmailDesc') },
   ];
-
   el.innerHTML = `
     <div class="page">
       <div class="step-indicator">
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
+        <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div>
       </div>
       <h1 class="page-title">${t('deliveryTitle')}</h1>
       <div class="delivery-options">
         ${deliveries.map(d => `
           <button class="delivery-btn" onclick="state.delivery='${d.key}'; navigate('#/search/feeling/results')">
             <div class="delivery-icon">${d.icon}</div>
-            <div>
-              <h3>${d.label}</h3>
-              <p>${d.desc}</p>
-            </div>
+            <div><h3>${d.label}</h3><p>${d.desc}</p></div>
           </button>
         `).join('')}
       </div>
@@ -257,25 +372,16 @@ function renderFeelingStep3(el, header) {
   `;
 }
 
-// Results (shared between feeling and criteria flows)
 function renderResults(el, header, filters) {
   const isFeeling = getRoute().includes('feeling');
   const backRoute = isFeeling ? '#/search/feeling/delivery' : '#/search/criteria';
   renderHeaderWithBack(header, t('resultsTitle'), backRoute);
 
   const results = searchTherapists(filters);
-  const lang = getLang();
 
   let stepIndicator = '';
   if (isFeeling) {
-    stepIndicator = `
-      <div class="step-indicator">
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot active"></div>
-      </div>
-    `;
+    stepIndicator = `<div class="step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div></div>`;
   }
 
   el.innerHTML = `
@@ -292,7 +398,7 @@ function renderResults(el, header, filters) {
           <div class="therapist-card" onclick="navigate('#/therapist/${th.id}')">
             <div class="therapist-avatar" style="background-color: ${th.avatarColor}">${initial}</div>
             <div class="therapist-card-info">
-              <h3>${name}</h3>
+              <h3>${name} ${renderTierBadge(th.tier, th.isFoundingMember)}</h3>
               <div class="username">${th.username}</div>
               <div class="location">${location}</div>
               <div class="price">¥${minPrice.toLocaleString()} ${t('resultsFrom')}</div>
@@ -304,11 +410,8 @@ function renderResults(el, header, filters) {
   `;
 }
 
-// Criteria Search
 function renderCriteria(el, header) {
   renderHeaderWithBack(header, t('criteriaTitle'), '#/search');
-  const lang = getLang();
-
   const typeOptions = [
     { value: '', label: t('criteriaTypeAll') },
     { value: 'physical', label: t('categoryPhysical') },
@@ -316,14 +419,12 @@ function renderCriteria(el, header) {
     { value: 'playful', label: t('categoryPlayful') },
     { value: 'pro', label: t('categoryPro') },
   ];
-
   const locationOptions = [
     { value: '', label: t('criteriaLocationAll') },
     { value: 'in-person', label: t('deliveryInPerson') },
     { value: 'video', label: t('deliveryVideo') },
     { value: 'email', label: t('deliveryEmail') },
   ];
-
   const priceOptions = [
     { value: '', label: t('criteriaPriceAll') },
     { value: '3000', label: '〜¥3,000' },
@@ -331,28 +432,21 @@ function renderCriteria(el, header) {
     { value: '8000', label: '〜¥8,000' },
     { value: '10000', label: '〜¥10,000' },
   ];
-
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('criteriaTitle')}</h1>
       <div class="criteria-form">
         <div class="form-group">
           <label>${t('criteriaType')}</label>
-          <select id="criteria-type">
-            ${typeOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
-          </select>
+          <select id="criteria-type">${typeOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}</select>
         </div>
         <div class="form-group">
           <label>${t('criteriaLocation')}</label>
-          <select id="criteria-delivery">
-            ${locationOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
-          </select>
+          <select id="criteria-delivery">${locationOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}</select>
         </div>
         <div class="form-group">
           <label>${t('criteriaPrice')}</label>
-          <select id="criteria-price">
-            ${priceOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
-          </select>
+          <select id="criteria-price">${priceOptions.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}</select>
         </div>
         <button class="btn-primary" onclick="onCriteriaSearch()">${t('criteriaSearch')}</button>
       </div>
@@ -374,23 +468,26 @@ function renderTherapistProfile(el, header, id) {
   if (!th) { navigate('#/search'); return; }
 
   const name = getLocalizedText(th.name);
-  renderHeaderWithBack(header, name, window.history.length > 1 ? 'javascript:history.back()' : '#/search');
-  // Override back button for history
+  renderHeaderWithBack(header, name, 'javascript:void(0)');
   header.querySelector('.header-back').onclick = () => history.back();
 
   const intro = getLocalizedText(th.intro);
   const location = getLocalizedText(th.location);
   const initial = name.charAt(0);
-  const lang = getLang();
 
-  // Calendar mockup for current month
   const calendarHtml = renderCalendar(th.availability);
-
   const deliveryLabels = {
     'in-person': t('deliveryInPerson'),
     'video': t('deliveryVideo'),
     'email': t('deliveryEmail'),
   };
+
+  // Filter reviews by type
+  const clientReviews = th.reviews.filter(r => r.type === 'client-to-therapist');
+  const therapistReviews = th.reviews.filter(r => r.type === 'therapist-to-client');
+
+  // Referral therapists
+  const referredTherapists = (th.referrals || []).map(rid => getTherapist(rid)).filter(Boolean);
 
   el.innerHTML = `
     <div class="page">
@@ -398,6 +495,7 @@ function renderTherapistProfile(el, header, id) {
         <div class="profile-avatar" style="background-color: ${th.avatarColor}">${initial}</div>
         <h1 class="profile-name">${name}</h1>
         <p class="profile-username">${th.username}</p>
+        <div class="mb-12">${renderTierBadge(th.tier, th.isFoundingMember)}</div>
         <p class="profile-location-text">${location}</p>
       </div>
 
@@ -425,71 +523,112 @@ function renderTherapistProfile(el, header, id) {
       </div>
 
       <div class="profile-section">
+        <button class="btn-secondary" style="max-width:100%" onclick="onMessageTherapist(${th.id})">${t('profileMessage')}</button>
+      </div>
+
+      <div class="profile-section">
         <h2>${t('profileAvailability')}</h2>
         ${calendarHtml}
       </div>
 
       <div class="profile-section">
-        <h2>${t('profileReviews')} (${th.reviews.length})</h2>
-        ${th.reviews.map(r => `
-          <div class="review-card">
-            <div class="review-header">
-              <span class="review-author">${getLocalizedText(r.author)}</span>
-              <span class="review-date">${r.date}</span>
-            </div>
-            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-            <p class="review-text">${getLocalizedText(r.text)}</p>
-          </div>
-        `).join('')}
+        <h2>${t('profileReviews')} (${clientReviews.length})</h2>
+        <div class="review-tabs">
+          <button class="review-tab active" onclick="showReviewTab(this, 'client')">${t('reviewsFromClients')}</button>
+          <button class="review-tab" onclick="showReviewTab(this, 'therapist')">${t('reviewsFromTherapists')}</button>
+        </div>
+        <div id="reviews-client">
+          ${clientReviews.map(r => renderReviewCard(r)).join('')}
+        </div>
+        <div id="reviews-therapist" style="display:none">
+          ${therapistReviews.map(r => renderReviewCard(r)).join('')}
+        </div>
+        ${authState.isLoggedIn ? `<button class="btn-secondary mt-12" style="max-width:100%" onclick="navigate('#/review/${th.id}')">${t('reviewSubmitTitle')}</button>` : ''}
       </div>
+
+      ${referredTherapists.length > 0 ? `
+        <div class="profile-section">
+          <h2>${t('profileSuggested')}</h2>
+          <div class="referral-cards">
+            ${referredTherapists.map(ref => {
+              const refName = getLocalizedText(ref.name);
+              return `
+                <div class="referral-card" onclick="navigate('#/therapist/${ref.id}')">
+                  <div class="ref-avatar" style="background-color:${ref.avatarColor}">${refName.charAt(0)}</div>
+                  <div class="ref-info">
+                    <h4>${refName} ${renderTierBadge(ref.tier, ref.isFoundingMember)}</h4>
+                    <p>${getLocalizedText(ref.location)}</p>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
     </div>
   `;
+}
+
+function renderReviewCard(r) {
+  return `
+    <div class="review-card">
+      <div class="review-header">
+        <span class="review-author">${getLocalizedText(r.author || r.clientName)}</span>
+        <span class="review-date">${r.date}</span>
+      </div>
+      <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+      <p class="review-text">${getLocalizedText(r.text)}</p>
+    </div>
+  `;
+}
+
+function showReviewTab(btn, type) {
+  document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('reviews-client').style.display = type === 'client' ? 'block' : 'none';
+  document.getElementById('reviews-therapist').style.display = type === 'therapist' ? 'block' : 'none';
 }
 
 function renderCalendar(availability) {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
-  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-
   const dayKeys = ['calSun', 'calMon', 'calTue', 'calWed', 'calThu', 'calFri', 'calSat'];
   const availDays = new Set(availability.map(a => a.day));
 
   let html = '<div class="calendar-grid">';
-
-  // Headers
-  dayKeys.forEach(k => {
-    html += `<div class="cal-header">${t(k)}</div>`;
-  });
-
-  // Empty cells before first day
-  for (let i = 0; i < firstDay; i++) {
-    html += '<div class="cal-day empty"></div>';
-  }
-
-  // Days
+  dayKeys.forEach(k => { html += `<div class="cal-header">${t(k)}</div>`; });
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
   for (let d = 1; d <= daysInMonth; d++) {
     const dayOfWeek = new Date(year, month, d).getDay();
     const isAvail = availDays.has(dayOfWeek);
     html += `<div class="cal-day${isAvail ? ' available' : ''}">${d}</div>`;
   }
-
   html += '</div>';
   return html;
 }
 
 function onBookSession(therapistId, sessionId) {
-  const th = getTherapist(therapistId);
-  const session = th.sessions.find(s => s.id === sessionId);
-  state.bookingTherapist = th;
-  state.bookingSession = session;
-  navigate('#/booking');
+  requireAuth('book', () => {
+    const th = getTherapist(therapistId);
+    const session = th.sessions.find(s => s.id === sessionId);
+    state.bookingTherapist = th;
+    state.bookingSession = session;
+    navigate('#/booking');
+  });
+}
+
+function onMessageTherapist(therapistId) {
+  requireAuth('message', () => {
+    navigate('#/chat/' + therapistId);
+  });
 }
 
 // Booking
 function renderBooking(el, header) {
-  renderHeaderWithBack(header, t('bookingTitle'), 'javascript:history.back()');
+  renderHeaderWithBack(header, t('bookingTitle'), 'javascript:void(0)');
   header.querySelector('.header-back').onclick = () => history.back();
 
   const th = state.bookingTherapist;
@@ -498,8 +637,6 @@ function renderBooking(el, header) {
 
   const name = getLocalizedText(th.name);
   const sessionName = getLocalizedText(session.name);
-
-  // Pick a mock date
   const mockDate = new Date();
   mockDate.setDate(mockDate.getDate() + 7);
   const dateStr = mockDate.toLocaleDateString(getLang() === 'ja' ? 'ja-JP' : 'en-US', {
@@ -510,39 +647,22 @@ function renderBooking(el, header) {
     <div class="page">
       <h1 class="page-title">${t('bookingTitle')}</h1>
       <div class="booking-summary">
-        <div class="booking-row">
-          <span class="booking-label">${t('bookingSession')}</span>
-          <span class="booking-value">${sessionName}</span>
-        </div>
-        <div class="booking-row">
-          <span class="booking-label">${t('bookingTherapist')}</span>
-          <span class="booking-value">${name}</span>
-        </div>
-        <div class="booking-row">
-          <span class="booking-label">${t('bookingDate')}</span>
-          <span class="booking-value">${dateStr}</span>
-        </div>
-        <div class="booking-row">
-          <span class="booking-label">${t('bookingPrice')}</span>
-          <span class="booking-value">¥${session.price.toLocaleString()}</span>
-        </div>
+        <div class="booking-row"><span class="booking-label">${t('bookingSession')}</span><span class="booking-value">${sessionName}</span></div>
+        <div class="booking-row"><span class="booking-label">${t('bookingTherapist')}</span><span class="booking-value">${name}</span></div>
+        <div class="booking-row"><span class="booking-label">${t('bookingDate')}</span><span class="booking-value">${dateStr}</span></div>
+        <div class="booking-row"><span class="booking-label">${t('bookingPrice')}</span><span class="booking-value">¥${session.price.toLocaleString()}</span></div>
       </div>
-
       <div class="cancel-policy">
         <h3>${t('bookingCancelPolicy')}</h3>
         <ul>
-          <li>${t('bookingCancel2w')}</li>
-          <li>${t('bookingCancel1w')}</li>
-          <li>${t('bookingCancel3d')}</li>
-          <li>${t('bookingCancelSame')}</li>
+          <li>${t('bookingCancel2w')}</li><li>${t('bookingCancel1w')}</li>
+          <li>${t('bookingCancel3d')}</li><li>${t('bookingCancelSame')}</li>
         </ul>
       </div>
-
       <div class="checkbox-group">
         <input type="checkbox" id="agree-check" onchange="document.getElementById('confirm-btn').disabled = !this.checked">
         <label for="agree-check">${t('bookingAgree')}</label>
       </div>
-
       <button id="confirm-btn" class="btn-primary" disabled onclick="navigate('#/booking/success')">${t('bookingConfirm')}</button>
     </div>
   `;
@@ -563,7 +683,6 @@ function renderBookingSuccess(el, header) {
 // Apply
 function renderApply(el, header) {
   renderHeaderWithBack(header, t('applyTitle'), '#/');
-
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('applyTitle')}</h1>
@@ -572,22 +691,18 @@ function renderApply(el, header) {
           <div class="photo-placeholder">📷</div>
           <button class="photo-upload-btn">${t('applyUpload')}</button>
         </div>
-
         <div class="form-group">
           <label>${t('applyName')}</label>
           <input type="text" placeholder="${t('applyNamePlaceholder')}">
         </div>
-
         <div class="form-group">
           <label>${t('applyIntro')}</label>
           <textarea placeholder="${t('applyIntroPlaceholder')}"></textarea>
         </div>
-
         <div class="form-group">
           <label>${t('applyLocation')}</label>
           <input type="text" placeholder="${t('applyLocationPlaceholder')}">
         </div>
-
         <div class="form-group">
           <label>${t('applySessions')}</label>
           <div class="session-entry">
@@ -598,22 +713,25 @@ function renderApply(el, header) {
           </div>
           <button class="add-session-btn mt-12">${t('applyAddSession')}</button>
         </div>
-
         <div class="form-group">
           <label>${t('applyPlanTitle')}</label>
           <div class="plan-cards">
-            <div class="plan-card selected" onclick="selectPlan(this)">
-              <h3>${t('applyPlanFree')}</h3>
-              <p>${t('applyPlanFreeDesc')}</p>
-            </div>
-            <div class="plan-card" onclick="selectPlan(this)">
-              <h3>${t('applyPlanPaid')}</h3>
-              <p>${t('applyPlanPaidDesc')}</p>
-              <div class="plan-price">${t('applyPlanPaidPrice')}</div>
-            </div>
+            ${['free', 'standard', 'premium'].map((tier, i) => {
+              const td = therapistTiers[tier];
+              return `
+                <div class="plan-card ${i === 0 ? 'selected' : ''}" onclick="selectPlan(this)">
+                  <h3>${t(td.nameKey)}</h3>
+                  <p>${t(td.descKey)}</p>
+                  <div class="plan-price">${t(td.priceKey)}</div>
+                  <ul class="plan-features">
+                    ${td.features.map(f => `<li>${t(f)}</li>`).join('')}
+                  </ul>
+                </div>
+              `;
+            }).join('')}
           </div>
+          <div class="info-box mt-12">${t('tierPlatformFee')}<br><br>${t('tierReentryNote')}</div>
         </div>
-
         <button class="btn-primary mt-12" onclick="navigate('#/apply/success')">${t('applySubmit')}</button>
       </div>
     </div>
@@ -641,13 +759,17 @@ function renderApplySuccess(el, header) {
 function renderUserProfile(el, header) {
   renderHeaderSimple(header, t('userProfileTitle'));
 
+  const userName = authState.isLoggedIn ? authState.user.name : t('userProfileAnon');
+  const userEmail = authState.isLoggedIn ? authState.user.email : '';
+  const userIdDisplay = authState.isLoggedIn ? authState.user.email : '#USR-29481';
+
   el.innerHTML = `
     <div class="page">
       <div class="user-profile-header">
         <div class="user-avatar">👤</div>
         <div class="user-info">
-          <h2>${t('userProfileAnon')}</h2>
-          <p>${t('userProfileId')}: #USR-29481</p>
+          <h2>${userName}</h2>
+          <p>${userIdDisplay}</p>
         </div>
       </div>
 
@@ -661,13 +783,615 @@ function renderUserProfile(el, header) {
         <div class="empty-state">${t('userProfileNoReviews')}</div>
       </div>
 
-      <div class="profile-menu-item" onclick="void(0)">
+      <div class="profile-section">
+        <h2>${t('userProfileReceivedReviews')}</h2>
+        ${mockUserReviews.length > 0 ? mockUserReviews.map(r => `
+          <div class="review-card">
+            <div class="review-header">
+              <span class="review-author">${getLocalizedText(r.therapistName)}</span>
+              <span class="review-date">${r.date}</span>
+            </div>
+            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+            <p class="review-text">${getLocalizedText(r.text)}</p>
+          </div>
+        `).join('') : `<div class="empty-state">${t('userProfileNoReceivedReviews')}</div>`}
+      </div>
+
+      <div class="profile-menu-item" onclick="navigate('#/settings')">
         <span>${t('userProfileSettings')}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
-      <div class="profile-menu-item" onclick="void(0)">
-        <span>${t('userProfileLogout')}</span>
+      <div class="profile-menu-item" onclick="onSwitchTherapistMode()">
+        <span>${t('userProfileSwitchTherapist')}</span>
         <span class="arrow">${icons.chevron}</span>
+      </div>
+      ${authState.isLoggedIn ? `
+        <div class="profile-menu-item" onclick="onLogout()">
+          <span>${t('userProfileLogout')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+      ` : `
+        <div class="profile-menu-item" onclick="navigate('#/signup')">
+          <span>${t('signupSubmit')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function onLogout() {
+  authState = { isLoggedIn: false, user: null, pendingAction: null };
+  saveAuth();
+  therapistMode = { active: false, therapistId: null };
+  saveTherapistMode();
+  navigate('#/profile');
+}
+
+function onSwitchTherapistMode() {
+  if (therapistMode.active) {
+    therapistMode.active = false;
+    therapistMode.therapistId = null;
+    saveTherapistMode();
+    navigate('#/profile');
+  } else {
+    // Default to therapist 1 for demo
+    therapistMode.active = true;
+    therapistMode.therapistId = 1;
+    saveTherapistMode();
+    navigate('#/therapist-dashboard');
+  }
+}
+
+// Settings
+function renderSettings(el, header) {
+  renderHeaderWithBack(header, t('settingsTitle'), '#/profile');
+  const currentTheme = getTheme();
+  const suggested = suggestThemeByTime();
+
+  const themes = [
+    { key: 'spring', name: t('themeSpring'), desc: t('themeSpringDesc'), color: 'linear-gradient(135deg, #a8e0c0, #5ac78d)' },
+    { key: 'summer', name: t('themeSummer'), desc: t('themeSummerDesc'), color: 'linear-gradient(135deg, #fbd5a0, #f59e42)' },
+    { key: 'evening', name: t('themeEvening'), desc: t('themeEveningDesc'), color: 'linear-gradient(135deg, #bdb3e0, #7e6bc7)' },
+  ];
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('settingsTitle')}</h1>
+      <div class="profile-section">
+        <h2>${t('settingsTheme')}</h2>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px">${t('settingsThemeDesc')}</p>
+        <div class="theme-cards">
+          ${themes.map(th => `
+            <div class="theme-card ${currentTheme === th.key ? 'active' : ''}" onclick="onSelectTheme('${th.key}')">
+              <div class="theme-swatch" style="background:${th.color}"></div>
+              <div class="theme-card-info">
+                <h3>${th.name} ${suggested === th.key ? t('themeSuggested') : ''}</h3>
+                <p>${th.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function onSelectTheme(theme) {
+  setTheme(theme);
+  router();
+}
+
+// Signup
+function renderSignup(el, header) {
+  renderHeaderWithBack(header, t('signupTitle'), '#/profile');
+  const hasAction = authState.pendingAction;
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('signupTitle')}</h1>
+      ${hasAction ? `<p class="text-center mb-20" style="font-size:0.9rem;color:var(--text-secondary)">${t('signupRequired')}</p>` : ''}
+      <div class="signup-form">
+        <div class="form-group">
+          <label>${t('signupName')}</label>
+          <input type="text" id="signup-name" placeholder="${t('signupNamePlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('signupEmail')}</label>
+          <input type="email" id="signup-email" placeholder="${t('signupEmailPlaceholder')}">
+        </div>
+        <button class="btn-primary" onclick="onSignup()">${t('signupSubmit')}</button>
+        <p class="signup-notice">${t('signupNotice')}</p>
+      </div>
+    </div>
+  `;
+}
+
+function onSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  if (!name || !email) return;
+
+  authState.isLoggedIn = true;
+  authState.user = { name, email };
+  const pending = authState.pendingAction;
+  authState.pendingAction = null;
+  saveAuth();
+
+  if (pending && pending.hash) {
+    navigate(pending.hash);
+  } else {
+    navigate('#/profile');
+  }
+}
+
+// ===== Chat =====
+function renderChat(el, header, therapistId) {
+  const th = getTherapist(therapistId);
+  if (!th) { navigate('#/search'); return; }
+
+  const name = getLocalizedText(th.name);
+  renderHeaderWithBack(header, name, '#/therapist/' + therapistId);
+  const messages = getChatMessages(parseInt(therapistId));
+
+  el.innerHTML = `
+    <div class="chat-screen">
+      <div class="chat-info-bar">${t('chatInfoWindow')}</div>
+      <button class="chat-video-btn" onclick="navigate('#/videocall/${therapistId}')">${t('chatStartVideo')}</button>
+      <div class="chat-messages">
+        ${messages.map(m => `
+          <div class="chat-bubble ${m.from === 'user' ? 'chat-sent' : 'chat-received'}">
+            ${getLocalizedText(m.text)}
+            <span class="chat-time">${m.time}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="chat-input-bar">
+        <input type="text" placeholder="${t('chatPlaceholder')}">
+        <button class="chat-send-btn">➤</button>
+      </div>
+    </div>
+  `;
+}
+
+// ===== Video Call =====
+function renderVideoCall(el, header, therapistId) {
+  const th = getTherapist(therapistId);
+  if (!th) { navigate('#/search'); return; }
+
+  const name = getLocalizedText(th.name);
+  header.innerHTML = '';
+
+  el.innerHTML = `
+    <div class="videocall-screen">
+      <div class="videocall-remote">
+        <div class="videocall-remote-placeholder">
+          <div class="avatar-large" style="background-color:${th.avatarColor}">${name.charAt(0)}</div>
+          <p>${name}</p>
+          <p class="call-status">${t('videoConnecting')}</p>
+        </div>
+      </div>
+      <div class="videocall-self">${t('videoSelfView')}</div>
+      <div class="videocall-controls">
+        <button class="vc-btn vc-mute" onclick="toggleVCBtn(this)">🎤<br><span>${t('videoMute')}</span></button>
+        <button class="vc-btn vc-camera" onclick="toggleVCBtn(this)">📷<br><span>${t('videoCamera')}</span></button>
+        <button class="vc-btn vc-end" onclick="navigate('#/chat/${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+        <button class="vc-btn vc-blur" onclick="toggleVCBtn(this)">🌫️<br><span>${t('videoBlur')}</span></button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleVCBtn(btn) {
+  btn.classList.toggle('active');
+}
+
+// ===== Review Form =====
+function renderReviewForm(el, header, therapistId) {
+  const th = getTherapist(therapistId);
+  if (!th) { navigate('#/search'); return; }
+
+  if (!authState.isLoggedIn) {
+    requireAuth('review', () => navigate('#/review/' + therapistId));
+    return;
+  }
+
+  const name = getLocalizedText(th.name);
+  renderHeaderWithBack(header, t('reviewSubmitTitle'), '#/therapist/' + therapistId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('reviewSubmitTitle')}</h1>
+      <p class="text-center mb-20" style="font-size:0.9rem;color:var(--text-secondary)">${name}</p>
+      <div class="review-form">
+        <div class="form-group">
+          <label>${t('reviewRating')}</label>
+          <div class="star-input" id="star-input">
+            ${[1,2,3,4,5].map(i => `<span onclick="setStarRating(${i})" data-star="${i}">☆</span>`).join('')}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>${t('reviewText')}</label>
+          <textarea id="review-text" placeholder="${t('reviewTextPlaceholder')}"></textarea>
+        </div>
+        <button class="btn-primary" onclick="onSubmitReview(${therapistId})">${t('reviewSubmit')}</button>
+      </div>
+    </div>
+  `;
+}
+
+let selectedRating = 0;
+function setStarRating(rating) {
+  selectedRating = rating;
+  document.querySelectorAll('#star-input span').forEach(s => {
+    const star = parseInt(s.dataset.star);
+    s.textContent = star <= rating ? '★' : '☆';
+    s.classList.toggle('active', star <= rating);
+  });
+}
+
+function onSubmitReview(therapistId) {
+  if (selectedRating === 0) return;
+  selectedRating = 0;
+  navigate('#/therapist/' + therapistId);
+}
+
+// ===== Therapist Dashboard =====
+function renderTherapistDashboard(el, header) {
+  renderHeaderSimple(header, t('dashboardTitle'));
+  const thId = therapistMode.therapistId || 1;
+  const data = getDashboardData(thId);
+  const th = getTherapist(thId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('dashboardTitle')}</h1>
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-value">${data.bookingsCount}</div>
+          <div class="stat-label">${t('dashboardBookings')}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.averageRating}</div>
+          <div class="stat-label">${t('dashboardRating')}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">¥${(data.monthlyEarnings / 1000).toFixed(0)}k</div>
+          <div class="stat-label">${t('dashboardEarnings')}</div>
+        </div>
+      </div>
+
+      <div class="dashboard-menu">
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/schedule')">
+          <span><span class="menu-icon">📅</span>${t('dashboardSchedule')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/sessions')">
+          <span><span class="menu-icon">🗂️</span>${t('dashboardSessions')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/clients')">
+          <span><span class="menu-icon">👥</span>${t('dashboardClients')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/earnings')">
+          <span><span class="menu-icon">💰</span>${t('dashboardEarningsMenu')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/profile-edit')">
+          <span><span class="menu-icon">✏️</span>${t('dashboardProfileEdit')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+        <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/referrals')">
+          <span><span class="menu-icon">🔗</span>${t('dashboardReferrals')}</span>
+          <span class="arrow">${icons.chevron}</span>
+        </div>
+      </div>
+
+      <div class="mt-20">
+        <button class="btn-secondary" style="max-width:100%" onclick="onSwitchTherapistMode()">${t('back')} → ${t('navProfile')}</button>
+      </div>
+    </div>
+  `;
+}
+
+// Schedule Editor
+function renderTherapistSchedule(el, header) {
+  renderHeaderWithBack(header, t('scheduleTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const th = getTherapist(thId);
+  const tierInfo = therapistTiers[th.tier];
+  const canEdit = tierInfo.canEditSchedule;
+
+  const days = ['schedSun', 'schedMon', 'schedTue', 'schedWed', 'schedThu', 'schedFri', 'schedSat'];
+  const timeSlots = ['9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+  const availMap = {};
+  th.availability.forEach(a => {
+    a.slots.forEach(s => { availMap[a.day + '-' + s] = true; });
+  });
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('scheduleTitle')}</h1>
+      <div class="schedule-grid">
+        <div class="schedule-header"></div>
+        ${days.map(d => `<div class="schedule-header">${t(d)}</div>`).join('')}
+        ${timeSlots.map(time => `
+          <div class="schedule-time">${time}</div>
+          ${[0,1,2,3,4,5,6].map(day => {
+            const key = day + '-' + time;
+            const isAvail = availMap[key];
+            const locked = !canEdit ? 'locked' : '';
+            return `<div class="schedule-slot ${isAvail ? 'available' : 'unavailable'} ${locked}" onclick="${canEdit ? `toggleScheduleSlot(this)` : ''}">${isAvail ? t('scheduleAvailable') : t('scheduleUnavailable')}</div>`;
+          }).join('')}
+        `).join('')}
+      </div>
+      ${!canEdit ? `
+        <div class="upgrade-prompt">
+          ${t('scheduleLocked')}
+          <button onclick="navigate('#/apply')">${t('scheduleUpgrade')}</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function toggleScheduleSlot(slot) {
+  slot.classList.toggle('available');
+  slot.classList.toggle('unavailable');
+  slot.textContent = slot.classList.contains('available') ? t('scheduleAvailable') : t('scheduleUnavailable');
+}
+
+// Sessions Management
+function renderTherapistSessions(el, header) {
+  renderHeaderWithBack(header, t('sessionsManageTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const th = getTherapist(thId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('sessionsManageTitle')}</h1>
+      ${th.sessions.map(s => `
+        <div class="session-list-item">
+          <div class="session-list-info">
+            <h3>${getLocalizedText(s.name)}</h3>
+            <p>¥${s.price.toLocaleString()} ${s.duration ? '· ' + s.duration + t('profileMinutes') : ''}</p>
+          </div>
+          <div class="session-list-actions">
+            <button class="btn-small btn-edit" onclick="navigate('#/therapist-dashboard/sessions/edit/${s.id}')">${t('sessionEditTitle')}</button>
+          </div>
+        </div>
+      `).join('')}
+      <button class="add-session-btn mt-20">${t('sessionsAdd')}</button>
+    </div>
+  `;
+}
+
+// Session Edit
+function renderTherapistSessionEdit(el, header, sessionId) {
+  renderHeaderWithBack(header, t('sessionEditTitle'), '#/therapist-dashboard/sessions');
+  const thId = therapistMode.therapistId || 1;
+  const th = getTherapist(thId);
+  const session = th.sessions.find(s => s.id === parseInt(sessionId));
+  if (!session) { navigate('#/therapist-dashboard/sessions'); return; }
+
+  const name = getLocalizedText(session.name);
+  const desc = getLocalizedText(session.description);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('sessionEditTitle')}</h1>
+      <div class="apply-form">
+        <div class="form-group">
+          <label>${t('applySessionName')}</label>
+          <input type="text" value="${name}">
+        </div>
+        <div class="form-group">
+          <label>${t('applySessionDesc')}</label>
+          <textarea style="min-height:80px">${desc}</textarea>
+        </div>
+        <div class="form-group">
+          <label>${t('applySessionPrice')}</label>
+          <input type="number" value="${session.price}">
+        </div>
+        <div class="form-group">
+          <label>${t('applySessionDuration')}</label>
+          <input type="number" value="${session.duration}">
+        </div>
+        <button class="btn-primary" onclick="navigate('#/therapist-dashboard/sessions')">${t('sessionSave')}</button>
+      </div>
+    </div>
+  `;
+}
+
+// Clients
+function renderTherapistClients(el, header) {
+  renderHeaderWithBack(header, t('clientsTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const data = getDashboardData(thId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('clientsTitle')}</h1>
+      ${data.clients.map((c, i) => `
+        <div class="client-item">
+          <div class="client-avatar-sm">👤</div>
+          <div class="client-info">
+            <h3>${getLocalizedText(c.name)}</h3>
+            <p>${t('clientLastBooking')}: ${c.lastBooking}</p>
+          </div>
+          <span class="client-review-status ${c.reviewed ? 'reviewed' : 'pending'}">
+            ${c.reviewed ? t('clientReviewed') : t('clientPendingReview')}
+          </span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Earnings
+function renderTherapistEarnings(el, header) {
+  renderHeaderWithBack(header, t('earningsTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const data = getDashboardData(thId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('earningsTitle')}</h1>
+      <div class="earnings-total">
+        <div class="amount">¥${data.netEarnings.toLocaleString()}</div>
+        <div class="label">${t('earningsThisMonth')}</div>
+      </div>
+
+      <div class="profile-section">
+        <h2>${t('earningsThisMonth')}</h2>
+        <div class="earnings-breakdown">
+          <div class="earnings-row">
+            <span class="label">${t('earningsSessionRevenue')}</span>
+            <span class="amount positive">¥${data.sessionRevenue.toLocaleString()}</span>
+          </div>
+          <div class="earnings-row">
+            <span class="label">${t('earningsPlatformFee')}</span>
+            <span class="amount negative">-¥${data.platformFee.toLocaleString()}</span>
+          </div>
+          <div class="earnings-row">
+            <span class="label">${t('earningsReferralIncome')}</span>
+            <span class="amount positive">+¥${data.referralIncome.toLocaleString()}</span>
+          </div>
+          <div class="earnings-row" style="border-top:2px solid var(--gray-200);padding-top:12px">
+            <span class="label" style="font-weight:700">${t('earningsNet')}</span>
+            <span class="amount positive" style="font-size:1.1rem">¥${data.netEarnings.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h2>${t('earningsHistory')}</h2>
+        ${data.earningsHistory.map(h => `
+          <div class="earnings-row">
+            <span class="label">${h.month}</span>
+            <span class="amount positive">¥${h.net.toLocaleString()}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Profile Edit
+function renderTherapistProfileEdit(el, header) {
+  renderHeaderWithBack(header, t('profileEditTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const th = getTherapist(thId);
+  const name = getLocalizedText(th.name);
+  const intro = getLocalizedText(th.intro);
+  const location = getLocalizedText(th.location);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('profileEditTitle')}</h1>
+      <div class="profile-edit-form">
+        <div class="photo-upload">
+          <div class="profile-avatar" style="background-color:${th.avatarColor};width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white">${name.charAt(0)}</div>
+          <button class="photo-upload-btn">${t('applyUpload')}</button>
+        </div>
+        <div class="form-group">
+          <label>${t('applyName')}</label>
+          <input type="text" value="${name}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyIntro')}</label>
+          <textarea>${intro}</textarea>
+        </div>
+        <div class="form-group">
+          <label>${t('applyLocation')}</label>
+          <input type="text" value="${location}">
+        </div>
+        <button class="btn-primary" onclick="navigate('#/therapist-dashboard')">${t('profileEditSave')}</button>
+      </div>
+    </div>
+  `;
+}
+
+// Referral Program
+function renderTherapistReferrals(el, header) {
+  renderHeaderWithBack(header, t('referralTitle'), '#/therapist-dashboard');
+  const thId = therapistMode.therapistId || 1;
+  const th = getTherapist(thId);
+  const data = getDashboardData(thId);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('referralTitle')}</h1>
+
+      <div class="profile-section">
+        <h2>${t('referralCode')}</h2>
+        <div class="referral-code-box">
+          <code id="ref-code">${th.referralCode}</code>
+          <button onclick="onCopyReferralCode()">${t('referralCopy')}</button>
+        </div>
+      </div>
+
+      <div class="referral-stats">
+        <div class="referral-stat">
+          <div class="value">${data.referralStats.totalReferred}</div>
+          <div class="label">${t('referralTotalReferred')}</div>
+        </div>
+        <div class="referral-stat">
+          <div class="value">¥${data.referralStats.totalEarnings.toLocaleString()}</div>
+          <div class="label">${t('referralTotalEarnings')}</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>${t('referralCommission')}</strong><br>
+        ${t('referralDesc')}
+      </div>
+
+      <div class="profile-section mt-20">
+        <h2>${t('earningsReferralIncome')}</h2>
+        <div class="earnings-breakdown">
+          ${data.earningsHistory.map(h => `
+            <div class="earnings-row">
+              <span class="label">${h.month}</span>
+              <span class="amount positive">+¥${h.referral.toLocaleString()}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function onCopyReferralCode() {
+  const code = document.getElementById('ref-code').textContent;
+  navigator.clipboard.writeText(code).catch(() => {});
+  const btn = document.querySelector('.referral-code-box button');
+  btn.textContent = t('referralCopied');
+  setTimeout(() => { btn.textContent = t('referralCopy'); }, 2000);
+}
+
+// Referral Landing
+function renderReferralLanding(el, header, code) {
+  renderHeaderSimple(header, t('appName'));
+  const referrer = getTherapistByReferralCode(code);
+
+  el.innerHTML = `
+    <div class="page">
+      <div class="referral-landing">
+        <div class="landing-logo">🌿</div>
+        <h1 class="landing-title" style="font-size:1.5rem">${t('referralLandingTitle')}</h1>
+        ${referrer ? `
+          <div class="referrer-info">
+            <div class="ref-avatar" style="background-color:${referrer.avatarColor};width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">${getLocalizedText(referrer.name).charAt(0)}</div>
+            <div>
+              <strong>${getLocalizedText(referrer.name)}</strong>
+              <p style="font-size:0.8rem;color:var(--text-muted)">${t('referralLandingDesc')}</p>
+            </div>
+          </div>
+        ` : ''}
+        <button class="btn-primary" onclick="navigate('#/apply')" style="margin:20px auto">${t('referralLandingCTA')}</button>
+        <button class="btn-secondary" onclick="navigate('#/')" style="margin:0 auto">${t('bookingBackHome')}</button>
       </div>
     </div>
   `;
@@ -676,7 +1400,6 @@ function renderUserProfile(el, header) {
 // ===== Init =====
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', () => {
-  // Set initial hash if none
   if (!window.location.hash) {
     window.location.hash = '#/';
   }
