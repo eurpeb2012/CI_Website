@@ -188,7 +188,7 @@ const therapists = [
       en: '8 years of tarot reading experience. Let\'s find the answers hidden in your heart. Available in person, online, and via email.'
     },
     location: { ja: '京都府京都市', en: 'Kyoto City, Kyoto' },
-    categories: ['playful', 'mental'],
+    categories: ['fortune-telling', 'playful'],
     delivery: ['in-person', 'video', 'email'],
     sessions: [
       {
@@ -278,8 +278,8 @@ const therapists = [
       en: 'Licensed clinical psychologist. After 10 years at a university hospital, I now focus on online counseling. I support those dealing with depression, anxiety, and relationship issues.'
     },
     location: { ja: '東京都（オンライン中心）', en: 'Tokyo (primarily online)' },
-    categories: ['pro'],
-    delivery: ['video', 'email'],
+    categories: ['mental'],
+    delivery: ['video', 'telephone', 'email'],
     sessions: [
       {
         id: 401,
@@ -954,6 +954,17 @@ function searchTherapists(filters) {
     return (tierOrder[a.tier] || 2) - (tierOrder[b.tier] || 2);
   });
   return results;
+}
+
+function searchTherapistsByText(query) {
+  const q = query.toLowerCase();
+  return therapists.filter(th => {
+    const name = (th.name.ja + ' ' + th.name.en).toLowerCase();
+    const intro = (th.intro.ja + ' ' + th.intro.en).toLowerCase();
+    const location = (th.location.ja + ' ' + th.location.en).toLowerCase();
+    const sessions = th.sessions.map(s => (s.name.ja + ' ' + s.name.en + ' ' + s.description.ja + ' ' + s.description.en).toLowerCase()).join(' ');
+    return name.includes(q) || intro.includes(q) || location.includes(q) || sessions.includes(q);
+  });
 }
 
 function getLocalizedText(obj) {

@@ -6,6 +6,7 @@ let state = {
   bookingSession: null,
   bookingTherapist: null,
   criteriaFilters: null,
+  generalSearchQuery: null,
 };
 
 // ===== Auth State =====
@@ -90,6 +91,7 @@ const routes = [
   { pattern: /^\/search\/feeling\/results$/, handler: 'feelingResults', nav: 'search' },
   { pattern: /^\/search\/criteria$/, handler: 'criteria', nav: 'search' },
   { pattern: /^\/search\/criteria\/results$/, handler: 'criteriaResults', nav: 'search' },
+  { pattern: /^\/search\/general-results$/, handler: 'generalSearchResults', nav: 'search' },
   { pattern: /^\/therapist\/(\d+)$/, handler: 'therapistProfile', nav: 'search' },
   { pattern: /^\/booking$/, handler: 'booking', nav: 'search' },
   { pattern: /^\/booking\/success$/, handler: 'bookingSuccess', nav: 'search' },
@@ -148,6 +150,7 @@ function renderRoute(handler, el, header, params) {
     feelingResults: () => renderResults(el, header, { category: state.category, delivery: state.delivery }),
     criteria: () => renderCriteria(el, header),
     criteriaResults: () => renderResults(el, header, state.criteriaFilters || {}),
+    generalSearchResults: () => renderGeneralSearchResults(el, header),
     therapistProfile: () => renderTherapistProfile(el, header, params[0]),
     booking: () => renderBooking(el, header),
     bookingSuccess: () => renderBookingSuccess(el, header),
@@ -277,6 +280,10 @@ function renderSearchEntry(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/');
   el.innerHTML = `
     <div class="page search-entry">
+      <div class="general-search-bar" style="display:flex;gap:8px;margin-bottom:24px">
+        <input type="text" id="general-search-input" placeholder="${t('generalSearchPlaceholder')}" style="flex:1;padding:12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.95rem">
+        <button class="btn-primary" style="white-space:nowrap;padding:12px 16px" onclick="onGeneralSearch()">${t('generalSearchButton')}</button>
+      </div>
       <h1 class="page-title">${t('searchTitle')}</h1>
       <div class="search-option" onclick="navigate('#/search/criteria')">
         <div class="search-option-icon">🔍</div>
@@ -296,6 +303,41 @@ function renderSearchEntry(el, header) {
   `;
 }
 
+function onGeneralSearch() {
+  const query = document.getElementById('general-search-input').value.trim();
+  if (!query) return;
+  state.generalSearchQuery = query;
+  navigate('#/search/general-results');
+}
+
+function renderGeneralSearchResults(el, header) {
+  renderHeaderWithBack(header, t('resultsTitle'), '#/search');
+  const results = searchTherapistsByText(state.generalSearchQuery || '');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('resultsTitle')}</h1>
+      ${results.length === 0 ? `<div class="results-empty">${t('resultsEmpty')}</div>` : ''}
+      ${results.map(th => {
+        const name = getLocalizedText(th.name);
+        const location = getLocalizedText(th.location);
+        const minPrice = Math.min(...th.sessions.map(s => s.price));
+        const initial = name.charAt(0);
+        return `
+          <div class="therapist-card" onclick="navigate('#/therapist/${th.id}')">
+            <div class="therapist-avatar" style="background-color: ${th.avatarColor}">${initial}</div>
+            <div class="therapist-card-info">
+              <h3>${name} ${renderTierBadge(th.tier, th.isFoundingMember)}</h3>
+              <div class="username">${th.username}</div>
+              <div class="location">${location}</div>
+              <div class="price">¥${minPrice.toLocaleString()} ${t('resultsFrom')}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
 function renderFeelingStep1(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search');
   const feelings = [
@@ -305,6 +347,10 @@ function renderFeelingStep1(el, header) {
     { key: 'lonely', label: t('feelingLonely') },
     { key: 'overwhelmed', label: t('feelingOverwhelmed') },
     { key: 'curious', label: t('feelingCurious') },
+    { key: 'change-myself', label: t('feelingChangeMyself') },
+    { key: 'future', label: t('feelingFuture') },
+    { key: 'partner', label: t('feelingPartner') },
+    { key: 'dream-job', label: t('feelingDreamJob') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -326,8 +372,9 @@ function renderFeelingStep2(el, header) {
   const categories = [
     { key: 'physical', icon: '💆', label: t('categoryPhysical'), desc: t('categoryPhysicalDesc') },
     { key: 'mental', icon: '🧘', label: t('categoryMental'), desc: t('categoryMentalDesc') },
-    { key: 'playful', icon: '🔮', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
-    { key: 'pro', icon: '👨‍⚕️', label: t('categoryPro'), desc: t('categoryProDesc') },
+    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
+    { key: 'fortune-telling', icon: '🔮', label: t('categoryFortuneTelling'), desc: t('categoryFortuneTellingDesc') },
+    { key: 'retreat', icon: '🏕️', label: t('categoryRetreat'), desc: t('categoryRetreatDesc') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -352,6 +399,7 @@ function renderFeelingStep3(el, header) {
   const deliveries = [
     { key: 'in-person', icon: '🤝', label: t('deliveryInPerson'), desc: t('deliveryInPersonDesc') },
     { key: 'video', icon: '💻', label: t('deliveryVideo'), desc: t('deliveryVideoDesc') },
+    { key: 'telephone', icon: '📞', label: t('deliveryTelephone'), desc: t('deliveryTelephoneDesc') },
     { key: 'email', icon: '✉️', label: t('deliveryEmail'), desc: t('deliveryEmailDesc') },
   ];
   el.innerHTML = `
@@ -417,20 +465,22 @@ function renderCriteria(el, header) {
     { value: 'physical', label: t('categoryPhysical') },
     { value: 'mental', label: t('categoryMental') },
     { value: 'playful', label: t('categoryPlayful') },
-    { value: 'pro', label: t('categoryPro') },
+    { value: 'fortune-telling', label: t('categoryFortuneTelling') },
+    { value: 'retreat', label: t('categoryRetreat') },
   ];
   const locationOptions = [
     { value: '', label: t('criteriaLocationAll') },
     { value: 'in-person', label: t('deliveryInPerson') },
     { value: 'video', label: t('deliveryVideo') },
+    { value: 'telephone', label: t('deliveryTelephone') },
     { value: 'email', label: t('deliveryEmail') },
   ];
   const priceOptions = [
     { value: '', label: t('criteriaPriceAll') },
-    { value: '3000', label: '〜¥3,000' },
-    { value: '5000', label: '〜¥5,000' },
     { value: '8000', label: '〜¥8,000' },
-    { value: '10000', label: '〜¥10,000' },
+    { value: '15000', label: '〜¥15,000' },
+    { value: '25000', label: '〜¥25,000' },
+    { value: '30000', label: '¥25,000+' },
   ];
   el.innerHTML = `
     <div class="page">
@@ -696,6 +746,18 @@ function renderApply(el, header) {
           <input type="text" placeholder="${t('applyNamePlaceholder')}">
         </div>
         <div class="form-group">
+          <label>${t('applyEmail')} *</label>
+          <input type="email" placeholder="${t('applyEmailPlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyAddress')} *</label>
+          <input type="text" placeholder="${t('applyAddressPlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyBirthday')} *</label>
+          <input type="date">
+        </div>
+        <div class="form-group">
           <label>${t('applyIntro')}</label>
           <textarea placeholder="${t('applyIntroPlaceholder')}"></textarea>
         </div>
@@ -824,6 +886,18 @@ function renderUserProfile(el, header) {
         `).join('') : `<div class="empty-state">${t('userProfileNoReceivedReviews')}</div>`}
       </div>
 
+      ${isLoggedIn ? `
+      <div class="profile-section">
+        <h2>${t('clientReferralTitle')}</h2>
+        <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:12px">${t('clientReferralDesc')}</p>
+        <div class="referral-code-box" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--theme-primary-100);border-radius:8px;margin-bottom:8px">
+          <code style="flex:1;font-size:1.1rem;font-weight:600">FRIEND-${(authState.user.name || 'USER').toUpperCase().slice(0,6)}</code>
+          <button class="btn-small" onclick="navigator.clipboard.writeText('FRIEND-${(authState.user.name || 'USER').toUpperCase().slice(0,6)}'); this.textContent='${t('referralCopied')}'">${t('referralCopy')}</button>
+        </div>
+        <p style="font-size:0.85rem;color:var(--theme-primary-700)">${t('clientReferralReward')}</p>
+      </div>
+      ` : ''}
+
       <div class="profile-menu-item" onclick="navigate('#/settings')">
         <span>${t('userProfileSettings')}</span>
         <span class="arrow">${icons.chevron}</span>
@@ -944,6 +1018,14 @@ function renderSignup(el, header) {
           <label>${t('signupEmail')}</label>
           <input type="email" id="signup-email" placeholder="${t('signupEmailPlaceholder')}">
         </div>
+        <div class="form-group">
+          <label>${t('signupPhone')} *</label>
+          <input type="tel" id="signup-phone" placeholder="${t('signupPhonePlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('signupAddress')} *</label>
+          <input type="text" id="signup-address" placeholder="${t('signupAddressPlaceholder')}">
+        </div>
         <button class="btn-primary" onclick="onSignup()">${t('signupSubmit')}</button>
         <p class="signup-notice">${t('signupNotice')}</p>
         <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gray-200);text-align:center">
@@ -957,10 +1039,12 @@ function renderSignup(el, header) {
 function onSignup() {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
-  if (!name || !email) return;
+  const phone = document.getElementById('signup-phone').value.trim();
+  const address = document.getElementById('signup-address').value.trim();
+  if (!name || !email || !phone || !address) return;
 
   authState.isLoggedIn = true;
-  authState.user = { name, email };
+  authState.user = { name, email, phone, address };
   const pending = authState.pendingAction;
   authState.pendingAction = null;
   saveAuth();

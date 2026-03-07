@@ -33,6 +33,10 @@ const translations = {
     feelingLonely: '孤独を感じる',
     feelingOverwhelmed: '疲れが取れない',
     feelingCurious: '新しい体験をしたい',
+    feelingChangeMyself: '自分を変えたい',
+    feelingFuture: '未来を良くしたい',
+    feelingPartner: 'パートナーが欲しい',
+    feelingDreamJob: '理想の仕事を見つけたい',
 
     // Feeling Flow - Step 2
     categoryTitle: 'どんな癒しを求めますか？',
@@ -41,9 +45,11 @@ const translations = {
     categoryMental: '心の癒し',
     categoryMentalDesc: '瞑想、ヒーリング、アロマなど',
     categoryPlayful: '楽しい体験',
-    categoryPlayfulDesc: 'タロット、占い、アートなど',
-    categoryPro: 'プロカウンセリング',
-    categoryProDesc: '資格を持つ専門家による相談',
+    categoryPlayfulDesc: '占い、アート、ワークショップなど',
+    categoryFortuneTelling: '占い',
+    categoryFortuneTellingDesc: 'タロット、オラクルカード、占星術など',
+    categoryRetreat: 'リトリート',
+    categoryRetreatDesc: '自然の中でのリフレッシュ体験',
 
     // Feeling Flow - Step 3
     deliveryTitle: 'ご希望の方法は？',
@@ -51,6 +57,8 @@ const translations = {
     deliveryInPersonDesc: '直接お会いして',
     deliveryVideo: 'オンライン',
     deliveryVideoDesc: 'ビデオ通話で',
+    deliveryTelephone: '電話',
+    deliveryTelephoneDesc: '電話で相談',
     deliveryEmail: 'メール',
     deliveryEmailDesc: 'メッセージのやり取りで',
 
@@ -106,6 +114,11 @@ const translations = {
     applyNamePlaceholder: 'ニックネームまたは本名',
     applyIntro: '自己紹介',
     applyIntroPlaceholder: 'あなたの経験や専門分野について...',
+    applyEmail: 'メールアドレス',
+    applyEmailPlaceholder: 'email@example.com',
+    applyAddress: '住所',
+    applyAddressPlaceholder: '例：東京都渋谷区1-2-3',
+    applyBirthday: '生年月日',
     applyLocation: '所在地',
     applyLocationPlaceholder: '例：東京都渋谷区',
     applySessions: '提供セッション',
@@ -165,6 +178,10 @@ const translations = {
     signupNamePlaceholder: 'お名前を入力',
     signupEmail: 'メールアドレス',
     signupEmailPlaceholder: 'email@example.com',
+    signupPhone: '電話番号',
+    signupPhonePlaceholder: '090-1234-5678',
+    signupAddress: '住所',
+    signupAddressPlaceholder: '例：東京都渋谷区1-2-3',
     signupSubmit: '登録する',
     signupNotice: '登録は無料です。閲覧はログインなしでもできます。',
     signupRequired: 'この操作にはアカウント登録が必要です',
@@ -268,6 +285,12 @@ const translations = {
     referralLandingDesc: 'さんからの紹介で特別にご招待されました！',
     referralLandingCTA: '今すぐ登録',
 
+    // Client Referral
+    clientReferralTitle: 'お友達紹介プログラム',
+    clientReferralDesc: 'お友達を紹介すると、次回のセッションで使えるキャッシュバックを受け取れます。',
+    clientReferralCode: 'あなたの紹介コード',
+    clientReferralReward: '紹介特典：¥500 キャッシュバック',
+
     // Founding Member
     foundingMember: '創立メンバー',
 
@@ -294,6 +317,10 @@ const translations = {
     schedFri: '金',
     schedSat: '土',
     schedSun: '日',
+
+    // Search
+    generalSearchPlaceholder: 'セラピスト、セッション、キーワードで検索...',
+    generalSearchButton: '検索',
 
     // Misc
     back: '戻る',
@@ -430,6 +457,10 @@ const translations = {
     feelingLonely: 'Lonely',
     feelingOverwhelmed: 'Exhausted',
     feelingCurious: 'Looking for something new',
+    feelingChangeMyself: 'I want to change myself',
+    feelingFuture: 'I want a better future',
+    feelingPartner: 'I want a partner',
+    feelingDreamJob: 'I want my dream job',
 
     // Feeling Flow - Step 2
     categoryTitle: 'What kind of healing are you looking for?',
@@ -438,9 +469,11 @@ const translations = {
     categoryMental: 'Mental Relief',
     categoryMentalDesc: 'Meditation, healing, aromatherapy, etc.',
     categoryPlayful: 'Playful Interaction',
-    categoryPlayfulDesc: 'Tarot, fortune telling, art, etc.',
-    categoryPro: 'Professional Counseling',
-    categoryProDesc: 'Certified professional consultation',
+    categoryPlayfulDesc: 'Fortune telling, art, workshops, etc.',
+    categoryFortuneTelling: 'Fortune Telling',
+    categoryFortuneTellingDesc: 'Tarot, oracle cards, astrology, etc.',
+    categoryRetreat: 'Retreat',
+    categoryRetreatDesc: 'Refresh in nature',
 
     // Feeling Flow - Step 3
     deliveryTitle: 'How would you like your session?',
@@ -448,6 +481,8 @@ const translations = {
     deliveryInPersonDesc: 'Meet face to face',
     deliveryVideo: 'Video Call',
     deliveryVideoDesc: 'Online video session',
+    deliveryTelephone: 'Telephone',
+    deliveryTelephoneDesc: 'Consultation by phone',
     deliveryEmail: 'Email',
     deliveryEmailDesc: 'Text-based exchange',
 
@@ -503,6 +538,11 @@ const translations = {
     applyNamePlaceholder: 'Nickname or real name',
     applyIntro: 'Introduction',
     applyIntroPlaceholder: 'Tell us about your experience and specialties...',
+    applyEmail: 'Email',
+    applyEmailPlaceholder: 'email@example.com',
+    applyAddress: 'Address',
+    applyAddressPlaceholder: 'e.g., 1-2-3 Shibuya, Tokyo',
+    applyBirthday: 'Date of Birth',
     applyLocation: 'Location',
     applyLocationPlaceholder: 'e.g., Shibuya, Tokyo',
     applySessions: 'Sessions Offered',
@@ -562,6 +602,10 @@ const translations = {
     signupNamePlaceholder: 'Enter your name',
     signupEmail: 'Email',
     signupEmailPlaceholder: 'email@example.com',
+    signupPhone: 'Phone Number',
+    signupPhonePlaceholder: '090-1234-5678',
+    signupAddress: 'Address',
+    signupAddressPlaceholder: 'e.g., 1-2-3 Shibuya, Tokyo',
     signupSubmit: 'Sign Up',
     signupNotice: 'Registration is free. You can browse without logging in.',
     signupRequired: 'This action requires an account',
@@ -665,6 +709,12 @@ const translations = {
     referralLandingDesc: 'You\'ve been invited by ',
     referralLandingCTA: 'Sign Up Now',
 
+    // Client Referral
+    clientReferralTitle: 'Refer a Friend',
+    clientReferralDesc: 'Refer a friend and get cashback on your next session.',
+    clientReferralCode: 'Your Referral Code',
+    clientReferralReward: 'Referral reward: ¥500 cashback',
+
     // Founding Member
     foundingMember: 'Founding Member',
 
@@ -691,6 +741,10 @@ const translations = {
     schedFri: 'Fri',
     schedSat: 'Sat',
     schedSun: 'Sun',
+
+    // Search
+    generalSearchPlaceholder: 'Search therapists, sessions, keywords...',
+    generalSearchButton: 'Search',
 
     // Misc
     back: 'Back',
