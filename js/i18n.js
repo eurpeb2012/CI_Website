@@ -327,6 +327,132 @@ const translations = {
     next: '次へ',
     language: 'EN',
 
+    // Verified & Credentials
+    verifiedBadge: '認証済み',
+    unverifiedBadge: '未認証',
+    credentials: '資格・認証',
+
+    // Tags & Specialties
+    tags: 'タグ',
+
+    // Response Time
+    responseTime: '平均応答時間',
+    responseTimeMinutes: '分以内',
+    responseTimeHours: '時間以内',
+    responseTimeDay: '日以内',
+
+    // Structured Ratings
+    ratingCommunication: 'コミュニケーション',
+    ratingEffectiveness: '効果',
+    ratingAtmosphere: '雰囲気',
+    ratingValue: 'コスパ',
+    ratingOverall: '総合評価',
+
+    // Favorites
+    favorites: 'お気に入り',
+    addFavorite: 'お気に入りに追加',
+    removeFavorite: 'お気に入りから削除',
+    favoritesEmpty: 'お気に入りはまだありません',
+    navFavorites: 'お気に入り',
+
+    // Points / Loyalty
+    points: 'ポイント',
+    pointsBalance: '保有ポイント',
+    pointsHistory: 'ポイント履歴',
+    pointsEarned: '獲得',
+    pointsUsed: '使用',
+    pointsPerYen: '¥100につき1ポイント',
+    pointsRedeemable: 'ポイントは次回予約時に使用できます',
+
+    // Sort
+    sortBy: '並び替え',
+    sortRecommended: 'おすすめ順',
+    sortPriceLow: '価格が安い順',
+    sortPriceHigh: '価格が高い順',
+    sortRating: '評価が高い順',
+    sortReviews: 'レビュー数順',
+    sortNewest: '新着順',
+
+    // Share
+    shareTherapist: 'このセラピストを共有',
+    shareCopied: 'リンクをコピーしました！',
+
+    // Trending / Popular
+    trendingTitle: '今週の人気',
+    trendingTherapists: '人気のセラピスト',
+    trendingSessions: '人気のセッション',
+
+    // Gallery
+    galleryTitle: 'ギャラリー',
+
+    // Sliding Scale
+    slidingScale: '収入に応じた料金調整あり',
+    slidingScaleDesc: '経済的な事情に応じて料金の相談が可能です',
+
+    // Gift Cards
+    giftCardTitle: 'ギフトカード',
+    giftCardDesc: '大切な人に癒しの時間を贈りましょう',
+    giftCardAmount: '金額を選択',
+    giftCardRecipient: '受取人のメールアドレス',
+    giftCardMessage: 'メッセージ（任意）',
+    giftCardMessagePlaceholder: 'お祝いのメッセージを添えて...',
+    giftCardSend: 'ギフトカードを送る',
+    giftCardSuccess: 'ギフトカードを送信しました！',
+
+    // Waitlist
+    waitlistJoin: 'キャンセル待ちに登録',
+    waitlistJoined: 'キャンセル待ち登録済み',
+    waitlistDesc: '空きが出た場合にお知らせします',
+
+    // Blog / Articles
+    blogTitle: '癒しのコラム',
+    blogReadMore: '続きを読む',
+    blogByTherapist: '著者',
+    blogEmpty: 'まだ記事はありません',
+
+    // Digital Products
+    digitalProductsTitle: 'デジタルコンテンツ',
+    digitalProductsDesc: 'いつでも使えるセルフケア教材',
+    digitalProductBuy: '購入する',
+    digitalProductPdf: 'PDF',
+    digitalProductVideo: '動画',
+    digitalProductAudio: '音声',
+
+    // Journal / Mood Tracking
+    journalTitle: 'セッション日記',
+    journalNew: '新しい記録',
+    journalMood: '今の気分',
+    journalMoodGreat: 'とても良い',
+    journalMoodGood: '良い',
+    journalMoodOkay: 'まあまあ',
+    journalMoodLow: '低い',
+    journalMoodBad: '悪い',
+    journalNotes: '振り返りメモ',
+    journalNotesPlaceholder: 'セッションで感じたこと、気づき...',
+    journalSave: '保存する',
+    journalSaved: '保存しました',
+    journalEmpty: 'まだ記録はありません',
+    journalHistory: '過去の記録',
+
+    // Insurance
+    insuranceAccepted: '保険適用可能',
+    corporateWellness: '法人プログラム対応',
+
+    // Form Validation
+    validationRequired: '必須項目です',
+    validationEmail: '有効なメールアドレスを入力してください',
+    validationPhone: '有効な電話番号を入力してください',
+
+    // Reminders
+    reminderTitle: '予約リマインダー',
+    reminder24h: '24時間前にお知らせ',
+    reminder1h: '1時間前にお知らせ',
+    reminderEnabled: 'リマインダーON',
+
+    // Notifications
+    notificationTitle: 'お知らせ',
+    notificationEmpty: '新しいお知らせはありません',
+
     // Admin
     adminTitle: '管理パネル',
     adminBackToSite: 'サイトに戻る',
@@ -750,6 +876,132 @@ const translations = {
     back: 'Back',
     next: 'Next',
     language: 'JP',
+
+    // Verified & Credentials
+    verifiedBadge: 'Verified',
+    unverifiedBadge: 'Unverified',
+    credentials: 'Credentials',
+
+    // Tags & Specialties
+    tags: 'Tags',
+
+    // Response Time
+    responseTime: 'Avg. Response',
+    responseTimeMinutes: 'min',
+    responseTimeHours: 'hr',
+    responseTimeDay: 'day',
+
+    // Structured Ratings
+    ratingCommunication: 'Communication',
+    ratingEffectiveness: 'Effectiveness',
+    ratingAtmosphere: 'Atmosphere',
+    ratingValue: 'Value',
+    ratingOverall: 'Overall',
+
+    // Favorites
+    favorites: 'Favorites',
+    addFavorite: 'Add to Favorites',
+    removeFavorite: 'Remove from Favorites',
+    favoritesEmpty: 'No favorites yet',
+    navFavorites: 'Favorites',
+
+    // Points / Loyalty
+    points: 'Points',
+    pointsBalance: 'Point Balance',
+    pointsHistory: 'Points History',
+    pointsEarned: 'Earned',
+    pointsUsed: 'Used',
+    pointsPerYen: '1 point per ¥100',
+    pointsRedeemable: 'Points can be redeemed on your next booking',
+
+    // Sort
+    sortBy: 'Sort by',
+    sortRecommended: 'Recommended',
+    sortPriceLow: 'Price: Low to High',
+    sortPriceHigh: 'Price: High to Low',
+    sortRating: 'Highest Rated',
+    sortReviews: 'Most Reviews',
+    sortNewest: 'Newest',
+
+    // Share
+    shareTherapist: 'Share this therapist',
+    shareCopied: 'Link copied!',
+
+    // Trending / Popular
+    trendingTitle: 'Popular This Week',
+    trendingTherapists: 'Popular Therapists',
+    trendingSessions: 'Popular Sessions',
+
+    // Gallery
+    galleryTitle: 'Gallery',
+
+    // Sliding Scale
+    slidingScale: 'Sliding scale pricing available',
+    slidingScaleDesc: 'Fees may be adjusted based on financial circumstances',
+
+    // Gift Cards
+    giftCardTitle: 'Gift Cards',
+    giftCardDesc: 'Give the gift of healing to someone special',
+    giftCardAmount: 'Select Amount',
+    giftCardRecipient: 'Recipient Email',
+    giftCardMessage: 'Message (optional)',
+    giftCardMessagePlaceholder: 'Add a personal message...',
+    giftCardSend: 'Send Gift Card',
+    giftCardSuccess: 'Gift card sent!',
+
+    // Waitlist
+    waitlistJoin: 'Join Waitlist',
+    waitlistJoined: 'On Waitlist',
+    waitlistDesc: 'We\'ll notify you when a spot opens up',
+
+    // Blog / Articles
+    blogTitle: 'Wellness Articles',
+    blogReadMore: 'Read More',
+    blogByTherapist: 'By',
+    blogEmpty: 'No articles yet',
+
+    // Digital Products
+    digitalProductsTitle: 'Digital Content',
+    digitalProductsDesc: 'Self-care resources available anytime',
+    digitalProductBuy: 'Purchase',
+    digitalProductPdf: 'PDF',
+    digitalProductVideo: 'Video',
+    digitalProductAudio: 'Audio',
+
+    // Journal / Mood Tracking
+    journalTitle: 'Session Journal',
+    journalNew: 'New Entry',
+    journalMood: 'Current Mood',
+    journalMoodGreat: 'Great',
+    journalMoodGood: 'Good',
+    journalMoodOkay: 'Okay',
+    journalMoodLow: 'Low',
+    journalMoodBad: 'Bad',
+    journalNotes: 'Reflection Notes',
+    journalNotesPlaceholder: 'What you felt during the session, insights...',
+    journalSave: 'Save',
+    journalSaved: 'Saved',
+    journalEmpty: 'No entries yet',
+    journalHistory: 'Past Entries',
+
+    // Insurance
+    insuranceAccepted: 'Insurance accepted',
+    corporateWellness: 'Corporate wellness eligible',
+
+    // Form Validation
+    validationRequired: 'This field is required',
+    validationEmail: 'Please enter a valid email',
+    validationPhone: 'Please enter a valid phone number',
+
+    // Reminders
+    reminderTitle: 'Booking Reminders',
+    reminder24h: 'Notify 24 hours before',
+    reminder1h: 'Notify 1 hour before',
+    reminderEnabled: 'Reminders ON',
+
+    // Notifications
+    notificationTitle: 'Notifications',
+    notificationEmpty: 'No new notifications',
 
     // Admin
     adminTitle: 'Admin Panel',

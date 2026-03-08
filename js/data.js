@@ -83,10 +83,25 @@ const therapists = [
       { day: 3, slots: ['10:00', '13:00'] },
       { day: 5, slots: ['11:00', '15:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: 'AEAJ認定アロマセラピスト', en: 'AEAJ Certified Aromatherapist' }, year: 2016 },
+      { name: { ja: 'NARD JAPANアロマアドバイザー', en: 'NARD JAPAN Aroma Advisor' }, year: 2018 }
+    ],
+    tags: ['stress', 'relaxation', 'aromatherapy', 'meditation', 'self-care'],
+    responseTime: '1h',
+    gallery: [
+      { desc: { ja: 'エッセンシャルオイルが並ぶ落ち着いたセラピールーム', en: 'Calm therapy room lined with essential oils' } },
+      { desc: { ja: 'セッションで使用するオーガニックアロマブレンド', en: 'Organic aroma blends used in sessions' } },
+      { desc: { ja: '瞑想スペースとキャンドルライト', en: 'Meditation space with candlelight' } }
+    ],
+    slidingScale: false,
+    popularityScore: 92,
     reviews: [
       {
         author: { ja: '匿名ユーザー', en: 'Anonymous' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 5, value: 4 },
         text: { ja: 'とても癒されました。アロマの香りが素晴らしく、リラックスできました。', en: 'Very healing. The aroma was wonderful and I felt so relaxed.' },
         date: '2026-02-15',
         type: 'client-to-therapist'
@@ -94,6 +109,7 @@ const therapists = [
       {
         author: { ja: 'Kさん', en: 'K.' },
         rating: 4,
+        ratings: { communication: 4, effectiveness: 4, atmosphere: 5, value: 4 },
         text: { ja: 'オンライン瞑想がとても良かったです。続けたいと思います。', en: 'The online meditation was great. I want to continue.' },
         date: '2026-01-28',
         type: 'client-to-therapist'
@@ -155,10 +171,24 @@ const therapists = [
       { day: 4, slots: ['10:00', '13:00', '16:00'] },
       { day: 6, slots: ['10:00', '12:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: '柔道整復師国家資格', en: 'National Judo Therapist License' }, year: 2011 },
+      { name: { ja: 'スポーツ整体認定資格', en: 'Certified Sports Bodywork Practitioner' }, year: 2014 }
+    ],
+    tags: ['back-pain', 'sports', 'posture', 'injury-recovery', 'physical'],
+    responseTime: '2h',
+    gallery: [
+      { desc: { ja: '広々とした施術ベッドのある整体院', en: 'Spacious bodywork clinic with treatment beds' } },
+      { desc: { ja: 'スポーツ整体に使用する専門器具', en: 'Specialized tools for sports bodywork' } }
+    ],
+    slidingScale: false,
+    popularityScore: 78,
     reviews: [
       {
         author: { ja: 'Mさん', en: 'M.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 4, value: 5 },
         text: { ja: '長年の腰痛が改善しました！通い続けたいです。', en: 'My chronic back pain improved! I want to keep coming.' },
         date: '2026-02-20',
         type: 'client-to-therapist'
@@ -231,10 +261,25 @@ const therapists = [
       { day: 4, slots: ['10:00', '13:00', '15:00', '17:00'] },
       { day: 5, slots: ['13:00', '15:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: '日本タロット協会認定リーダー', en: 'Japan Tarot Association Certified Reader' }, year: 2019 },
+      { name: { ja: 'オラクルカードリーディング修了', en: 'Oracle Card Reading Certificate' }, year: 2020 }
+    ],
+    tags: ['tarot', 'oracle', 'fortune-telling', 'love', 'career', 'beginners'],
+    responseTime: '30m',
+    gallery: [
+      { desc: { ja: '京都の町家を改装した鑑定ルーム', en: 'Reading room in a renovated Kyoto townhouse' } },
+      { desc: { ja: 'セッションで使用するタロットカードコレクション', en: 'Tarot card collection used in sessions' } },
+      { desc: { ja: 'キャンドルとクリスタルで彩られたテーブル', en: 'Table adorned with candles and crystals' } }
+    ],
+    slidingScale: false,
+    popularityScore: 88,
     reviews: [
       {
         author: { ja: 'Aさん', en: 'A.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 5, value: 5 },
         text: { ja: '的確なリーディングで驚きました。とても参考になりました。', en: 'I was amazed by the accurate reading. Very helpful.' },
         date: '2026-02-10',
         type: 'client-to-therapist'
@@ -242,6 +287,7 @@ const therapists = [
       {
         author: { ja: 'Yさん', en: 'Y.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 4, atmosphere: 5, value: 5 },
         text: { ja: 'メール鑑定がとても丁寧で、心が軽くなりました。', en: 'The email reading was very thorough and my heart feels lighter.' },
         date: '2026-01-15',
         type: 'client-to-therapist'
@@ -249,6 +295,7 @@ const therapists = [
       {
         author: { ja: '匿名ユーザー', en: 'Anonymous' },
         rating: 4,
+        ratings: { communication: 4, effectiveness: 4, atmosphere: 4, value: 4 },
         text: { ja: 'オラクルカード体験、初めてでしたが楽しかったです！', en: 'It was my first oracle card experience and it was fun!' },
         date: '2026-02-25',
         type: 'client-to-therapist'
@@ -310,10 +357,24 @@ const therapists = [
       { day: 3, slots: ['10:00', '11:00', '14:00', '15:00', '16:00'] },
       { day: 4, slots: ['10:00', '11:00', '14:00'] },
     ],
+    verified: false,
+    credentials: [
+      { name: { ja: '臨床心理士', en: 'Clinical Psychologist' }, year: 2015 },
+      { name: { ja: '公認心理師', en: 'Licensed Public Psychologist' }, year: 2019 }
+    ],
+    tags: ['anxiety', 'depression', 'relationships', 'cbt', 'mental-health'],
+    responseTime: '4h',
+    gallery: [
+      { desc: { ja: '安心感のあるオンラインカウンセリング環境', en: 'Comfortable online counseling environment' } },
+      { desc: { ja: '心理学関連の書籍が並ぶ書斎', en: 'Study lined with psychology books' } }
+    ],
+    slidingScale: true,
+    popularityScore: 45,
     reviews: [
       {
         author: { ja: '匿名ユーザー', en: 'Anonymous' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 4, value: 4 },
         text: { ja: '丁寧に話を聞いていただき、気持ちが楽になりました。継続してお世話になっています。', en: 'They listened carefully and I felt much better. I continue to see them regularly.' },
         date: '2026-02-18',
         type: 'client-to-therapist'
@@ -321,6 +382,7 @@ const therapists = [
       {
         author: { ja: 'Tさん', en: 'T.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 4, atmosphere: 5, value: 5 },
         text: { ja: 'メール相談でも十分な支援を感じました。文章で整理できるのが自分に合っています。', en: 'I felt well supported even through email. Organizing my thoughts in writing suits me.' },
         date: '2026-01-30',
         type: 'client-to-therapist'
@@ -374,10 +436,25 @@ const therapists = [
       { day: 4, slots: ['10:00', '14:00'] },
       { day: 6, slots: ['9:00', '10:00', '11:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: '全米ヨガアライアンスRYT200', en: 'Yoga Alliance RYT200' }, year: 2014 },
+      { name: { ja: 'リストラティブヨガ指導者資格', en: 'Restorative Yoga Teacher Certification' }, year: 2017 }
+    ],
+    tags: ['yoga', 'flexibility', 'sleep', 'beginners', 'stress-relief'],
+    responseTime: '1h',
+    gallery: [
+      { desc: { ja: '自然光が差し込む明るいヨガスタジオ', en: 'Bright yoga studio with natural light' } },
+      { desc: { ja: 'リストラティブヨガで使用するボルスターとブランケット', en: 'Bolsters and blankets used in restorative yoga' } },
+      { desc: { ja: '横浜の海が見えるスタジオからの眺め', en: 'Ocean view from the Yokohama studio' } }
+    ],
+    slidingScale: false,
+    popularityScore: 74,
     reviews: [
       {
         author: { ja: 'Eさん', en: 'E.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 5, value: 4 },
         text: { ja: '初めてのヨガでしたが、丁寧に教えてもらえてとても楽しかったです。身体がすっきりしました！', en: 'It was my first yoga class but she taught me so patiently. My body feels refreshed!' },
         date: '2026-02-22',
         type: 'client-to-therapist'
@@ -385,6 +462,7 @@ const therapists = [
       {
         author: { ja: 'Oさん', en: 'O.' },
         rating: 4,
+        ratings: { communication: 4, effectiveness: 4, atmosphere: 3, value: 4 },
         text: { ja: 'オンラインでもしっかり指導してもらえました。夜寝る前のヨガが習慣になりそうです。', en: 'Got good instruction even online. Yoga before bed might become a habit.' },
         date: '2026-02-10',
         type: 'client-to-therapist'
@@ -445,10 +523,24 @@ const therapists = [
       { day: 3, slots: ['11:00', '14:00', '16:00'] },
       { day: 5, slots: ['11:00', '14:00'] },
     ],
+    verified: false,
+    credentials: [
+      { name: { ja: 'レイキマスター認定', en: 'Reiki Master Certification' }, year: 2020 },
+      { name: { ja: 'エネルギーヒーリング実践者資格', en: 'Energy Healing Practitioner Certificate' }, year: 2021 }
+    ],
+    tags: ['reiki', 'energy', 'chakra', 'spiritual', 'distance-healing'],
+    responseTime: '1d',
+    gallery: [
+      { desc: { ja: 'ヒーリングストーンが置かれた静かな施術室', en: 'Quiet treatment room with healing stones' } },
+      { desc: { ja: 'チャクラカラーのクリスタルセット', en: 'Chakra-colored crystal set' } }
+    ],
+    slidingScale: true,
+    popularityScore: 32,
     reviews: [
       {
         author: { ja: 'Cさん', en: 'C.' },
         rating: 4,
+        ratings: { communication: 4, effectiveness: 4, atmosphere: 5, value: 3 },
         text: { ja: '不思議な体験でしたが、終わった後とても軽くなりました。', en: 'It was a mysterious experience, but I felt so light afterward.' },
         date: '2026-02-05',
         type: 'client-to-therapist'
@@ -502,10 +594,25 @@ const therapists = [
       { day: 3, slots: ['10:00', '14:00'] },
       { day: 5, slots: ['10:00', '14:00', '16:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: '日本芸術療法学会認定アートセラピスト', en: 'Japan Art Therapy Association Certified Art Therapist' }, year: 2017 },
+      { name: { ja: '臨床美術士5級', en: 'Clinical Art Practitioner Grade 5' }, year: 2019 }
+    ],
+    tags: ['art', 'creativity', 'children', 'family', 'expression', 'color-therapy'],
+    responseTime: '2h',
+    gallery: [
+      { desc: { ja: '色とりどりの画材が揃ったアトリエ', en: 'Atelier stocked with colorful art supplies' } },
+      { desc: { ja: 'クライアントが制作した作品のギャラリー壁', en: 'Gallery wall of works created by clients' } },
+      { desc: { ja: '親子セッション用の広々としたワークスペース', en: 'Spacious workspace for parent-child sessions' } }
+    ],
+    slidingScale: false,
+    popularityScore: 85,
     reviews: [
       {
         author: { ja: 'Pさん', en: 'P.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 5, value: 5 },
         text: { ja: '絵が苦手でしたが全く問題なく、自分でも驚くくらいリラックスできました。', en: 'I\'m not good at drawing but it didn\'t matter at all. I relaxed more than I expected.' },
         date: '2026-02-24',
         type: 'client-to-therapist'
@@ -513,6 +620,7 @@ const therapists = [
       {
         author: { ja: 'Uさん', en: 'U.' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 4, atmosphere: 5, value: 5 },
         text: { ja: '子どもと一緒に参加しました。親子で楽しめる素敵な時間でした。', en: 'Attended with my child. A wonderful time we could enjoy together.' },
         date: '2026-02-17',
         type: 'client-to-therapist'
@@ -585,10 +693,25 @@ const therapists = [
       { day: 5, slots: ['10:00', '13:00', '15:00'] },
       { day: 6, slots: ['10:00', '11:00'] },
     ],
+    verified: true,
+    credentials: [
+      { name: { ja: 'サウンドヒーリング協会認定プラクティショナー', en: 'Sound Healing Association Certified Practitioner' }, year: 2018 },
+      { name: { ja: 'チベタンシンギングボウル奏者認定', en: 'Tibetan Singing Bowl Player Certification' }, year: 2019 }
+    ],
+    tags: ['sound', 'singing-bowl', 'meditation', 'relaxation', 'vibration'],
+    responseTime: '3h',
+    gallery: [
+      { desc: { ja: '大小さまざまなシンギングボウルが並ぶヒーリングルーム', en: 'Healing room with singing bowls of various sizes' } },
+      { desc: { ja: 'セッションで使用する音叉とチャイムバー', en: 'Tuning forks and chime bars used in sessions' } },
+      { desc: { ja: 'クッションと柔らかい照明のリラクゼーションスペース', en: 'Relaxation space with cushions and soft lighting' } }
+    ],
+    slidingScale: false,
+    popularityScore: 71,
     reviews: [
       {
         author: { ja: 'Dさん', en: 'D.' },
         rating: 5,
+        ratings: { communication: 4, effectiveness: 5, atmosphere: 5, value: 5 },
         text: { ja: 'シンギングボウルの音が身体中に響いて、今まで経験したことのない深いリラックスでした。', en: 'The singing bowl resonated through my whole body. The deepest relaxation I\'ve ever experienced.' },
         date: '2026-02-26',
         type: 'client-to-therapist'
@@ -596,6 +719,7 @@ const therapists = [
       {
         author: { ja: 'Fさん', en: 'F.' },
         rating: 4,
+        ratings: { communication: 4, effectiveness: 4, atmosphere: 4, value: 4 },
         text: { ja: 'オンラインでも十分に音の癒しを感じられました。パーソナル音声ガイドもとても良かったです。', en: 'Could feel the sound healing even online. The personal audio guide was excellent too.' },
         date: '2026-02-14',
         type: 'client-to-therapist'
@@ -603,6 +727,7 @@ const therapists = [
       {
         author: { ja: '匿名ユーザー', en: 'Anonymous' },
         rating: 5,
+        ratings: { communication: 5, effectiveness: 5, atmosphere: 5, value: 4 },
         text: { ja: '寝落ちするくらいリラックスできました。終わった後の爽快感がすごいです。', en: 'I relaxed so much I almost fell asleep. The refreshed feeling afterward was amazing.' },
         date: '2026-02-02',
         type: 'client-to-therapist'
@@ -921,6 +1046,110 @@ const mockUserWrittenReviews = [
     text: { ja: '絵が下手でも楽しめました！色を選ぶだけで気持ちが軽くなる不思議な体験。', en: 'Enjoyed it even though I can\'t draw! A wonderful experience where just choosing colors lifts your mood.' },
     date: '2026-02-17'
   },
+];
+
+// ===== Blog / Articles Data =====
+const blogArticles = [
+  {
+    id: 'blog-1',
+    therapistId: 1,
+    title: { ja: 'アロマセラピーで心を整える5つの方法', en: '5 Ways to Balance Your Mind with Aromatherapy' },
+    excerpt: { ja: 'エッセンシャルオイルを使った日常のセルフケア方法をご紹介します。', en: 'Discover daily self-care methods using essential oils.' },
+    date: '2026-02-20',
+    tags: ['aromatherapy', 'selfcare']
+  },
+  {
+    id: 'blog-2',
+    therapistId: 3,
+    title: { ja: 'タロットカードの基本：初心者ガイド', en: 'Tarot Basics: A Beginner\'s Guide' },
+    excerpt: { ja: 'タロットに興味があるけど何から始めればいい？基本を解説します。', en: 'Interested in tarot but don\'t know where to start? Learn the basics.' },
+    date: '2026-02-15',
+    tags: ['tarot', 'beginners']
+  },
+  {
+    id: 'blog-3',
+    therapistId: 5,
+    title: { ja: '寝る前の10分ヨガで睡眠の質を上げる', en: '10-Minute Bedtime Yoga for Better Sleep' },
+    excerpt: { ja: '簡単なポーズで深い睡眠を。毎日続けられるルーティンをご紹介。', en: 'Simple poses for deep sleep. A routine you can keep up every day.' },
+    date: '2026-02-10',
+    tags: ['yoga', 'sleep', 'selfcare']
+  },
+  {
+    id: 'blog-4',
+    therapistId: 7,
+    title: { ja: '色が心に与える影響：カラーセラピー入門', en: 'How Colors Affect Your Mind: Intro to Color Therapy' },
+    excerpt: { ja: '色にはそれぞれ心理的な効果があります。日常に取り入れる方法とは。', en: 'Each color has psychological effects. Learn how to use them daily.' },
+    date: '2026-02-05',
+    tags: ['art', 'selfcare', 'beginners']
+  },
+  {
+    id: 'blog-5',
+    therapistId: 4,
+    title: { ja: '不安との付き合い方：認知行動療法の視点から', en: 'Living with Anxiety: A CBT Perspective' },
+    excerpt: { ja: '不安を感じた時に試せる認知行動療法のテクニックを解説。', en: 'CBT techniques you can try when anxiety strikes.' },
+    date: '2026-01-28',
+    tags: ['anxiety', 'mental-health', 'cbt']
+  },
+  {
+    id: 'blog-6',
+    therapistId: 8,
+    title: { ja: 'サウンドヒーリングの科学：なぜ音で癒されるのか', en: 'The Science of Sound Healing: Why Sound Heals' },
+    excerpt: { ja: '周波数と脳波の関係から、音の癒し効果のメカニズムを探ります。', en: 'Exploring the healing mechanism of sound through frequency and brainwave relationships.' },
+    date: '2026-01-20',
+    tags: ['sound', 'science', 'healing']
+  },
+];
+
+// ===== Digital Products Data =====
+const digitalProducts = [
+  {
+    id: 'dp-1',
+    therapistId: 1,
+    name: { ja: 'リラクゼーション・アロマガイド (PDF)', en: 'Relaxation Aroma Guide (PDF)' },
+    description: { ja: '自宅で使える10種のエッセンシャルオイル活用法', en: '10 essential oil recipes for home relaxation' },
+    price: 1500,
+    type: 'pdf'
+  },
+  {
+    id: 'dp-2',
+    therapistId: 5,
+    name: { ja: '朝ヨガ15分ルーティン (動画)', en: 'Morning Yoga 15-min Routine (Video)' },
+    description: { ja: '毎朝続けられる簡単ヨガプログラム', en: 'Easy daily morning yoga program' },
+    price: 2000,
+    type: 'video'
+  },
+  {
+    id: 'dp-3',
+    therapistId: 8,
+    name: { ja: '瞑想用サウンドトラック (音声)', en: 'Meditation Soundtrack (Audio)' },
+    description: { ja: 'シンギングボウルの音で深い瞑想へ導く30分音声', en: '30-minute singing bowl audio for deep meditation' },
+    price: 1000,
+    type: 'audio'
+  },
+  {
+    id: 'dp-4',
+    therapistId: 4,
+    name: { ja: '不安対処ワークシート (PDF)', en: 'Anxiety Coping Worksheet (PDF)' },
+    description: { ja: 'CBTベースの自己記録シート5種セット', en: '5 CBT-based self-recording sheets' },
+    price: 800,
+    type: 'pdf'
+  },
+  {
+    id: 'dp-5',
+    therapistId: 7,
+    name: { ja: 'カラーセラピー・ジャーナル (PDF)', en: 'Color Therapy Journal (PDF)' },
+    description: { ja: '30日分の色を使った気分記録ジャーナル', en: '30-day mood journal using colors' },
+    price: 1200,
+    type: 'pdf'
+  },
+];
+
+// ===== Gift Card Data =====
+const giftCardOptions = [
+  { amount: 3000, label: { ja: '¥3,000', en: '¥3,000' } },
+  { amount: 5000, label: { ja: '¥5,000', en: '¥5,000' } },
+  { amount: 10000, label: { ja: '¥10,000', en: '¥10,000' } },
+  { amount: 20000, label: { ja: '¥20,000', en: '¥20,000' } },
 ];
 
 // ===== Test User for Demo =====

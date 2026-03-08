@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>癒しの庭 v3 Release Notes / Healing Garden v3 リリースノート</title>
+  <style>
+    :root {
+      --green-50: #f0faf4;
+      --green-100: #d4f0e0;
+      --green-500: #3dba78;
+      --green-600: #2f9660;
+      --green-700: #237148;
+      --amber-50: #fffbeb;
+      --amber-100: #fef3c7;
+      --amber-600: #d97706;
+      --purple-50: #f5f3ff;
+      --purple-100: #ede9fe;
+      --purple-600: #7c3aed;
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --blue-600: #2563eb;
+      --rose-50: #fff1f2;
+      --rose-100: #ffe4e6;
+      --rose-600: #e11d48;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-700);
+      line-height: 1.7;
+    }
+    .hero {
+      background: linear-gradient(135deg, #a8e0c0, #3dba78);
+      color: white;
+      text-align: center;
+      padding: 60px 24px 48px;
+    }
+    .hero-logo { font-size: 3.5rem; margin-bottom: 8px; }
+    .hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; }
+    .hero .subtitle { font-size: 1.1rem; opacity: 0.9; margin-bottom: 4px; }
+    .hero .version {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .hero .date { font-size: 0.8rem; opacity: 0.8; margin-top: 8px; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+    .intro {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 0.95rem;
+      color: var(--gray-500);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .intro strong { color: var(--gray-700); }
+
+    .section { margin-bottom: 40px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.2rem; font-weight: 700; color: var(--gray-900); }
+    .section-header .section-desc { font-size: 0.8rem; color: var(--gray-500); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 600px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .feature-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 18px;
+      transition: box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .feature-card .feature-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+    .feature-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+    }
+    .feature-card p {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+    .feature-card .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .badge-new { background: var(--green-100); color: var(--green-700); }
+    .badge-enhanced { background: var(--blue-100); color: var(--blue-600); }
+
+    .highlight-row {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 24px;
+    }
+    .highlight-card {
+      flex-shrink: 0;
+      width: 200px;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .highlight-card .h-icon { font-size: 2rem; margin-bottom: 6px; }
+    .highlight-card h4 { font-size: 0.85rem; margin-bottom: 2px; }
+    .highlight-card p { font-size: 0.75rem; color: var(--gray-500); }
+
+    .test-section {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    .test-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--gray-900);
+    }
+    .test-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .test-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      padding: 10px 14px;
+      background: var(--gray-50);
+      border-radius: 8px;
+    }
+    .test-checklist .check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gray-200);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .test-checklist .step-label {
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-right: 4px;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 24px 0 8px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-item .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--green-500);
+    }
+    .stat-item .stat-label {
+      font-size: 0.7rem;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--gray-500);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--gray-200);
+    }
+    footer a {
+      color: var(--green-600);
+      text-decoration: none;
+    }
+
+    /* JP/EN toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--gray-200);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .lang-en { display: none; }
+    body.en .lang-ja { display: none; }
+    body.en .lang-en { display: block; display: initial; }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle" onclick="document.body.classList.toggle('en'); this.textContent = document.body.classList.contains('en') ? 'JP' : 'EN'">EN</button>
+
+  <div class="hero">
+    <div class="hero-logo">🌿</div>
+    <h1>
+      <span class="lang-ja">癒しの庭 v3 リリースノート</span>
+      <span class="lang-en">Healing Garden v3 Release Notes</span>
+    </h1>
+    <div class="subtitle">
+      <span class="lang-ja">プラットフォーム大幅アップグレード</span>
+      <span class="lang-en">Major Platform Upgrade</span>
+    </div>
+    <div class="version">Version 3.0</div>
+    <div class="date">2026-03-08</div>
+    <div style="margin-top:16px">
+      <a href="https://eurpeb2012.github.io/CI_Website/" style="display:inline-block;background:rgba(255,255,255,0.95);color:var(--green-700);padding:10px 24px;border-radius:24px;text-decoration:none;font-weight:700;font-size:0.9rem;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="lang-ja">🌿 アプリを開く</span>
+        <span class="lang-en">🌿 Open the App</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">22</div>
+      <div class="stat-label">
+        <span class="lang-ja">新機能</span>
+        <span class="lang-en">New Features</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">10</div>
+      <div class="stat-label">
+        <span class="lang-ja">新画面</span>
+        <span class="lang-en">New Screens</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">85+</div>
+      <div class="stat-label">
+        <span class="lang-ja">翻訳キー追加</span>
+        <span class="lang-en">New i18n Keys</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">JP/EN</div>
+      <div class="stat-label">
+        <span class="lang-ja">完全バイリンガル</span>
+        <span class="lang-en">Fully Bilingual</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro">
+    <span class="lang-ja">
+      v3では、<strong>信頼性・発見・エンゲージメント</strong>を大幅に強化しました。類似サービス（BetterHelp、Talkspace、ココナラ、ホットペッパービューティー、Mindbodyなど）のベストプラクティスを参考にした22の改善を実装しています。
+    </span>
+    <span class="lang-en">
+      v3 delivers a major upgrade to <strong>trust, discovery, and engagement</strong>. We implemented 22 improvements inspired by best practices from platforms like BetterHelp, Talkspace, Coconala, Hot Pepper Beauty, and Mindbody.
+    </span>
+  </div>
+
+  <div class="container">
+
+    <!-- Trust & Conversion -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--green-100)">🛡</div>
+        <div>
+          <h2>
+            <span class="lang-ja">信頼性とコンバージョン</span>
+            <span class="lang-en">Trust & Conversion</span>
+          </h2>
+          <div class="section-desc">
+            <span class="lang-ja">安心して予約できる仕組み</span>
+            <span class="lang-en">Building confidence in every booking</span>
+          </div>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">✅</div>
+          <h3>
+            <span class="lang-ja">セラピスト認証バッジ</span>
+            <span class="lang-en">Therapist Verification Badges</span>
+          </h3>
+          <p>
+            <span class="lang-ja">認証済みセラピストには緑のチェックマークが表示されます。プロフィールページで資格・認証情報も確認できます。</span>
+            <span class="lang-en">Verified therapists show a green checkmark on cards and profiles. Credentials and certifications are now displayed on profile pages.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📊</div>
+          <h3>
+            <span class="lang-ja">多軸レビュー評価</span>
+            <span class="lang-en">Multi-Axis Review Ratings</span>
+          </h3>
+          <p>
+            <span class="lang-ja">コミュニケーション・効果・雰囲気・コスパの4軸で評価。プロフィールに評価バーグラフが表示されます。</span>
+            <span class="lang-en">Reviews now rate Communication, Effectiveness, Atmosphere, and Value. Profile pages show aggregated rating bars.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-enhanced">ENHANCED</div>
+          <div class="feature-emoji">📋</div>
+          <h3>
+            <span class="lang-ja">フォームバリデーション</span>
+            <span class="lang-en">Form Validation</span>
+          </h3>
+          <p>
+            <span class="lang-ja">アカウント登録フォームにインラインエラー表示を追加。メールアドレスの形式チェックも対応。</span>
+            <span class="lang-en">Signup form now shows inline field errors with email format validation. No more silent failures.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">💚</div>
+          <h3>
+            <span class="lang-ja">収入に応じた料金調整表示</span>
+            <span class="lang-en">Sliding Scale Pricing Indicator</span>
+          </h3>
+          <p>
+            <span class="lang-ja">経済的事情に応じて料金相談が可能なセラピストにはバッジが表示されます。</span>
+            <span class="lang-en">Therapists who offer income-based fee adjustments now show a visible indicator on cards and profiles.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Engagement & Retention -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--rose-100)">❤️</div>
+        <div>
+          <h2>
+            <span class="lang-ja">エンゲージメントとリテンション</span>
+            <span class="lang-en">Engagement & Retention</span>
+          </h2>
+          <div class="section-desc">
+            <span class="lang-ja">ユーザーが繰り返し使いたくなる機能</span>
+            <span class="lang-en">Features that keep users coming back</span>
+          </div>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🤍</div>
+          <h3>
+            <span class="lang-ja">お気に入り機能</span>
+            <span class="lang-en">Favorites System</span>
+          </h3>
+          <p>
+            <span class="lang-ja">セラピストカードや詳細ページからハートボタンでお気に入り登録。マイページから一覧確認できます。</span>
+            <span class="lang-en">Tap the heart on any therapist card or profile to save. View all favorites from your profile page.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🎯</div>
+          <h3>
+            <span class="lang-ja">ポイントプログラム</span>
+            <span class="lang-en">Points / Loyalty Program</span>
+          </h3>
+          <p>
+            <span class="lang-ja">¥100の予約ごとに1ポイント獲得。ポイント残高と履歴は専用ページで確認できます。</span>
+            <span class="lang-en">Earn 1 point per ¥100 spent on bookings. Track balance and history on a dedicated points page.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📓</div>
+          <h3>
+            <span class="lang-ja">セッション日記 / 気分トラッキング</span>
+            <span class="lang-en">Session Journal / Mood Tracking</span>
+          </h3>
+          <p>
+            <span class="lang-ja">5段階の気分セレクターと振り返りメモを記録。セッション後の変化を追跡できます。</span>
+            <span class="lang-en">Record your mood (5 levels) and reflection notes after sessions. Track your wellness journey over time.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">💬</div>
+          <h3>
+            <span class="lang-ja">応答時間の表示</span>
+            <span class="lang-en">Response Time Display</span>
+          </h3>
+          <p>
+            <span class="lang-ja">各セラピストの平均応答時間（30分、2時間、1日など）がカードとプロフィールに表示されます。</span>
+            <span class="lang-en">Each therapist's average response time (30m, 2h, 1d, etc.) is shown on cards and profiles.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🔔</div>
+          <h3>
+            <span class="lang-ja">お知らせページ</span>
+            <span class="lang-en">Notifications Page</span>
+          </h3>
+          <p>
+            <span class="lang-ja">予約リマインダーやキャンセル待ち状況をまとめて確認できるお知らせ画面を追加。</span>
+            <span class="lang-en">New notifications page showing booking reminders and waitlist status in one place.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🔔</div>
+          <h3>
+            <span class="lang-ja">キャンセル待ち</span>
+            <span class="lang-en">Waitlist</span>
+          </h3>
+          <p>
+            <span class="lang-ja">人気セラピストに空きが出たら通知を受け取れるキャンセル待ち機能を追加。</span>
+            <span class="lang-en">Join a waitlist for popular therapists and get notified when a slot opens up.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discovery & Search -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--blue-100)">🔍</div>
+        <div>
+          <h2>
+            <span class="lang-ja">発見と検索</span>
+            <span class="lang-en">Discovery & Search</span>
+          </h2>
+          <div class="section-desc">
+            <span class="lang-ja">ぴったりのセラピストをもっと簡単に</span>
+            <span class="lang-en">Find the right therapist faster</span>
+          </div>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">↕️</div>
+          <h3>
+            <span class="lang-ja">検索結果の並び替え</span>
+            <span class="lang-en">Sort Options for Results</span>
+          </h3>
+          <p>
+            <span class="lang-ja">おすすめ順・価格順・評価順・レビュー数順で結果を並び替えできるようになりました。</span>
+            <span class="lang-en">Sort results by recommended, price (low/high), highest rated, or most reviews.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🏷</div>
+          <h3>
+            <span class="lang-ja">タグベースの探索</span>
+            <span class="lang-en">Tag-Based Discovery</span>
+          </h3>
+          <p>
+            <span class="lang-ja">各セラピストに「ストレス」「初心者」「リラクゼーション」などのタグが表示されます。</span>
+            <span class="lang-en">Therapist cards now show specialty tags like "stress", "beginners", "relaxation" for quick scanning.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🔥</div>
+          <h3>
+            <span class="lang-ja">今週の人気セラピスト</span>
+            <span class="lang-en">Trending Therapists</span>
+          </h3>
+          <p>
+            <span class="lang-ja">ホーム画面に人気のセラピストが横スクロールカルーセルで表示されます。</span>
+            <span class="lang-en">The home screen now features top therapists in a horizontal scroll carousel.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-enhanced">ENHANCED</div>
+          <div class="feature-emoji">🃏</div>
+          <h3>
+            <span class="lang-ja">セラピストカードの改善</span>
+            <span class="lang-en">Enhanced Therapist Cards</span>
+          </h3>
+          <p>
+            <span class="lang-ja">認証バッジ・評価・レビュー数・応答時間・タグをカードに一括表示。お気に入りボタンも追加。</span>
+            <span class="lang-en">Cards now show verification, rating, review count, response time, tags, and a favorite button at a glance.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Growth -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--purple-100)">🚀</div>
+        <div>
+          <h2>
+            <span class="lang-ja">プラットフォームの成長</span>
+            <span class="lang-en">Platform Growth</span>
+          </h2>
+          <div class="section-desc">
+            <span class="lang-ja">新しい収益チャネルとコンテンツ</span>
+            <span class="lang-en">New revenue channels and content</span>
+          </div>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">🎁</div>
+          <h3>
+            <span class="lang-ja">ギフトカード</span>
+            <span class="lang-en">Gift Cards</span>
+          </h3>
+          <p>
+            <span class="lang-ja">¥3,000〜¥20,000の4段階。受取人のメールアドレスとメッセージを添えて送付できます。</span>
+            <span class="lang-en">4 tiers from ¥3,000 to ¥20,000. Send with a recipient email and personal message.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📝</div>
+          <h3>
+            <span class="lang-ja">癒しのコラム（ブログ）</span>
+            <span class="lang-en">Wellness Articles (Blog)</span>
+          </h3>
+          <p>
+            <span class="lang-ja">セラピストが執筆した6本の記事を掲載。アロマ、タロット、ヨガ、アート、CBT、サウンドヒーリングなど。</span>
+            <span class="lang-en">6 therapist-written articles covering aromatherapy, tarot, yoga, art, CBT, and sound healing.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📦</div>
+          <h3>
+            <span class="lang-ja">デジタルコンテンツ販売</span>
+            <span class="lang-en">Digital Content Marketplace</span>
+          </h3>
+          <p>
+            <span class="lang-ja">PDF・動画・音声のセルフケア教材を購入可能。セラピストプロフィールからも直接アクセスできます。</span>
+            <span class="lang-en">Purchase PDF, video, and audio self-care resources. Also accessible directly from therapist profiles.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📤</div>
+          <h3>
+            <span class="lang-ja">セラピスト共有ボタン</span>
+            <span class="lang-en">Share Therapist Button</span>
+          </h3>
+          <p>
+            <span class="lang-ja">セラピストのプロフィールリンクをワンタップでコピー。LINE、Twitter等で共有できます。</span>
+            <span class="lang-en">Copy a therapist's profile link with one tap. Share via LINE, Twitter, or any messaging app.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-new">NEW</div>
+          <div class="feature-emoji">📷</div>
+          <h3>
+            <span class="lang-ja">ギャラリー</span>
+            <span class="lang-en">Therapist Gallery</span>
+          </h3>
+          <p>
+            <span class="lang-ja">セラピストのプロフィールにセッション空間やツールの写真ギャラリーを追加。</span>
+            <span class="lang-en">Therapist profiles now include a gallery section showcasing their space and tools.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="badge badge-enhanced">ENHANCED</div>
+          <div class="feature-emoji">🏠</div>
+          <h3>
+            <span class="lang-ja">ホーム画面の充実</span>
+            <span class="lang-en">Enhanced Home Screen</span>
+          </h3>
+          <p>
+            <span class="lang-ja">ギフトカード・ブログ・デジタルコンテンツへのクイックリンクと最新記事プレビューを追加。</span>
+            <span class="lang-en">Quick links to Gift Cards, Blog, and Digital Content plus article previews on the landing page.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Wins -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--amber-100)">⚡</div>
+        <div>
+          <h2>
+            <span class="lang-ja">UIの改善</span>
+            <span class="lang-en">UI Improvements</span>
+          </h2>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-emoji">🌐</div>
+          <h3>
+            <span class="lang-ja">OGPメタタグ & ファビコン</span>
+            <span class="lang-en">OGP Meta Tags & Favicon</span>
+          </h3>
+          <p>
+            <span class="lang-ja">LINEやTwitterでリンク共有時にプレビューが表示されるようになりました。ファビコンも追加。</span>
+            <span class="lang-en">Link previews now appear when sharing on LINE, Twitter, etc. Favicon added.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">💬</div>
+          <h3>
+            <span class="lang-ja">トースト通知</span>
+            <span class="lang-en">Toast Notifications</span>
+          </h3>
+          <p>
+            <span class="lang-ja">共有完了・日記保存などのアクション後にフィードバックが表示されます。</span>
+            <span class="lang-en">Visual feedback toasts for actions like sharing, journal saves, and clipboard copies.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🎨</div>
+          <h3>
+            <span class="lang-ja">空状態のデザイン</span>
+            <span class="lang-en">Empty State Designs</span>
+          </h3>
+          <p>
+            <span class="lang-ja">お気に入り・日記・お知らせが空の時に、アイコン付きのメッセージを表示。</span>
+            <span class="lang-en">Favorites, journal, and notifications show styled empty states with icons instead of blank pages.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🔘</div>
+          <h3>
+            <span class="lang-ja">ボタンのアクセシビリティ</span>
+            <span class="lang-en">Button Accessibility</span>
+          </h3>
+          <p>
+            <span class="lang-ja">ナビゲーションボタンにtype="button"属性を追加し、フォーム内の誤動作を防止。</span>
+            <span class="lang-en">Navigation buttons now have type="button" to prevent accidental form submissions.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testing Guide -->
+    <div class="test-section">
+      <h2>
+        <span class="lang-ja">🧪 テスト手順</span>
+        <span class="lang-en">🧪 Testing Checklist</span>
+      </h2>
+      <ol class="test-checklist">
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">ホーム画面：</span>
+              <span class="lang-en">Home Screen:</span>
+            </span>
+            <span class="lang-ja">人気セラピストのカルーセル、クイックリンク（ギフト・ブログ・コンテンツ）、記事プレビューが表示されるか確認</span>
+            <span class="lang-en">Verify trending carousel, quick links (Gift / Blog / Content), and article previews</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">検索結果：</span>
+              <span class="lang-en">Search Results:</span>
+            </span>
+            <span class="lang-ja">並び替えドロップダウン、認証バッジ、タグ、お気に入りボタン、応答時間表示を確認</span>
+            <span class="lang-en">Check sort dropdown, verified badges, tags, favorite buttons, and response time on cards</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">セラピストプロフィール：</span>
+              <span class="lang-en">Therapist Profile:</span>
+            </span>
+            <span class="lang-ja">認証バッジ・資格一覧・ギャラリー・4軸評価バー・デジタルコンテンツ・共有ボタン・キャンセル待ちを確認</span>
+            <span class="lang-en">Verify badge, credentials, gallery, rating bars, digital products, share button, and waitlist</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">マイページ：</span>
+              <span class="lang-en">My Profile:</span>
+            </span>
+            <span class="lang-ja">お気に入り・ポイント・日記・お知らせの各リンクが表示され、正しく遷移するか確認（デモログインで）</span>
+            <span class="lang-en">Check favorites / points / journal / notifications links appear and navigate correctly (use Demo Login)</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">日記：</span>
+              <span class="lang-en">Journal:</span>
+            </span>
+            <span class="lang-ja">気分を選択→メモを入力→保存。一覧に表示されるか確認。ブラウザを閉じても残るか確認</span>
+            <span class="lang-en">Select mood, write notes, save. Check it appears in list and persists across page reloads</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">予約完了：</span>
+              <span class="lang-en">Booking:</span>
+            </span>
+            <span class="lang-ja">予約完了画面でポイント獲得メッセージが表示されるか確認（ログイン状態で）</span>
+            <span class="lang-en">Complete a booking and verify the points earned message appears on success screen (logged in)</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">ギフトカード：</span>
+              <span class="lang-en">Gift Card:</span>
+            </span>
+            <span class="lang-ja">金額選択→メール入力→メッセージ入力→送信の全フローを確認</span>
+            <span class="lang-en">Walk through full flow: select amount, enter email, add message, send</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">ブログ＆コンテンツ：</span>
+              <span class="lang-en">Blog & Content:</span>
+            </span>
+            <span class="lang-ja">ブログ一覧→記事詳細→著者リンク。デジタルコンテンツ一覧の表示を確認</span>
+            <span class="lang-en">Browse blog list, read detail, click author. Verify digital products listing</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">サインアップ：</span>
+              <span class="lang-en">Signup:</span>
+            </span>
+            <span class="lang-ja">空欄や無効なメールで送信し、インラインエラーが表示されるか確認</span>
+            <span class="lang-en">Submit with empty fields or invalid email and verify inline error messages appear</span>
+          </div>
+        </li>
+        <li>
+          <div class="check"></div>
+          <div>
+            <span class="step-label">
+              <span class="lang-ja">言語切替：</span>
+              <span class="lang-en">Language:</span>
+            </span>
+            <span class="lang-ja">すべての新画面で JP/EN 切替が正しく動作するか確認</span>
+            <span class="lang-en">Verify JP/EN toggle works correctly across all new screens</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>
+      <span class="lang-ja">癒しの庭 / Healing Garden &mdash; テスト版 v3.0</span>
+      <span class="lang-en">Healing Garden &mdash; Test Build v3.0</span>
+    </p>
+    <p style="margin-top:8px">
+      <span class="lang-ja">フィードバックやバグ報告は開発チームまでお願いします</span>
+      <span class="lang-en">Please send feedback and bug reports to the development team</span>
+    </p>
+    <p style="margin-top:12px">
+      <a href="https://eurpeb2012.github.io/CI_Website/">
+        <span class="lang-ja">🌿 アプリを開く</span>
+        <span class="lang-en">🌿 Open the App</span>
+      </a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://eurpeb2012.github.io/CI_Website/admin.html">
+        <span class="lang-ja">管理パネル</span>
+        <span class="lang-en">Admin Panel</span>
+      </a>
+    </p>
+  </footer>
+
+</body>
+</html>
