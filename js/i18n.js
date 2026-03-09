@@ -28,15 +28,15 @@ const translations = {
     // Feeling Flow - Step 1
     feelingTitle: '今の気持ちは？',
     feelingStressed: 'ストレスを感じている',
-    feelingLowEnergy: '元気が出ない',
     feelingAnxious: '不安・心配がある',
     feelingLonely: '孤独を感じる',
     feelingOverwhelmed: '疲れが取れない',
-    feelingCurious: '新しい体験をしたい',
+    feelingLowEnergy: '元気が出ない',
     feelingChangeMyself: '自分を変えたい',
     feelingFuture: '未来を良くしたい',
     feelingPartner: 'パートナーが欲しい',
     feelingDreamJob: '理想の仕事を見つけたい',
+    feelingCurious: '新しい体験をしたい',
 
     // Feeling Flow - Step 2
     categoryTitle: 'どんな癒しを求めますか？',
@@ -45,7 +45,7 @@ const translations = {
     categoryMental: '心の癒し',
     categoryMentalDesc: '瞑想、ヒーリング、アロマなど',
     categoryPlayful: '楽しい体験',
-    categoryPlayfulDesc: '占い、アート、ワークショップなど',
+    categoryPlayfulDesc: '楽しい体験（占い・リトリートを含む）',
     categoryFortuneTelling: '占い',
     categoryFortuneTellingDesc: 'タロット、オラクルカード、占星術など',
     categoryRetreat: 'リトリート',
@@ -453,6 +453,35 @@ const translations = {
     notificationTitle: 'お知らせ',
     notificationEmpty: '新しいお知らせはありません',
 
+    // Retreat Section
+    retreatSectionTitle: 'リトリート',
+    retreatSectionDesc: '世界中のウェルネスリトリートを見つけよう',
+    retreatLocation: '場所',
+    retreatDuration: '期間',
+    retreatDays: '日間',
+    retreatProvider: '提供者',
+    retreatBookNow: '予約する',
+    retreatIncludes: '含まれるもの',
+    retreatNote: '※航空券・交通費は含まれません',
+    retreatViewAll: 'すべてのリトリートを見る',
+
+    // Forum / Message Board
+    forumTitle: '掲示板',
+    forumDesc: 'コミュニティで話し合いましょう',
+    forumNewThread: '新しいトピック',
+    forumThreadTitle: 'タイトル',
+    forumThreadTitlePlaceholder: 'トピックのタイトルを入力...',
+    forumThreadBody: '内容',
+    forumThreadBodyPlaceholder: 'あなたの質問やアイデアを共有...',
+    forumPost: '投稿する',
+    forumReply: '返信する',
+    forumReplyPlaceholder: '返信を入力...',
+    forumReplies: '件の返信',
+    forumPostedBy: '投稿者',
+    forumEmpty: 'まだトピックはありません',
+    forumLoginRequired: 'トピックの投稿にはログインが必要です',
+    forumRules: 'コミュニティガイドライン：敬意を持って交流しましょう。',
+
     // Admin
     adminTitle: '管理パネル',
     adminBackToSite: 'サイトに戻る',
@@ -578,15 +607,15 @@ const translations = {
     // Feeling Flow - Step 1
     feelingTitle: 'How are you feeling?',
     feelingStressed: 'Stressed',
-    feelingLowEnergy: 'Low energy',
     feelingAnxious: 'Anxious or worried',
     feelingLonely: 'Lonely',
     feelingOverwhelmed: 'Exhausted',
-    feelingCurious: 'Looking for something new',
+    feelingLowEnergy: 'Low energy',
     feelingChangeMyself: 'I want to change myself',
     feelingFuture: 'I want a better future',
     feelingPartner: 'I want a partner',
     feelingDreamJob: 'I want my dream job',
+    feelingCurious: 'Looking for something new',
 
     // Feeling Flow - Step 2
     categoryTitle: 'What kind of healing are you looking for?',
@@ -595,7 +624,7 @@ const translations = {
     categoryMental: 'Mental Relief',
     categoryMentalDesc: 'Meditation, healing, aromatherapy, etc.',
     categoryPlayful: 'Playful Interaction',
-    categoryPlayfulDesc: 'Fortune telling, art, workshops, etc.',
+    categoryPlayfulDesc: 'Fortune telling, retreats, art, workshops, etc.',
     categoryFortuneTelling: 'Fortune Telling',
     categoryFortuneTellingDesc: 'Tarot, oracle cards, astrology, etc.',
     categoryRetreat: 'Retreat',
@@ -1002,6 +1031,35 @@ const translations = {
     // Notifications
     notificationTitle: 'Notifications',
     notificationEmpty: 'No new notifications',
+
+    // Retreat Section
+    retreatSectionTitle: 'Retreats',
+    retreatSectionDesc: 'Discover wellness retreats around the world',
+    retreatLocation: 'Location',
+    retreatDuration: 'Duration',
+    retreatDays: 'days',
+    retreatProvider: 'Provider',
+    retreatBookNow: 'Book Now',
+    retreatIncludes: 'Includes',
+    retreatNote: '* Airfare / transportation not included',
+    retreatViewAll: 'View All Retreats',
+
+    // Forum / Message Board
+    forumTitle: 'Message Board',
+    forumDesc: 'Discuss with the community',
+    forumNewThread: 'New Topic',
+    forumThreadTitle: 'Title',
+    forumThreadTitlePlaceholder: 'Enter topic title...',
+    forumThreadBody: 'Content',
+    forumThreadBodyPlaceholder: 'Share your question or idea...',
+    forumPost: 'Post',
+    forumReply: 'Reply',
+    forumReplyPlaceholder: 'Write a reply...',
+    forumReplies: 'replies',
+    forumPostedBy: 'Posted by',
+    forumEmpty: 'No topics yet',
+    forumLoginRequired: 'Login required to post topics',
+    forumRules: 'Community guidelines: Be respectful in all interactions.',
 
     // Admin
     adminTitle: 'Admin Panel',

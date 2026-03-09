@@ -155,6 +155,11 @@ const routes = [
   { pattern: /^\/journal\/new$/, handler: 'journalNew', nav: 'profile' },
   { pattern: /^\/points$/, handler: 'pointsPage', nav: 'profile' },
   { pattern: /^\/notifications$/, handler: 'notifications', nav: 'profile' },
+  { pattern: /^\/retreats$/, handler: 'retreats', nav: 'home' },
+  { pattern: /^\/retreats\/(\d+)$/, handler: 'retreatDetail', nav: 'home' },
+  { pattern: /^\/forum$/, handler: 'forum', nav: 'home' },
+  { pattern: /^\/forum\/new$/, handler: 'forumNew', nav: 'home' },
+  { pattern: /^\/forum\/(\d+)$/, handler: 'forumThread', nav: 'home' },
 ];
 
 function router() {
@@ -224,6 +229,11 @@ function renderRoute(handler, el, header, params) {
     journalNew: () => renderJournalNew(el, header),
     pointsPage: () => renderPoints(el, header),
     notifications: () => renderNotifications(el, header),
+    retreats: () => renderRetreats(el, header),
+    retreatDetail: () => renderRetreatDetail(el, header, params[0]),
+    forum: () => renderForum(el, header),
+    forumThread: () => renderForumThread(el, header, params[0]),
+    forumNew: () => renderForumNewThread(el, header),
   };
   (handlers[handler] || handlers.landing)();
 }
@@ -329,6 +339,8 @@ function renderLanding(el, header) {
       <button class="btn-secondary" onclick="navigate('#/apply')">${t('landingSecondary')}</button>
 
       <div class="landing-quick-links">
+        <button class="quick-link-btn" onclick="navigate('#/retreats')">🏕️ ${t('retreatSectionTitle')}</button>
+        <button class="quick-link-btn" onclick="navigate('#/forum')">💬 ${t('forumTitle')}</button>
         <button class="quick-link-btn" onclick="navigate('#/gift-card')">🎁 ${t('giftCardTitle')}</button>
         <button class="quick-link-btn" onclick="navigate('#/blog')">📝 ${t('blogTitle')}</button>
         <button class="quick-link-btn" onclick="navigate('#/digital-products')">📦 ${t('digitalProductsTitle')}</button>
@@ -421,15 +433,15 @@ function renderFeelingStep1(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search');
   const feelings = [
     { key: 'stressed', label: t('feelingStressed') },
-    { key: 'low-energy', label: t('feelingLowEnergy') },
     { key: 'anxious', label: t('feelingAnxious') },
     { key: 'lonely', label: t('feelingLonely') },
     { key: 'overwhelmed', label: t('feelingOverwhelmed') },
-    { key: 'curious', label: t('feelingCurious') },
+    { key: 'low-energy', label: t('feelingLowEnergy') },
     { key: 'change-myself', label: t('feelingChangeMyself') },
     { key: 'future', label: t('feelingFuture') },
     { key: 'partner', label: t('feelingPartner') },
     { key: 'dream-job', label: t('feelingDreamJob') },
+    { key: 'curious', label: t('feelingCurious') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -451,9 +463,10 @@ function renderFeelingStep2(el, header) {
   const categories = [
     { key: 'physical', icon: '💆', label: t('categoryPhysical'), desc: t('categoryPhysicalDesc') },
     { key: 'mental', icon: '🧘', label: t('categoryMental'), desc: t('categoryMentalDesc') },
-    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
-    { key: 'fortune-telling', icon: '🔮', label: t('categoryFortuneTelling'), desc: t('categoryFortuneTellingDesc') },
-    { key: 'retreat', icon: '🏕️', label: t('categoryRetreat'), desc: t('categoryRetreatDesc') },
+    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc'), subcategories: [
+      { key: 'fortune-telling', icon: '🔮', label: t('categoryFortuneTelling'), desc: t('categoryFortuneTellingDesc') },
+      { key: 'retreat', icon: '🏕️', label: t('categoryRetreat'), desc: t('categoryRetreatDesc') },
+    ]},
   ];
   el.innerHTML = `
     <div class="page">
@@ -467,6 +480,12 @@ function renderFeelingStep2(el, header) {
             <div class="category-icon">${c.icon}</div>
             <div><h3>${c.label}</h3><p>${c.desc}</p></div>
           </div>
+          ${c.subcategories ? c.subcategories.map(sc => `
+            <div class="category-card subcategory" onclick="state.category='${sc.key}'; navigate('#/search/feeling/delivery')">
+              <div class="category-icon">${sc.icon}</div>
+              <div><h3>${sc.label}</h3><p>${sc.desc}</p></div>
+            </div>
+          `).join('') : ''}
         `).join('')}
       </div>
     </div>
@@ -596,8 +615,6 @@ function renderCriteria(el, header) {
     { value: 'physical', label: t('categoryPhysical') },
     { value: 'mental', label: t('categoryMental') },
     { value: 'playful', label: t('categoryPlayful') },
-    { value: 'fortune-telling', label: t('categoryFortuneTelling') },
-    { value: 'retreat', label: t('categoryRetreat') },
   ];
   const locationOptions = [
     { value: '', label: t('criteriaLocationAll') },
@@ -610,8 +627,8 @@ function renderCriteria(el, header) {
     { value: '', label: t('criteriaPriceAll') },
     { value: '8000', label: '〜¥8,000' },
     { value: '15000', label: '〜¥15,000' },
-    { value: '25000', label: '〜¥25,000' },
-    { value: '30000', label: '¥25,000+' },
+    { value: '35000', label: '〜¥35,000' },
+    { value: '35001', label: '¥35,000+' },
   ];
   el.innerHTML = `
     <div class="page">
@@ -2093,6 +2110,207 @@ function renderNotifications(el, header) {
       `).join('')}
     </div>
   `;
+}
+
+// ===== Retreats =====
+function renderRetreats(el, header) {
+  renderHeaderWithBack(header, t('retreatSectionTitle'), '#/');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('retreatSectionTitle')}</h1>
+      <p class="section-desc">${t('retreatSectionDesc')}</p>
+      <p class="retreat-note">${t('retreatNote')}</p>
+      ${retreats.map(r => `
+        <div class="retreat-card" onclick="navigate('#/retreats/${r.id}')">
+          <div class="retreat-card-header">
+            <div class="retreat-card-icon">🏕️</div>
+            <div class="retreat-card-info">
+              <h3>${getLocalizedText(r.title)}</h3>
+              <p class="retreat-location">📍 ${getLocalizedText(r.location)}</p>
+            </div>
+          </div>
+          <p class="retreat-card-desc">${getLocalizedText(r.description)}</p>
+          <div class="retreat-card-meta">
+            <span class="retreat-duration">📅 ${r.duration}${t('retreatDays')}</span>
+            <span class="retreat-price">¥${r.price.toLocaleString()}</span>
+          </div>
+          <div class="retreat-tags">${r.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderRetreatDetail(el, header, id) {
+  const retreat = retreats.find(r => r.id === parseInt(id));
+  if (!retreat) { navigate('#/retreats'); return; }
+  renderHeaderWithBack(header, getLocalizedText(retreat.title), '#/retreats');
+  const includes = getLocalizedText(retreat.includes);
+  el.innerHTML = `
+    <div class="page">
+      <div class="retreat-detail-hero">
+        <div class="retreat-hero-icon">🏕️</div>
+        <h1 class="page-title">${getLocalizedText(retreat.title)}</h1>
+        <p class="retreat-location-lg">📍 ${getLocalizedText(retreat.location)}</p>
+      </div>
+      <div class="profile-section">
+        <p class="retreat-detail-desc">${getLocalizedText(retreat.description)}</p>
+      </div>
+      <div class="profile-section">
+        <h2>${t('retreatProvider')}</h2>
+        <p>${getLocalizedText(retreat.provider)}</p>
+      </div>
+      <div class="profile-section">
+        <h2>${t('retreatIncludes')}</h2>
+        <ul class="retreat-includes-list">
+          ${Array.isArray(includes) ? includes.map(item => `<li>✓ ${item}</li>`).join('') : `<li>${includes}</li>`}
+        </ul>
+      </div>
+      <div class="retreat-detail-meta">
+        <div class="retreat-meta-item">
+          <span class="meta-label">${t('retreatDuration')}</span>
+          <span class="meta-value">${retreat.duration}${t('retreatDays')}</span>
+        </div>
+        <div class="retreat-meta-item">
+          <span class="meta-label">${t('bookingPrice')}</span>
+          <span class="meta-value retreat-price-lg">¥${retreat.price.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="retreat-note mt-12">${t('retreatNote')}</div>
+      <button class="btn-primary mt-16" onclick="requireAuth('book-retreat', () => { showToast(t('retreatBookNow') + '!'); })">${t('retreatBookNow')}</button>
+    </div>
+  `;
+}
+
+// ===== Forum / Message Board =====
+let forumReplyData = JSON.parse(localStorage.getItem('iyashi-forum-replies') || '{}');
+function saveForumReplies() { localStorage.setItem('iyashi-forum-replies', JSON.stringify(forumReplyData)); }
+
+let forumUserThreads = JSON.parse(localStorage.getItem('iyashi-forum-threads') || '[]');
+function saveForumThreads() { localStorage.setItem('iyashi-forum-threads', JSON.stringify(forumUserThreads)); }
+
+function renderForum(el, header) {
+  renderHeaderWithBack(header, t('forumTitle'), '#/');
+  const allThreads = [...forumUserThreads, ...forumThreads].sort((a, b) => b.date > a.date ? 1 : -1);
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('forumTitle')}</h1>
+      <p class="section-desc">${t('forumDesc')}</p>
+      <p class="forum-rules">${t('forumRules')}</p>
+      ${authState.isLoggedIn
+        ? `<button class="btn-primary mb-16" onclick="navigate('#/forum/new')">+ ${t('forumNewThread')}</button>`
+        : `<div class="info-box mb-16">${t('forumLoginRequired')}</div>`
+      }
+      ${allThreads.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('forumEmpty')}</p></div>` : ''}
+      ${allThreads.map(thread => {
+        const replyCount = (thread.replies ? thread.replies.length : 0) + ((forumReplyData[thread.id] || []).length);
+        return `
+          <div class="forum-thread-card" onclick="navigate('#/forum/${thread.id}')">
+            <h3 class="forum-thread-title">${getLocalizedText(thread.title)}</h3>
+            <p class="forum-thread-preview">${getLocalizedText(thread.body).slice(0, 80)}...</p>
+            <div class="forum-thread-meta">
+              <span class="forum-author">${t('forumPostedBy')}: ${getLocalizedText(thread.author)}</span>
+              <span class="forum-date">${thread.date}</span>
+              <span class="forum-reply-count">💬 ${replyCount} ${t('forumReplies')}</span>
+            </div>
+            ${thread.tags ? `<div class="forum-tags">${thread.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}</div>` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderForumThread(el, header, id) {
+  if (id === 'new') {
+    renderForumNewThread(el, header);
+    return;
+  }
+  const thread = forumThreads.find(t => t.id === parseInt(id)) || forumUserThreads.find(t => t.id === id);
+  if (!thread) { navigate('#/forum'); return; }
+  renderHeaderWithBack(header, t('forumTitle'), '#/forum');
+  const userReplies = forumReplyData[thread.id] || [];
+  const allReplies = [...(thread.replies || []), ...userReplies];
+  el.innerHTML = `
+    <div class="page">
+      <div class="forum-thread-detail">
+        <h1 class="forum-detail-title">${getLocalizedText(thread.title)}</h1>
+        <div class="forum-detail-meta">
+          <span>${t('forumPostedBy')}: ${getLocalizedText(thread.author)}</span>
+          <span>${thread.date}</span>
+        </div>
+        <div class="forum-detail-body">${getLocalizedText(thread.body)}</div>
+      </div>
+      <div class="forum-replies-section">
+        <h2>${allReplies.length} ${t('forumReplies')}</h2>
+        ${allReplies.map(r => `
+          <div class="forum-reply">
+            <div class="forum-reply-header">
+              <span class="forum-reply-author">${getLocalizedText(r.author)}</span>
+              <span class="forum-reply-date">${r.date}</span>
+            </div>
+            <p class="forum-reply-text">${getLocalizedText(r.text)}</p>
+          </div>
+        `).join('')}
+      </div>
+      ${authState.isLoggedIn ? `
+        <div class="forum-reply-form">
+          <textarea id="forum-reply-input" placeholder="${t('forumReplyPlaceholder')}" style="min-height:80px"></textarea>
+          <button class="btn-primary mt-8" onclick="onForumReply(${typeof thread.id === 'string' ? `'${thread.id}'` : thread.id})">${t('forumReply')}</button>
+        </div>
+      ` : `<div class="info-box">${t('forumLoginRequired')}</div>`}
+    </div>
+  `;
+}
+
+function renderForumNewThread(el, header) {
+  renderHeaderWithBack(header, t('forumNewThread'), '#/forum');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('forumNewThread')}</h1>
+      <div class="form-group">
+        <label>${t('forumThreadTitle')}</label>
+        <input type="text" id="forum-thread-title" placeholder="${t('forumThreadTitlePlaceholder')}">
+      </div>
+      <div class="form-group">
+        <label>${t('forumThreadBody')}</label>
+        <textarea id="forum-thread-body" placeholder="${t('forumThreadBodyPlaceholder')}" style="min-height:120px"></textarea>
+      </div>
+      <button class="btn-primary" onclick="onForumCreateThread()">${t('forumPost')}</button>
+    </div>
+  `;
+}
+
+function onForumCreateThread() {
+  const title = document.getElementById('forum-thread-title').value.trim();
+  const body = document.getElementById('forum-thread-body').value.trim();
+  if (!title || !body) return;
+  const thread = {
+    id: 'user-' + Date.now(),
+    title: title,
+    body: body,
+    author: authState.user ? authState.user.name : 'User',
+    date: new Date().toISOString().slice(0, 10),
+    replies: [],
+    tags: [],
+  };
+  forumUserThreads.unshift(thread);
+  saveForumThreads();
+  showToast(t('forumPost') + '!');
+  navigate('#/forum');
+}
+
+function onForumReply(threadId) {
+  const text = document.getElementById('forum-reply-input').value.trim();
+  if (!text) return;
+  if (!forumReplyData[threadId]) forumReplyData[threadId] = [];
+  forumReplyData[threadId].push({
+    author: authState.user ? authState.user.name : 'User',
+    text: text,
+    date: new Date().toISOString().slice(0, 10),
+  });
+  saveForumReplies();
+  router();
 }
 
 // ===== Init =====

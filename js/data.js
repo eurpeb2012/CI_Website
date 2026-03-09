@@ -1158,6 +1158,98 @@ const testUser = {
   email: 'test@healinggarden.jp',
 };
 
+// ===== Retreat Data =====
+const retreats = [
+  {
+    id: 1,
+    title: { ja: 'バリ島ヨガリトリート', en: 'Bali Yoga Retreat' },
+    location: { ja: 'バリ島、インドネシア', en: 'Bali, Indonesia' },
+    description: { ja: '熱帯の楽園でヨガと瞑想を通じて心身をリフレッシュ。地元のヒーラーによるスパトリートメント付き。', en: 'Refresh your mind and body through yoga and meditation in a tropical paradise. Includes spa treatments by local healers.' },
+    provider: { ja: 'バリ・ウェルネス・センター', en: 'Bali Wellness Center' },
+    duration: 5,
+    price: 180000,
+    includes: { ja: ['宿泊5泊', 'ヨガセッション（毎日）', 'スパトリートメント2回', '食事（オーガニック）'], en: ['5-night accommodation', 'Daily yoga sessions', '2 spa treatments', 'Organic meals'] },
+    tags: ['yoga', 'meditation', 'spa'],
+    image: null,
+  },
+  {
+    id: 2,
+    title: { ja: 'ハワイ マインドフルネスリトリート', en: 'Hawaii Mindfulness Retreat' },
+    location: { ja: 'マウイ島、ハワイ', en: 'Maui, Hawaii' },
+    description: { ja: '海と山に囲まれた環境でマインドフルネスを実践。ネイチャーウォーク、瞑想、地元の伝統的なヒーリング体験。', en: 'Practice mindfulness surrounded by ocean and mountains. Nature walks, meditation, and traditional Hawaiian healing experiences.' },
+    provider: { ja: 'アロハ・ヒーリング・スペース', en: 'Aloha Healing Space' },
+    duration: 4,
+    price: 250000,
+    includes: { ja: ['宿泊4泊', 'マインドフルネスセッション', 'ネイチャーウォーク', 'ハワイアンヒーリング体験'], en: ['4-night accommodation', 'Mindfulness sessions', 'Nature walks', 'Hawaiian healing experience'] },
+    tags: ['mindfulness', 'nature', 'healing'],
+    image: null,
+  },
+  {
+    id: 3,
+    title: { ja: 'インド アーユルヴェーダリトリート', en: 'India Ayurveda Retreat' },
+    location: { ja: 'ケーララ州、インド', en: 'Kerala, India' },
+    description: { ja: 'アーユルヴェーダの本場ケーララで本格的なデトックスプログラム。個別カウンセリングと体質に合わせたトリートメント。', en: 'Authentic detox program in the birthplace of Ayurveda. Personalized consultation and treatments tailored to your constitution.' },
+    provider: { ja: 'ケーララ・アーユルヴェーダ・リゾート', en: 'Kerala Ayurveda Resort' },
+    duration: 7,
+    price: 150000,
+    includes: { ja: ['宿泊7泊', 'アーユルヴェーダ診断', '毎日のトリートメント', 'ベジタリアン食事'], en: ['7-night accommodation', 'Ayurveda diagnosis', 'Daily treatments', 'Vegetarian meals'] },
+    tags: ['ayurveda', 'detox', 'traditional'],
+    image: null,
+  },
+  {
+    id: 4,
+    title: { ja: '箱根 温泉リトリート', en: 'Hakone Hot Spring Retreat' },
+    location: { ja: '箱根、神奈川県', en: 'Hakone, Kanagawa' },
+    description: { ja: '日本の伝統的な温泉文化を楽しむ週末リトリート。露天風呂、森林浴、茶道体験。', en: 'Weekend retreat enjoying traditional Japanese hot spring culture. Open-air baths, forest bathing, and tea ceremony.' },
+    provider: { ja: '箱根ヒーリングリゾート', en: 'Hakone Healing Resort' },
+    duration: 2,
+    price: 65000,
+    includes: { ja: ['宿泊2泊', '温泉入浴', '森林浴ガイド', '茶道体験', '懐石料理'], en: ['2-night accommodation', 'Hot spring bathing', 'Forest bathing guide', 'Tea ceremony', 'Kaiseki cuisine'] },
+    tags: ['onsen', 'nature', 'japanese'],
+    image: null,
+  },
+];
+
+// ===== Forum Data =====
+const forumThreads = [
+  {
+    id: 1,
+    title: { ja: '東南アジアでのリトリートおすすめ教えてください！', en: 'Recommendations for retreats in Southeast Asia?' },
+    body: { ja: '来年の春に東南アジアでリトリートに参加したいと考えています。バリ島やタイなど、おすすめの場所や体験があれば教えてください。', en: 'I\'m thinking of joining a retreat in Southeast Asia next spring. Any recommendations for places or experiences in Bali, Thailand, etc.?' },
+    author: { ja: '田中 美咲', en: 'Misaki Tanaka' },
+    date: '2026-03-05',
+    replies: [
+      { author: { ja: '鈴木 健太', en: 'Kenta Suzuki' }, text: { ja: 'バリ島のウブドがおすすめです！ヨガリトリートがたくさんあります。', en: 'I recommend Ubud in Bali! There are lots of yoga retreats there.' }, date: '2026-03-05' },
+      { author: { ja: '山田 花子', en: 'Hanako Yamada' }, text: { ja: 'タイのチェンマイも良いですよ。瞑想リトリートが充実しています。', en: 'Chiang Mai in Thailand is also great. They have wonderful meditation retreats.' }, date: '2026-03-06' },
+    ],
+    tags: ['retreat', 'travel'],
+  },
+  {
+    id: 2,
+    title: { ja: 'アロマセラピー初心者です。おすすめの精油は？', en: 'Aromatherapy beginner - recommended essential oils?' },
+    body: { ja: 'アロマセラピーに興味があります。初心者におすすめの精油や使い方を教えていただけませんか？', en: 'I\'m interested in aromatherapy. Could you recommend essential oils and usage tips for beginners?' },
+    author: { ja: '佐藤 由美', en: 'Yumi Sato' },
+    date: '2026-03-04',
+    replies: [
+      { author: { ja: '高橋 リナ', en: 'Rina Takahashi' }, text: { ja: 'ラベンダーとティーツリーから始めるのがおすすめです。リラックス効果が高いですよ。', en: 'I recommend starting with lavender and tea tree. They have great relaxation effects.' }, date: '2026-03-04' },
+    ],
+    tags: ['aromatherapy', 'beginner'],
+  },
+  {
+    id: 3,
+    title: { ja: '瞑想の習慣化のコツ', en: 'Tips for making meditation a habit' },
+    body: { ja: '瞑想を始めたいのですが、なかなか続きません。習慣化するコツがあれば教えてください。', en: 'I want to start meditating but can\'t seem to stick with it. Any tips for making it a habit?' },
+    author: { ja: '中村 大輔', en: 'Daisuke Nakamura' },
+    date: '2026-03-03',
+    replies: [
+      { author: { ja: '伊藤 真理', en: 'Mari Ito' }, text: { ja: '最初は5分から始めて、毎日同じ時間にやるのがポイントです。', en: 'Start with just 5 minutes and do it at the same time every day.' }, date: '2026-03-03' },
+      { author: { ja: '小林 優', en: 'Yu Kobayashi' }, text: { ja: 'アプリを使うと続けやすいですよ。タイマー機能が便利です。', en: 'Using an app makes it easier to continue. The timer feature is really convenient.' }, date: '2026-03-04' },
+      { author: { ja: '渡辺 さくら', en: 'Sakura Watanabe' }, text: { ja: '朝起きてすぐがおすすめです。頭がクリアな状態で始められます。', en: 'I recommend right after waking up. You can start with a clear mind.' }, date: '2026-03-05' },
+    ],
+    tags: ['meditation', 'wellness'],
+  },
+];
+
 // ===== Helper Functions =====
 function getTherapist(id) {
   return therapists.find(t => t.id === parseInt(id));
@@ -1169,7 +1261,14 @@ function getTherapistByReferralCode(code) {
 
 function searchTherapists(filters) {
   let results = therapists.filter(therapist => {
-    if (filters.category && !therapist.categories.includes(filters.category)) return false;
+    if (filters.category) {
+      // Subcategory support: fortune-telling and retreat are subcategories of playful
+      if (filters.category === 'playful') {
+        if (!therapist.categories.includes('playful') && !therapist.categories.includes('fortune-telling') && !therapist.categories.includes('retreat')) return false;
+      } else {
+        if (!therapist.categories.includes(filters.category)) return false;
+      }
+    }
     if (filters.delivery && !therapist.delivery.includes(filters.delivery)) return false;
     if (filters.maxPrice) {
       const minPrice = Math.min(...therapist.sessions.map(s => s.price));

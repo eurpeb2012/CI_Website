@@ -2687,6 +2687,287 @@ body {
   background: var(--theme-primary-600);
 }
 
+/* ===== Subcategory Styling ===== */
+.category-card.subcategory {
+  margin-left: 24px;
+  border-left: 3px solid var(--theme-primary-300);
+  background: var(--theme-primary-50, #f0faf4);
+}
+
+/* ===== Retreat Cards ===== */
+.retreat-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.retreat-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.retreat-card:active {
+  transform: scale(0.98);
+}
+
+.retreat-card-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.retreat-card-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.retreat-card-info h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.retreat-location {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.retreat-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.retreat-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.retreat-duration {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.retreat-price {
+  font-weight: 700;
+  color: var(--theme-primary-700);
+  font-size: 1.1rem;
+}
+
+.retreat-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Retreat Detail */
+.retreat-detail-hero {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.retreat-hero-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.retreat-location-lg {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.retreat-detail-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.retreat-includes-list {
+  list-style: none;
+  padding: 0;
+}
+
+.retreat-includes-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 0.9rem;
+}
+
+.retreat-detail-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.retreat-meta-item {
+  flex: 1;
+  background: var(--theme-primary-100);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.retreat-meta-item .meta-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.retreat-meta-item .meta-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.retreat-price-lg {
+  color: var(--theme-primary-700);
+}
+
+/* ===== Forum / Message Board ===== */
+.forum-rules {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: var(--theme-primary-50, #f0faf4);
+  border-radius: 8px;
+}
+
+.forum-thread-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.forum-thread-card:active {
+  transform: scale(0.98);
+}
+
+.forum-thread-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.forum-thread-preview {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.forum-thread-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.forum-reply-count {
+  color: var(--theme-primary-600);
+  font-weight: 500;
+}
+
+.forum-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* Forum Thread Detail */
+.forum-thread-detail {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--gray-200);
+}
+
+.forum-detail-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.forum-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.forum-detail-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.forum-replies-section {
+  margin-bottom: 16px;
+}
+
+.forum-replies-section h2 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.forum-reply {
+  background: var(--theme-primary-50, #f0faf4);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.forum-reply-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.forum-reply-author {
+  font-weight: 600;
+  color: var(--theme-primary-700);
+}
+
+.forum-reply-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.forum-reply-form {
+  margin-top: 16px;
+}
+
+.forum-reply-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
 /* ================================================================
    ADMIN PANEL STYLES
    ================================================================ */
