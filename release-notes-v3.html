@@ -271,6 +271,10 @@
         <span class="lang-ja">🌿 アプリを開く</span>
         <span class="lang-en">🌿 Open the App</span>
       </a>
+      <a href="https://eurpeb2012.github.io/CI_Website/admin.html" style="display:inline-block;background:rgba(255,255,255,0.3);color:white;padding:10px 24px;border-radius:24px;text-decoration:none;font-weight:700;font-size:0.9rem;transition:transform 0.2s;margin-left:8px;border:1px solid rgba(255,255,255,0.5)" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="lang-ja">⚙️ 管理パネル</span>
+        <span class="lang-en">⚙️ Admin Panel</span>
+      </a>
     </div>
   </div>
 
@@ -390,6 +394,117 @@
           <p>
             <span class="lang-ja">コミュニティ掲示板を追加。トピックの投稿と返信が可能（ログイン必要）。リトリート、アロマ、瞑想など3つのサンプルトピック付き。コミュニティガイドライン表示。</span>
             <span class="lang-en">Community message board added. Post topics and replies (login required). 3 sample threads on retreats, aromatherapy, and meditation. Community guidelines shown.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--gray-100)">⚙️</div>
+        <div>
+          <h2>
+            <span class="lang-ja">管理パネル（デスクトップ向け）</span>
+            <span class="lang-en">Admin Panel (Desktop)</span>
+          </h2>
+          <div class="section-desc">
+            <span class="lang-ja">プラットフォーム運営のための管理画面</span>
+            <span class="lang-en">Platform management dashboard for operators</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--gray-500);margin-bottom:16px;line-height:1.6">
+        <span class="lang-ja">管理パネルは<strong>admin.html</strong>からアクセスできるデスクトップ向け画面（最大幅960px）です。サイドバーナビゲーション、JP/EN切替対応。8つの管理画面で構成されています。</span>
+        <span class="lang-en">The admin panel is a desktop-focused interface (960px max-width) accessible via <strong>admin.html</strong>. It features sidebar navigation with JP/EN toggle and 8 management screens.</span>
+      </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-emoji">📊</div>
+          <h3>
+            <span class="lang-ja">ダッシュボード</span>
+            <span class="lang-en">Dashboard</span>
+          </h3>
+          <p>
+            <span class="lang-ja">登録セラピスト数・ユーザー数・アクティブ予約・月間売上・手数料の統計。最近のアクティビティとクイックリンク。</span>
+            <span class="lang-en">Stats for therapists, users, active bookings, monthly revenue, and fees. Recent activity feed and quick links.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">👤</div>
+          <h3>
+            <span class="lang-ja">セラピスト管理</span>
+            <span class="lang-en">Therapist Management</span>
+          </h3>
+          <p>
+            <span class="lang-ja">プラン・ステータスでフィルタリング。個別プロフィール表示、プラン管理、統計情報。</span>
+            <span class="lang-en">Filter by tier and status. Individual profiles, tier management, and statistics.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">👥</div>
+          <h3>
+            <span class="lang-ja">ユーザー管理</span>
+            <span class="lang-en">User Management</span>
+          </h3>
+          <p>
+            <span class="lang-ja">ユーザー検索、プロフィール詳細、ステータス変更。予約数と登録日の一覧表示。</span>
+            <span class="lang-en">User search, profile details, status changes. Booking counts and join dates listed.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">📅</div>
+          <h3>
+            <span class="lang-ja">予約一覧</span>
+            <span class="lang-en">Bookings</span>
+          </h3>
+          <p>
+            <span class="lang-ja">全予約のステータス別フィルタリング（完了・予定・キャンセル）。セラピストとクライアントの紐付け表示。</span>
+            <span class="lang-en">Filter all bookings by status (completed, upcoming, cancelled). Shows therapist-client associations.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">💰</div>
+          <h3>
+            <span class="lang-ja">収益・分析</span>
+            <span class="lang-en">Revenue & Analytics</span>
+          </h3>
+          <p>
+            <span class="lang-ja">総売上・プラットフォーム手数料・紹介報酬・純収益。月次推移、セラピスト別収益、手数料体系の表示。</span>
+            <span class="lang-en">Gross revenue, platform fees, referral payouts, and net income. Monthly trends, per-therapist breakdown, and fee structure.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🛡</div>
+          <h3>
+            <span class="lang-ja">コンテンツ管理</span>
+            <span class="lang-en">Moderation</span>
+          </h3>
+          <p>
+            <span class="lang-ja">レビューと通報の未処理・処理済み一覧。承認・削除・却下のアクション。</span>
+            <span class="lang-en">Pending and resolved reviews/reports. Approve, remove, or dismiss actions.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🔗</div>
+          <h3>
+            <span class="lang-ja">紹介トラッキング</span>
+            <span class="lang-en">Referral Tracking</span>
+          </h3>
+          <p>
+            <span class="lang-ja">総紹介数・総コミッション。紹介コード一覧、有効/無効切替、紹介チェーン表示。</span>
+            <span class="lang-en">Total referrals and commissions. Referral code list with enable/disable toggle and referral chains.</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">⚙</div>
+          <h3>
+            <span class="lang-ja">カレンダー設定</span>
+            <span class="lang-en">Calendar Settings</span>
+          </h3>
+          <p>
+            <span class="lang-ja">予約受付期間のグローバル設定、プラン別デフォルト、セラピスト個別設定。ブラックアウト日の管理。</span>
+            <span class="lang-en">Global booking window settings, per-tier defaults, per-therapist overrides, and blackout date management.</span>
           </p>
         </div>
       </div>
