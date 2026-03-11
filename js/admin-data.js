@@ -64,14 +64,14 @@ const moderationQueue = [
 ];
 
 const adminReferrals = [
-  { therapistId: 1, therapistName: { ja: '山田 花子', en: 'Hanako Yamada' }, code: 'HANAKO2026', totalReferred: 2, referredIds: [2, 8], totalCommission: 8400, status: 'active' },
-  { therapistId: 3, therapistName: { ja: '佐藤 美月', en: 'Mitsuki Sato' }, code: 'MITSUKI2026', totalReferred: 2, referredIds: [4, 7], totalCommission: 13600, status: 'active' },
-  { therapistId: 5, therapistName: { ja: '中村 さくら', en: 'Sakura Nakamura' }, code: 'SAKURA2026', totalReferred: 1, referredIds: [6], totalCommission: 3000, status: 'active' },
-  { therapistId: 7, therapistName: { ja: '伊藤 ケン', en: 'Ken Ito' }, code: 'KEN2026', totalReferred: 1, referredIds: [5], totalCommission: 6000, status: 'active' },
-  { therapistId: 2, therapistName: { ja: '鈴木 太郎', en: 'Taro Suzuki' }, code: 'TARO2026', totalReferred: 0, referredIds: [], totalCommission: 0, status: 'active' },
-  { therapistId: 4, therapistName: { ja: '田中 誠', en: 'Makoto Tanaka' }, code: 'MAKOTO2026', totalReferred: 0, referredIds: [], totalCommission: 0, status: 'active' },
-  { therapistId: 6, therapistName: { ja: '高橋 レイ', en: 'Rei Takahashi' }, code: 'REI2026', totalReferred: 0, referredIds: [], totalCommission: 0, status: 'active' },
-  { therapistId: 8, therapistName: { ja: '小林 あかり', en: 'Akari Kobayashi' }, code: 'AKARI2026', totalReferred: 0, referredIds: [], totalCommission: 0, status: 'active' },
+  { therapist_id: 1, name_ja: '山田 花子', name_en: 'Hanako Yamada', referral_code: 'HANAKO2026', total_referred: 2, referred_ids: [2, 8], total_commission: 8400, status: 'active' },
+  { therapist_id: 3, name_ja: '佐藤 美月', name_en: 'Mitsuki Sato', referral_code: 'MITSUKI2026', total_referred: 2, referred_ids: [4, 7], total_commission: 13600, status: 'active' },
+  { therapist_id: 5, name_ja: '中村 さくら', name_en: 'Sakura Nakamura', referral_code: 'SAKURA2026', total_referred: 1, referred_ids: [6], total_commission: 3000, status: 'active' },
+  { therapist_id: 7, name_ja: '伊藤 ケン', name_en: 'Ken Ito', referral_code: 'KEN2026', total_referred: 1, referred_ids: [5], total_commission: 6000, status: 'active' },
+  { therapist_id: 2, name_ja: '鈴木 太郎', name_en: 'Taro Suzuki', referral_code: 'TARO2026', total_referred: 0, referred_ids: [], total_commission: 0, status: 'active' },
+  { therapist_id: 4, name_ja: '田中 誠', name_en: 'Makoto Tanaka', referral_code: 'MAKOTO2026', total_referred: 0, referred_ids: [], total_commission: 0, status: 'active' },
+  { therapist_id: 6, name_ja: '高橋 レイ', name_en: 'Rei Takahashi', referral_code: 'REI2026', total_referred: 0, referred_ids: [], total_commission: 0, status: 'active' },
+  { therapist_id: 8, name_ja: '小林 あかり', name_en: 'Akari Kobayashi', referral_code: 'AKARI2026', total_referred: 0, referred_ids: [], total_commission: 0, status: 'active' },
 ];
 
 const calendarSettings = {
@@ -86,11 +86,11 @@ const calendarSettings = {
 };
 
 const monthlyRevenueData = [
-  { month: '2025-10', gross: 312000, platformFees: 24960, referralPayouts: 3200, net: 21760 },
-  { month: '2025-11', gross: 456000, platformFees: 38880, referralPayouts: 5600, net: 33280 },
-  { month: '2025-12', gross: 578000, platformFees: 48540, referralPayouts: 7600, net: 40940 },
-  { month: '2026-01', gross: 692000, platformFees: 58320, referralPayouts: 8800, net: 49520 },
-  { month: '2026-02', gross: 843500, platformFees: 72630, referralPayouts: 12600, net: 60030 },
+  { month: '2025-10', total_bookings: 12, completed_bookings: 10, cancelled_bookings: 2, gross_revenue: 312000, platform_fees: 24960, therapist_payouts: 287040 },
+  { month: '2025-11', total_bookings: 18, completed_bookings: 16, cancelled_bookings: 2, gross_revenue: 456000, platform_fees: 38880, therapist_payouts: 417120 },
+  { month: '2025-12', total_bookings: 22, completed_bookings: 19, cancelled_bookings: 3, gross_revenue: 578000, platform_fees: 48540, therapist_payouts: 529460 },
+  { month: '2026-01', total_bookings: 28, completed_bookings: 25, cancelled_bookings: 3, gross_revenue: 692000, platform_fees: 58320, therapist_payouts: 633680 },
+  { month: '2026-02', total_bookings: 35, completed_bookings: 31, cancelled_bookings: 4, gross_revenue: 843500, platform_fees: 72630, therapist_payouts: 770870 },
 ];
 
 const recentActivity = [

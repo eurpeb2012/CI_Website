@@ -50,6 +50,7 @@ const translations = {
     categoryFortuneTellingDesc: 'タロット、オラクルカード、占星術など',
     categoryRetreat: 'リトリート',
     categoryRetreatDesc: '自然の中でのリフレッシュ体験',
+    categoryRetreatInPersonDesc: '対面のみ・自然の中でのリフレッシュ体験',
 
     // Feeling Flow - Step 3
     deliveryTitle: 'ご希望の方法は？',
@@ -102,6 +103,14 @@ const translations = {
     bookingCancelSame: '当日：100%',
     bookingAgree: '利用規約とキャンセルポリシーに同意します',
     bookingConfirm: '確認して支払う',
+    bookingSelectDate: '日付を選択',
+    bookingSelectTime: '時間を選択',
+    bookingNoSlots: 'この日は空きがありません',
+    bookingTimeConflict: 'この時間は既に予約済みです',
+    bookingPrevMonth: '前月',
+    bookingNextMonth: '翌月',
+    bookingLoading: '予約中...',
+    bookingError: '予約に失敗しました。もう一度お試しください。',
     bookingSuccess: '予約が完了しました！',
     bookingSuccessMsg: '確認メールをお送りしました。',
     bookingBackHome: 'ホームに戻る',
@@ -185,6 +194,11 @@ const translations = {
     signupSubmit: '登録する',
     signupNotice: '登録は無料です。閲覧はログインなしでもできます。',
     signupRequired: 'この操作にはアカウント登録が必要です',
+    signupSocialHint: 'お持ちのアカウントで簡単ログイン',
+    signInGoogle: 'Googleでログイン',
+    signInApple: 'Appleでログイン',
+    or: 'または',
+    authError: 'ログインに失敗しました。もう一度お試しください。',
 
     // Settings
     settingsTitle: '設定',
@@ -198,11 +212,21 @@ const translations = {
     themeEveningDesc: '落ち着いたインディゴ・パープル',
     themeSuggested: '（おすすめ）',
 
+    // Messages
+    messagesTitle: 'メッセージ',
+    messagesEmpty: 'メッセージはまだありません',
+    messagesNoMessages: 'まだメッセージはありません',
+    messagesLoginRequired: 'メッセージを見るにはログインしてください',
+
     // Chat
     chatTitle: 'チャット',
     chatInfoWindow: 'メッセージは3日間有効です',
     chatPlaceholder: 'メッセージを入力...',
     chatStartVideo: 'ビデオ通話を開始',
+    chatToday: '今日',
+    chatJustNow: 'たった今',
+    chatLoadingMessages: 'メッセージを読み込み中...',
+    chatSendFailed: '送信失敗（ローカルに保存）',
 
     // Video Call
     videoTitle: 'ビデオ通話',
@@ -576,6 +600,8 @@ const translations = {
     adminRefDisable: '無効化',
     adminRefEnable: '有効化',
     adminRefChain: '紹介チェーン',
+    adminLoading: 'データを読み込み中...',
+    adminStatPendingModeration: '未処理モデレーション',
   },
 
   en: {
@@ -629,6 +655,7 @@ const translations = {
     categoryFortuneTellingDesc: 'Tarot, oracle cards, astrology, etc.',
     categoryRetreat: 'Retreat',
     categoryRetreatDesc: 'Refresh in nature',
+    categoryRetreatInPersonDesc: 'In-person only — refresh in nature',
 
     // Feeling Flow - Step 3
     deliveryTitle: 'How would you like your session?',
@@ -681,6 +708,14 @@ const translations = {
     bookingCancelSame: 'Same day: 100%',
     bookingAgree: 'I agree to the terms of service and cancellation policy',
     bookingConfirm: 'Confirm & Pay',
+    bookingSelectDate: 'Select a date',
+    bookingSelectTime: 'Select a time',
+    bookingNoSlots: 'No availability on this day',
+    bookingTimeConflict: 'This time is already booked',
+    bookingPrevMonth: 'Previous',
+    bookingNextMonth: 'Next',
+    bookingLoading: 'Booking...',
+    bookingError: 'Booking failed. Please try again.',
     bookingSuccess: 'Booking Confirmed!',
     bookingSuccessMsg: 'A confirmation email has been sent.',
     bookingBackHome: 'Back to Home',
@@ -764,6 +799,11 @@ const translations = {
     signupSubmit: 'Sign Up',
     signupNotice: 'Registration is free. You can browse without logging in.',
     signupRequired: 'This action requires an account',
+    signupSocialHint: 'Sign in with your existing account',
+    signInGoogle: 'Sign in with Google',
+    signInApple: 'Sign in with Apple',
+    or: 'or',
+    authError: 'Login failed. Please try again.',
 
     // Settings
     settingsTitle: 'Settings',
@@ -777,11 +817,21 @@ const translations = {
     themeEveningDesc: 'Cool indigo and purple',
     themeSuggested: '(suggested)',
 
+    // Messages
+    messagesTitle: 'Messages',
+    messagesEmpty: 'No messages yet',
+    messagesNoMessages: 'No messages yet',
+    messagesLoginRequired: 'Please log in to view messages',
+
     // Chat
     chatTitle: 'Chat',
     chatInfoWindow: 'Messages are available for 3 days',
     chatPlaceholder: 'Type a message...',
     chatStartVideo: 'Start Video Call',
+    chatToday: 'Today',
+    chatJustNow: 'Just now',
+    chatLoadingMessages: 'Loading messages...',
+    chatSendFailed: 'Send failed (saved locally)',
 
     // Video Call
     videoTitle: 'Video Call',
@@ -1155,6 +1205,8 @@ const translations = {
     adminRefDisable: 'Disable',
     adminRefEnable: 'Enable',
     adminRefChain: 'Referral Chain',
+    adminLoading: 'Loading data...',
+    adminStatPendingModeration: 'Pending Moderation',
   }
 };
 

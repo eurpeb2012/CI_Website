@@ -894,6 +894,104 @@ body {
   color: var(--text-primary);
 }
 
+/* Booking Calendar */
+.booking-calendar {
+  margin-bottom: 20px;
+}
+
+.booking-cal-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.booking-cal-nav button {
+  background: none;
+  border: 1px solid var(--theme-primary-200);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: var(--theme-primary-700);
+  cursor: pointer;
+}
+
+.booking-cal-nav button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.booking-cal-nav .cal-month-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.booking-calendar .cal-day.available {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.booking-calendar .cal-day.available:hover {
+  background: var(--theme-primary-200);
+}
+
+.booking-calendar .cal-day.selected {
+  background: var(--theme-primary-700);
+  color: #fff;
+}
+
+.booking-calendar .cal-day.past {
+  opacity: 0.3;
+}
+
+.booking-time-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.booking-time-slot {
+  padding: 8px 16px;
+  border: 1px solid var(--theme-primary-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: var(--theme-accent);
+  color: var(--theme-primary-700);
+  transition: background 0.15s;
+}
+
+.booking-time-slot:hover {
+  background: var(--theme-primary-200);
+}
+
+.booking-time-slot.selected {
+  background: var(--theme-primary-700);
+  color: #fff;
+  border-color: var(--theme-primary-700);
+}
+
+.booking-time-slot.conflict {
+  opacity: 0.4;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.booking-time-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.booking-no-slots {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 10px 0;
+}
+
 .cancel-policy {
   background: var(--gray-50);
   border-radius: var(--radius-sm);
@@ -1222,6 +1320,69 @@ body {
   margin-top: 8px;
 }
 
+/* Social login buttons */
+.social-login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.btn-social:hover { opacity: 0.85; }
+.btn-social:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-social svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+.btn-google {
+  background: #fff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+}
+
+.btn-apple {
+  background: #000;
+  color: #fff;
+}
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.social-divider span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* Auth prompt inline */
 .auth-prompt {
   padding: 20px;
@@ -1347,6 +1508,17 @@ body {
   color: var(--theme-primary-700);
   cursor: pointer;
   text-align: center;
+}
+
+.chat-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.chat-send-btn:active {
+  opacity: 0.7;
 }
 
 /* ===== Video Call Screen ===== */
@@ -3739,6 +3911,14 @@ body {
   color: var(--text-muted);
   font-size: 0.85rem;
   padding: 20px;
+  text-align: center;
+}
+
+/* --- Loading state --- */
+.admin-loading {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 40px 20px;
   text-align: center;
 }
 

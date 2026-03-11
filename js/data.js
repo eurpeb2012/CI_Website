@@ -1252,7 +1252,9 @@ const forumThreads = [
 
 // ===== Helper Functions =====
 function getTherapist(id) {
-  return therapists.find(t => t.id === parseInt(id));
+  if (!id) return null;
+  const strId = String(id);
+  return therapists.find(t => String(t.id) === strId);
 }
 
 function getTherapistByReferralCode(code) {
@@ -1262,8 +1264,11 @@ function getTherapistByReferralCode(code) {
 function searchTherapists(filters) {
   let results = therapists.filter(therapist => {
     if (filters.category) {
-      // Subcategory support: fortune-telling and retreat are subcategories of playful
-      if (filters.category === 'playful') {
+      // Retreat is a sub-type of playful (in-person only)
+      if (filters.category === 'retreat') {
+        if (!therapist.categories.includes('playful') && !therapist.categories.includes('retreat')) return false;
+        if (!therapist.delivery.includes('in-person')) return false;
+      } else if (filters.category === 'playful') {
         if (!therapist.categories.includes('playful') && !therapist.categories.includes('fortune-telling') && !therapist.categories.includes('retreat')) return false;
       } else {
         if (!therapist.categories.includes(filters.category)) return false;

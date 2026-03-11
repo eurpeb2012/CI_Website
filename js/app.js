@@ -5,19 +5,35 @@ let state = {
   delivery: null,
   bookingSession: null,
   bookingTherapist: null,
+  bookingDate: null,
+  bookingTime: null,
+  bookingCalMonth: new Date().getMonth(),
+  bookingCalYear: new Date().getFullYear(),
+  bookingConflicts: [],
   criteriaFilters: null,
   generalSearchQuery: null,
 };
 
 // ===== Auth State =====
-let authState = JSON.parse(localStorage.getItem('iyashi-user') || 'null') || {
+let authState = {
   isLoggedIn: false,
   user: null,
   pendingAction: null,
 };
 
+// Restore pending action from sessionStorage (survives OAuth redirect)
+const savedPending = sessionStorage.getItem('iyashi-pending-action');
+if (savedPending) {
+  authState.pendingAction = JSON.parse(savedPending);
+}
+
 function saveAuth() {
-  localStorage.setItem('iyashi-user', JSON.stringify(authState));
+  // Session/user state managed by Supabase — only persist pending action
+  if (authState.pendingAction) {
+    sessionStorage.setItem('iyashi-pending-action', JSON.stringify(authState.pendingAction));
+  } else {
+    sessionStorage.removeItem('iyashi-pending-action');
+  }
 }
 
 function requireAuth(action, callback) {
@@ -27,6 +43,63 @@ function requireAuth(action, callback) {
     authState.pendingAction = { action, hash: window.location.hash };
     saveAuth();
     navigate('#/signup');
+  }
+}
+
+// Initialize auth from Supabase session
+async function initSupabaseAuth() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    setAuthFromSession(session);
+  }
+
+  // Listen for auth changes (login, logout, token refresh, OAuth redirect)
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      setAuthFromSession(session);
+      // Handle pending action after OAuth redirect
+      if (event === 'SIGNED_IN' && authState.pendingAction) {
+        const pending = authState.pendingAction;
+        authState.pendingAction = null;
+        saveAuth();
+        if (pending.hash) {
+          navigate(pending.hash);
+          return;
+        }
+      }
+      if (event === 'SIGNED_IN') {
+        navigate(window.location.hash || '#/profile');
+      }
+    } else {
+      authState.isLoggedIn = false;
+      authState.user = null;
+    }
+  });
+}
+
+function setAuthFromSession(session) {
+  const u = session.user;
+  const meta = u.user_metadata || {};
+  authState.isLoggedIn = true;
+  authState.user = {
+    id: u.id,
+    name: meta.full_name || meta.name || u.email?.split('@')[0] || '',
+    email: u.email || '',
+    avatar_url: meta.avatar_url || meta.picture || '',
+    provider: u.app_metadata?.provider || 'email',
+  };
+}
+
+async function signInWithProvider(provider) {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: window.location.origin + window.location.pathname,
+    },
+  });
+  if (error) {
+    console.error('Auth error:', error.message);
+    showToast(t('authError'));
   }
 }
 
@@ -43,14 +116,37 @@ function saveTherapistMode() {
 // ===== Favorites =====
 let favorites = JSON.parse(localStorage.getItem('iyashi-favorites') || '[]');
 function saveFavorites() { localStorage.setItem('iyashi-favorites', JSON.stringify(favorites)); }
+
+async function loadFavorites() {
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  try {
+    const { data, error } = await supabase.from('favorites').select('therapist_id').eq('user_id', userId);
+    if (!error && data && data.length > 0) {
+      favorites = data.map(f => f.therapist_id);
+      saveFavorites();
+    }
+  } catch (e) {
+    console.warn('loadFavorites: Supabase failed, using localStorage', e);
+  }
+}
+
 function toggleFavorite(id) {
-  id = parseInt(id);
+  id = String(id);
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
   const idx = favorites.indexOf(id);
-  if (idx > -1) favorites.splice(idx, 1); else favorites.push(id);
+  if (idx > -1) {
+    favorites.splice(idx, 1);
+    supabase.from('favorites').delete().eq('user_id', userId).eq('therapist_id', id)
+      .then(({ error }) => { if (error) console.warn('Supabase favorites delete failed:', error); });
+  } else {
+    favorites.push(id);
+    supabase.from('favorites').insert({ user_id: userId, therapist_id: id })
+      .then(({ error }) => { if (error) console.warn('Supabase favorites insert failed:', error); });
+  }
   saveFavorites();
   router();
 }
-function isFavorite(id) { return favorites.includes(parseInt(id)); }
+function isFavorite(id) { return favorites.includes(String(id)); }
 
 // ===== Points =====
 let pointsData = JSON.parse(localStorage.getItem('iyashi-points') || 'null') || { balance: 0, history: [] };
@@ -66,9 +162,45 @@ function earnPoints(amount, desc) {
 let journalEntries = JSON.parse(localStorage.getItem('iyashi-journal') || '[]');
 function saveJournal() { localStorage.setItem('iyashi-journal', JSON.stringify(journalEntries)); }
 
+async function loadJournal() {
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  try {
+    const { data, error } = await supabase.from('journal_entries').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (!error && data && data.length > 0) {
+      journalEntries = data.map(e => ({
+        mood: e.mood,
+        moodEmoji: e.mood_emoji,
+        notes: e.notes,
+        date: e.created_at ? e.created_at.slice(0, 10) : '',
+      }));
+      saveJournal();
+    }
+  } catch (e) {
+    console.warn('loadJournal: Supabase failed, using localStorage', e);
+  }
+}
+
 // ===== Waitlist =====
 let waitlistIds = JSON.parse(localStorage.getItem('iyashi-waitlist') || '[]');
 function saveWaitlist() { localStorage.setItem('iyashi-waitlist', JSON.stringify(waitlistIds)); }
+
+async function loadWaitlist() {
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  try {
+    const { data, error } = await supabase.from('waitlist').select('therapist_id').eq('user_id', userId);
+    if (!error && data && data.length > 0) {
+      waitlistIds = data.map(w => w.therapist_id);
+      saveWaitlist();
+    }
+  } catch (e) {
+    console.warn('loadWaitlist: Supabase failed, using localStorage', e);
+  }
+}
+
+// ===== Load User Data (Supabase with localStorage fallback) =====
+async function loadUserData() {
+  await Promise.all([loadFavorites(), loadWaitlist(), loadJournal()]);
+}
 
 // ===== Sort State =====
 let currentSort = 'recommended';
@@ -120,12 +252,13 @@ const routes = [
   { pattern: /^\/search$/, handler: 'searchEntry', nav: 'search' },
   { pattern: /^\/search\/feeling$/, handler: 'feelingStep1', nav: 'search' },
   { pattern: /^\/search\/feeling\/category$/, handler: 'feelingStep2', nav: 'search' },
+  { pattern: /^\/search\/feeling\/category\/playful$/, handler: 'playfulSubMenu', nav: 'search' },
   { pattern: /^\/search\/feeling\/delivery$/, handler: 'feelingStep3', nav: 'search' },
   { pattern: /^\/search\/feeling\/results$/, handler: 'feelingResults', nav: 'search' },
   { pattern: /^\/search\/criteria$/, handler: 'criteria', nav: 'search' },
   { pattern: /^\/search\/criteria\/results$/, handler: 'criteriaResults', nav: 'search' },
   { pattern: /^\/search\/general-results$/, handler: 'generalSearchResults', nav: 'search' },
-  { pattern: /^\/therapist\/(\d+)$/, handler: 'therapistProfile', nav: 'search' },
+  { pattern: /^\/therapist\/([a-f0-9-]+|\d+)$/, handler: 'therapistProfile', nav: 'search' },
   { pattern: /^\/booking$/, handler: 'booking', nav: 'search' },
   { pattern: /^\/booking\/success$/, handler: 'bookingSuccess', nav: 'search' },
   { pattern: /^\/apply$/, handler: 'apply', nav: 'home' },
@@ -133,19 +266,20 @@ const routes = [
   { pattern: /^\/profile$/, handler: 'userProfile', nav: 'profile' },
   { pattern: /^\/settings$/, handler: 'settings', nav: 'profile' },
   { pattern: /^\/signup$/, handler: 'signup', nav: 'profile' },
-  { pattern: /^\/chat\/(\d+)$/, handler: 'chat', nav: 'search' },
-  { pattern: /^\/videocall\/(\d+)$/, handler: 'videocall', nav: 'search' },
-  { pattern: /^\/review\/(\d+)$/, handler: 'reviewForm', nav: 'search' },
+  { pattern: /^\/messages$/, handler: 'messagesList', nav: 'profile' },
+  { pattern: /^\/chat\/([a-f0-9-]+|\d+)$/, handler: 'chat', nav: 'profile' },
+  { pattern: /^\/videocall\/([a-f0-9-]+|\d+)$/, handler: 'videocall', nav: 'profile' },
+  { pattern: /^\/review\/([a-f0-9-]+|\d+)$/, handler: 'reviewForm', nav: 'search' },
   { pattern: /^\/therapist-dashboard$/, handler: 'therapistDashboard', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/schedule$/, handler: 'therapistSchedule', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/sessions$/, handler: 'therapistSessions', nav: 'dashboard' },
-  { pattern: /^\/therapist-dashboard\/sessions\/edit\/(\d+)$/, handler: 'therapistSessionEdit', nav: 'dashboard' },
+  { pattern: /^\/therapist-dashboard\/sessions\/edit\/([a-f0-9-]+|\d+)$/, handler: 'therapistSessionEdit', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/clients$/, handler: 'therapistClients', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/earnings$/, handler: 'therapistEarnings', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/profile-edit$/, handler: 'therapistProfileEdit', nav: 'dashboard' },
   { pattern: /^\/therapist-dashboard\/referrals$/, handler: 'therapistReferrals', nav: 'dashboard' },
   { pattern: /^\/referral\/([A-Z0-9]+)$/, handler: 'referralLanding', nav: 'home' },
-  { pattern: /^\/favorites$/, handler: 'favorites', nav: 'search' },
+  { pattern: /^\/favorites$/, handler: 'favorites', nav: 'profile' },
   { pattern: /^\/gift-card$/, handler: 'giftCard', nav: 'home' },
   { pattern: /^\/gift-card\/success$/, handler: 'giftCardSuccess', nav: 'home' },
   { pattern: /^\/blog$/, handler: 'blog', nav: 'home' },
@@ -156,13 +290,16 @@ const routes = [
   { pattern: /^\/points$/, handler: 'pointsPage', nav: 'profile' },
   { pattern: /^\/notifications$/, handler: 'notifications', nav: 'profile' },
   { pattern: /^\/retreats$/, handler: 'retreats', nav: 'home' },
-  { pattern: /^\/retreats\/(\d+)$/, handler: 'retreatDetail', nav: 'home' },
+  { pattern: /^\/retreats\/([a-f0-9-]+|\d+)$/, handler: 'retreatDetail', nav: 'home' },
   { pattern: /^\/forum$/, handler: 'forum', nav: 'home' },
   { pattern: /^\/forum\/new$/, handler: 'forumNew', nav: 'home' },
-  { pattern: /^\/forum\/(\d+)$/, handler: 'forumThread', nav: 'home' },
+  { pattern: /^\/forum\/([a-f0-9-]+|\d+)$/, handler: 'forumThread', nav: 'home' },
 ];
 
 function router() {
+  // Clean up chat subscription when navigating away
+  _cleanupChatSubscription();
+
   const route = getRoute();
   const content = document.getElementById('content');
   const header = document.getElementById('header');
@@ -194,6 +331,7 @@ function renderRoute(handler, el, header, params) {
     searchEntry: () => renderSearchEntry(el, header),
     feelingStep1: () => renderFeelingStep1(el, header),
     feelingStep2: () => renderFeelingStep2(el, header),
+    playfulSubMenu: () => renderPlayfulSubMenu(el, header),
     feelingStep3: () => renderFeelingStep3(el, header),
     feelingResults: () => renderResults(el, header, { category: state.category, delivery: state.delivery }),
     criteria: () => renderCriteria(el, header),
@@ -207,6 +345,7 @@ function renderRoute(handler, el, header, params) {
     userProfile: () => renderUserProfile(el, header),
     settings: () => renderSettings(el, header),
     signup: () => renderSignup(el, header),
+    messagesList: () => renderMessagesList(el, header),
     chat: () => renderChat(el, header, params[0]),
     videocall: () => renderVideoCall(el, header, params[0]),
     reviewForm: () => renderReviewForm(el, header, params[0]),
@@ -463,10 +602,7 @@ function renderFeelingStep2(el, header) {
   const categories = [
     { key: 'physical', icon: '💆', label: t('categoryPhysical'), desc: t('categoryPhysicalDesc') },
     { key: 'mental', icon: '🧘', label: t('categoryMental'), desc: t('categoryMentalDesc') },
-    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc'), subcategories: [
-      { key: 'fortune-telling', icon: '🔮', label: t('categoryFortuneTelling'), desc: t('categoryFortuneTellingDesc') },
-      { key: 'retreat', icon: '🏕️', label: t('categoryRetreat'), desc: t('categoryRetreatDesc') },
-    ]},
+    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -476,17 +612,37 @@ function renderFeelingStep2(el, header) {
       <h1 class="page-title">${t('categoryTitle')}</h1>
       <div class="category-cards">
         ${categories.map(c => `
-          <div class="category-card" onclick="state.category='${c.key}'; navigate('#/search/feeling/delivery')">
+          <div class="category-card" onclick="${c.key === 'playful' ? "navigate('#/search/feeling/category/playful')" : `state.category='${c.key}'; navigate('#/search/feeling/delivery')`}">
             <div class="category-icon">${c.icon}</div>
             <div><h3>${c.label}</h3><p>${c.desc}</p></div>
           </div>
-          ${c.subcategories ? c.subcategories.map(sc => `
-            <div class="category-card subcategory" onclick="state.category='${sc.key}'; navigate('#/search/feeling/delivery')">
-              <div class="category-icon">${sc.icon}</div>
-              <div><h3>${sc.label}</h3><p>${sc.desc}</p></div>
-            </div>
-          `).join('') : ''}
         `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderPlayfulSubMenu(el, header) {
+  renderHeaderWithBack(header, t('categoryPlayful'), '#/search/feeling/category');
+  el.innerHTML = `
+    <div class="page">
+      <div class="step-indicator">
+        <div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
+      </div>
+      <h1 class="page-title">${t('categoryPlayful')}</h1>
+      <div class="category-cards">
+        <div class="category-card" onclick="state.category='playful'; navigate('#/search/feeling/delivery')">
+          <div class="category-icon">🎨</div>
+          <div><h3>${t('categoryPlayful')}</h3><p>${t('categoryPlayfulDesc')}</p></div>
+        </div>
+        <div class="category-card" onclick="state.category='fortune-telling'; navigate('#/search/feeling/delivery')">
+          <div class="category-icon">🔮</div>
+          <div><h3>${t('categoryFortuneTelling')}</h3><p>${t('categoryFortuneTellingDesc')}</p></div>
+        </div>
+        <div class="category-card" onclick="state.category='retreat'; state.delivery='in-person'; navigate('#/search/feeling/results')">
+          <div class="category-icon">🏕️</div>
+          <div><h3>${t('categoryRetreat')}</h3><p>${t('categoryRetreatInPersonDesc')}</p></div>
+        </div>
       </div>
     </div>
   `;
@@ -857,9 +1013,18 @@ function onShareTherapist(id) {
 }
 
 function onToggleWaitlist(id) {
-  id = parseInt(id);
+  id = String(id);
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
   const idx = waitlistIds.indexOf(id);
-  if (idx > -1) waitlistIds.splice(idx, 1); else waitlistIds.push(id);
+  if (idx > -1) {
+    waitlistIds.splice(idx, 1);
+    supabase.from('waitlist').delete().eq('user_id', userId).eq('therapist_id', id)
+      .then(({ error }) => { if (error) console.warn('Supabase waitlist delete failed:', error); });
+  } else {
+    waitlistIds.push(id);
+    supabase.from('waitlist').insert({ user_id: userId, therapist_id: id })
+      .then(({ error }) => { if (error) console.warn('Supabase waitlist insert failed:', error); });
+  }
   saveWaitlist();
   router();
 }
@@ -929,11 +1094,23 @@ function renderCalendar(availability) {
 function onBookSession(therapistId, sessionId) {
   requireAuth('book', () => {
     const th = getTherapist(therapistId);
-    const session = th.sessions.find(s => s.id === sessionId);
+    const session = th.sessions.find(s => String(s.id) === String(sessionId));
     state.bookingTherapist = th;
     state.bookingSession = session;
+    state.bookingDate = null;
+    state.bookingTime = null;
+    state.bookingCalMonth = new Date().getMonth();
+    state.bookingCalYear = new Date().getFullYear();
+    state.bookingConflicts = [];
     navigate('#/booking');
   });
+}
+
+function toTherapistUUID(id) {
+  return '10000000-0000-0000-0000-' + String(id).padStart(12, '0');
+}
+function toSessionUUID(id) {
+  return '20000000-0000-0000-0000-' + String(id).padStart(12, '0');
 }
 
 function onMessageTherapist(therapistId) {
@@ -943,6 +1120,216 @@ function onMessageTherapist(therapistId) {
 }
 
 // Booking
+function renderBookingCalendar() {
+  const th = state.bookingTherapist;
+  const year = state.bookingCalYear;
+  const month = state.bookingCalMonth;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const maxDate = new Date(today);
+  maxDate.setDate(maxDate.getDate() + 30);
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const availDays = new Set((th.availability || []).map(a => a.day));
+
+  const monthLabel = new Date(year, month).toLocaleDateString(getLang() === 'ja' ? 'ja-JP' : 'en-US', { year: 'numeric', month: 'long' });
+
+  // Can navigate to previous month? Only if it's current month or later
+  const canPrev = (year > now.getFullYear()) || (year === now.getFullYear() && month > now.getMonth());
+  // Can navigate to next month? Only if last day of next month is within 30 days
+  const nextMonthFirst = new Date(year, month + 1, 1);
+  const canNext = nextMonthFirst <= maxDate;
+
+  const dayKeys = ['calSun', 'calMon', 'calTue', 'calWed', 'calThu', 'calFri', 'calSat'];
+
+  let html = `<div class="booking-calendar">`;
+  html += `<div class="booking-cal-nav">`;
+  html += `<button onclick="bookingCalPrev()" ${canPrev ? '' : 'disabled'}>${t('bookingPrevMonth')}</button>`;
+  html += `<span class="cal-month-label">${monthLabel}</span>`;
+  html += `<button onclick="bookingCalNext()" ${canNext ? '' : 'disabled'}>${t('bookingNextMonth')}</button>`;
+  html += `</div>`;
+  html += `<div class="calendar-grid">`;
+  dayKeys.forEach(k => { html += `<div class="cal-header">${t(k)}</div>`; });
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dayOfWeek = date.getDay();
+    const isAvail = availDays.has(dayOfWeek);
+    const isPast = date < today;
+    const isBeyond = date > maxDate;
+    const isSelectable = isAvail && !isPast && !isBeyond;
+    const isSelected = state.bookingDate && date.toDateString() === state.bookingDate.toDateString();
+    let cls = 'cal-day';
+    if (isPast || isBeyond) cls += ' past';
+    if (isSelectable) cls += ' available';
+    if (isSelected) cls += ' selected';
+    const onclick = isSelectable ? ` onclick="bookingSelectDate(${year},${month},${d})"` : '';
+    html += `<div class="${cls}"${onclick}>${d}</div>`;
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function bookingCalPrev() {
+  if (state.bookingCalMonth === 0) {
+    state.bookingCalMonth = 11;
+    state.bookingCalYear--;
+  } else {
+    state.bookingCalMonth--;
+  }
+  updateBookingCalendarUI();
+}
+
+function bookingCalNext() {
+  if (state.bookingCalMonth === 11) {
+    state.bookingCalMonth = 0;
+    state.bookingCalYear++;
+  } else {
+    state.bookingCalMonth++;
+  }
+  updateBookingCalendarUI();
+}
+
+function updateBookingCalendarUI() {
+  const calContainer = document.getElementById('booking-cal-container');
+  if (calContainer) calContainer.innerHTML = renderBookingCalendar();
+  updateBookingTimeSlotsUI();
+  updateBookingDateDisplay();
+}
+
+async function bookingSelectDate(year, month, day) {
+  state.bookingDate = new Date(year, month, day);
+  state.bookingTime = null;
+  state.bookingConflicts = [];
+
+  // Query existing bookings for this therapist on this date
+  const th = state.bookingTherapist;
+  const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  try {
+    const therapistUUID = toTherapistUUID(th.id);
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('booking_time')
+      .eq('therapist_id', therapistUUID)
+      .eq('booking_date', dateStr)
+      .neq('status', 'cancelled');
+    if (!error && data) {
+      state.bookingConflicts = data.map(b => b.booking_time.slice(0, 5));
+    }
+  } catch (e) {
+    // If query fails, proceed without conflict data
+  }
+
+  updateBookingCalendarUI();
+}
+
+function updateBookingTimeSlotsUI() {
+  const container = document.getElementById('booking-time-container');
+  if (!container) return;
+
+  if (!state.bookingDate) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const th = state.bookingTherapist;
+  const dayOfWeek = state.bookingDate.getDay();
+  const avail = (th.availability || []).find(a => a.day === dayOfWeek);
+
+  if (!avail || !avail.slots || avail.slots.length === 0) {
+    container.innerHTML = `<p class="booking-no-slots">${t('bookingNoSlots')}</p>`;
+    return;
+  }
+
+  let html = `<p class="booking-time-label">${t('bookingSelectTime')}</p><div class="booking-time-slots">`;
+  avail.slots.forEach(slot => {
+    const isConflict = state.bookingConflicts.includes(slot);
+    const isSelected = state.bookingTime === slot;
+    let cls = 'booking-time-slot';
+    if (isConflict) cls += ' conflict';
+    if (isSelected) cls += ' selected';
+    const onclick = isConflict ? '' : ` onclick="bookingSelectTime('${slot}')"`;
+    html += `<button class="${cls}"${onclick}${isConflict ? ' disabled title="' + t('bookingTimeConflict') + '"' : ''}>${slot}</button>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function bookingSelectTime(time) {
+  state.bookingTime = time;
+  updateBookingTimeSlotsUI();
+  updateBookingDateDisplay();
+  updateBookingConfirmBtn();
+}
+
+function updateBookingDateDisplay() {
+  const el = document.getElementById('booking-date-display');
+  if (!el) return;
+  if (state.bookingDate && state.bookingTime) {
+    const dateStr = state.bookingDate.toLocaleDateString(getLang() === 'ja' ? 'ja-JP' : 'en-US', {
+      year: 'numeric', month: 'long', day: 'numeric', weekday: 'short'
+    }) + ' ' + state.bookingTime;
+    el.textContent = dateStr;
+  } else {
+    el.textContent = t('bookingSelectDate');
+  }
+}
+
+function updateBookingConfirmBtn() {
+  const btn = document.getElementById('confirm-btn');
+  const chk = document.getElementById('agree-check');
+  if (btn) {
+    btn.disabled = !(chk && chk.checked && state.bookingDate && state.bookingTime);
+  }
+}
+
+async function confirmBooking() {
+  const btn = document.getElementById('confirm-btn');
+  if (!btn) return;
+  const th = state.bookingTherapist;
+  const session = state.bookingSession;
+  if (!th || !session || !state.bookingDate || !state.bookingTime) return;
+
+  btn.disabled = true;
+  btn.textContent = t('bookingLoading');
+
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  const therapistUUID = toTherapistUUID(th.id);
+  const sessionUUID = toSessionUUID(session.id);
+  const dateStr = state.bookingDate.getFullYear() + '-' +
+    String(state.bookingDate.getMonth() + 1).padStart(2, '0') + '-' +
+    String(state.bookingDate.getDate()).padStart(2, '0');
+  const timeStr = state.bookingTime + ':00';
+
+  const tier = therapistTiers[th.tier] || therapistTiers.free;
+  const platformFee = Math.round(session.price * (tier.platformFee / 100));
+
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert({
+        user_id: userId,
+        therapist_id: therapistUUID,
+        session_id: sessionUUID,
+        booking_date: dateStr,
+        booking_time: timeStr,
+        price: session.price,
+        platform_fee: platformFee,
+        status: 'upcoming'
+      })
+      .select();
+
+    if (error) throw error;
+    navigate('#/booking/success');
+  } catch (e) {
+    console.error('Booking insert failed:', e);
+    showToast(t('bookingError'));
+    btn.disabled = false;
+    btn.textContent = t('bookingConfirm');
+  }
+}
+
 function renderBooking(el, header) {
   renderHeaderWithBack(header, t('bookingTitle'), 'javascript:void(0)');
   header.querySelector('.header-back').onclick = () => history.back();
@@ -953,11 +1340,6 @@ function renderBooking(el, header) {
 
   const name = getLocalizedText(th.name);
   const sessionName = getLocalizedText(session.name);
-  const mockDate = new Date();
-  mockDate.setDate(mockDate.getDate() + 7);
-  const dateStr = mockDate.toLocaleDateString(getLang() === 'ja' ? 'ja-JP' : 'en-US', {
-    year: 'numeric', month: 'long', day: 'numeric', weekday: 'short'
-  }) + ' 14:00';
 
   el.innerHTML = `
     <div class="page">
@@ -965,9 +1347,12 @@ function renderBooking(el, header) {
       <div class="booking-summary">
         <div class="booking-row"><span class="booking-label">${t('bookingSession')}</span><span class="booking-value">${sessionName}</span></div>
         <div class="booking-row"><span class="booking-label">${t('bookingTherapist')}</span><span class="booking-value">${name}</span></div>
-        <div class="booking-row"><span class="booking-label">${t('bookingDate')}</span><span class="booking-value">${dateStr}</span></div>
-        <div class="booking-row"><span class="booking-label">${t('bookingPrice')}</span><span class="booking-value">¥${session.price.toLocaleString()}</span></div>
+        <div class="booking-row"><span class="booking-label">${t('bookingDate')}</span><span class="booking-value" id="booking-date-display">${t('bookingSelectDate')}</span></div>
+        <div class="booking-row"><span class="booking-label">${t('bookingPrice')}</span><span class="booking-value">&yen;${session.price.toLocaleString()}</span></div>
       </div>
+      <p class="booking-time-label">${t('bookingSelectDate')}</p>
+      <div id="booking-cal-container">${renderBookingCalendar()}</div>
+      <div id="booking-time-container"></div>
       <div class="cancel-policy">
         <h3>${t('bookingCancelPolicy')}</h3>
         <ul>
@@ -976,10 +1361,10 @@ function renderBooking(el, header) {
         </ul>
       </div>
       <div class="checkbox-group">
-        <input type="checkbox" id="agree-check" onchange="document.getElementById('confirm-btn').disabled = !this.checked">
+        <input type="checkbox" id="agree-check" onchange="updateBookingConfirmBtn()">
         <label for="agree-check">${t('bookingAgree')}</label>
       </div>
-      <button id="confirm-btn" class="btn-primary" disabled onclick="navigate('#/booking/success')">${t('bookingConfirm')}</button>
+      <button id="confirm-btn" class="btn-primary" disabled onclick="confirmBooking()">${t('bookingConfirm')}</button>
     </div>
   `;
 }
@@ -1104,7 +1489,9 @@ function renderUserProfile(el, header) {
   el.innerHTML = `
     <div class="page">
       <div class="user-profile-header">
-        <div class="user-avatar">👤</div>
+        ${isLoggedIn && authState.user.avatar_url
+          ? `<img class="user-avatar" src="${authState.user.avatar_url}" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`
+          : `<div class="user-avatar">👤</div>`}
         <div class="user-info">
           <h2>${userName}</h2>
           <p>${userIdDisplay}</p>
@@ -1169,6 +1556,10 @@ function renderUserProfile(el, header) {
       </div>
       ` : ''}
 
+      <div class="profile-menu-item" onclick="navigate('#/messages')">
+        <span>💬 ${t('messagesTitle')}</span>
+        <span class="arrow">${icons.chevron}</span>
+      </div>
       <div class="profile-menu-item" onclick="navigate('#/favorites')">
         <span>❤️ ${t('favorites')} (${favorites.length})</span>
         <span class="arrow">${icons.chevron}</span>
@@ -1225,7 +1616,8 @@ function onDemoLogin() {
   }
 }
 
-function onLogout() {
+async function onLogout() {
+  await supabase.auth.signOut();
   authState = { isLoggedIn: false, user: null, pendingAction: null };
   saveAuth();
   therapistMode = { active: false, therapistId: null };
@@ -1287,7 +1679,7 @@ function onSelectTheme(theme) {
   router();
 }
 
-// Signup
+// Signup / Login
 function renderSignup(el, header) {
   renderHeaderWithBack(header, t('signupTitle'), '#/profile');
   const hasAction = authState.pendingAction;
@@ -1297,100 +1689,310 @@ function renderSignup(el, header) {
       <h1 class="page-title">${t('signupTitle')}</h1>
       ${hasAction ? `<p class="text-center mb-20" style="font-size:0.9rem;color:var(--text-secondary)">${t('signupRequired')}</p>` : ''}
       <div class="signup-form">
-        <div class="form-group">
-          <label>${t('signupName')}</label>
-          <input type="text" id="signup-name" placeholder="${t('signupNamePlaceholder')}">
-        </div>
-        <div class="form-group">
-          <label>${t('signupEmail')}</label>
-          <input type="email" id="signup-email" placeholder="${t('signupEmailPlaceholder')}">
-        </div>
-        <div class="form-group">
-          <label>${t('signupPhone')} *</label>
-          <input type="tel" id="signup-phone" placeholder="${t('signupPhonePlaceholder')}">
-        </div>
-        <div class="form-group">
-          <label>${t('signupAddress')} *</label>
-          <input type="text" id="signup-address" placeholder="${t('signupAddressPlaceholder')}">
-        </div>
-        <button class="btn-primary" onclick="onSignup()">${t('signupSubmit')}</button>
+        <button class="btn-primary" onclick="onDemoLogin()">⚡ ${t('demoLogin')}</button>
         <p class="signup-notice">${t('signupNotice')}</p>
-        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gray-200);text-align:center">
-          <button class="btn-secondary" style="margin:0 auto" onclick="onDemoLogin()">⚡ ${t('demoLogin')}</button>
-        </div>
       </div>
     </div>
   `;
 }
 
-function onSignup() {
-  const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const phone = document.getElementById('signup-phone').value.trim();
-  const address = document.getElementById('signup-address').value.trim();
+// ===== Messages List =====
+function renderMessagesList(el, header) {
+  renderHeaderWithBack(header, t('messagesTitle'), '#/profile');
 
-  // Clear previous errors
-  document.querySelectorAll('.field-error').forEach(e => e.remove());
-  document.querySelectorAll('.input-error').forEach(e => e.classList.remove('input-error'));
-
-  let hasError = false;
-  function showFieldError(inputId, msg) {
-    hasError = true;
-    const input = document.getElementById(inputId);
-    input.classList.add('input-error');
-    const err = document.createElement('div');
-    err.className = 'field-error';
-    err.textContent = msg;
-    input.parentNode.appendChild(err);
+  // Build conversation list from booking history (therapists user has interacted with)
+  const conversations = [];
+  if (authState.isLoggedIn) {
+    const seen = new Set();
+    mockBookingHistory.forEach(b => {
+      if (seen.has(b.therapistId)) return;
+      seen.add(b.therapistId);
+      const th = getTherapist(b.therapistId);
+      if (!th) return;
+      const msgs = getChatMessages(b.therapistId);
+      const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+      conversations.push({
+        therapistId: b.therapistId,
+        name: getLocalizedText(th.name),
+        initial: getLocalizedText(th.name).charAt(0),
+        avatarColor: th.avatarColor,
+        lastMessage: lastMsg ? getLocalizedText(lastMsg.text) : t('messagesNoMessages'),
+        time: lastMsg ? lastMsg.time : '',
+      });
+    });
   }
 
-  if (!name) showFieldError('signup-name', t('validationRequired'));
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) showFieldError('signup-email', t('validationEmail'));
-  if (!phone) showFieldError('signup-phone', t('validationRequired'));
-  if (!address) showFieldError('signup-address', t('validationRequired'));
-
-  if (hasError) return;
-
-  authState.isLoggedIn = true;
-  authState.user = { name, email, phone, address };
-  const pending = authState.pendingAction;
-  authState.pendingAction = null;
-  saveAuth();
-
-  if (pending && pending.hash) {
-    navigate(pending.hash);
-  } else {
-    navigate('#/profile');
-  }
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('messagesTitle')}</h1>
+      ${!authState.isLoggedIn ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesLoginRequired')}</p><button class="btn-primary mt-12" onclick="navigate('#/signup')">${t('signupSubmit')}</button></div>` :
+        conversations.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesEmpty')}</p></div>` :
+        conversations.map(c => `
+          <div class="profile-menu-item" onclick="navigate('#/chat/${c.therapistId}')" style="padding:12px 16px">
+            <div style="display:flex;align-items:center;gap:12px;flex:1">
+              <div class="profile-avatar" style="background-color:${c.avatarColor};width:40px;height:40px;min-width:40px;font-size:1rem;display:flex;align-items:center;justify-content:center;border-radius:50%;color:#fff">${c.initial}</div>
+              <div style="flex:1;min-width:0">
+                <h3 style="margin:0;font-size:0.95rem">${c.name}</h3>
+                <p style="margin:2px 0 0;font-size:0.85rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.lastMessage}</p>
+              </div>
+              ${c.time ? `<span style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">${c.time}</span>` : ''}
+            </div>
+          </div>
+        `).join('')}
+    </div>
+  `;
 }
 
 // ===== Chat =====
-function renderChat(el, header, therapistId) {
+
+// Therapist integer ID -> UUID mapping (matches DB therapists table)
+const therapistUUIDs = {
+  1: '10000000-0000-0000-0000-000000000001',
+  2: '10000000-0000-0000-0000-000000000002',
+  3: '10000000-0000-0000-0000-000000000003',
+  4: '10000000-0000-0000-0000-000000000004',
+  5: '10000000-0000-0000-0000-000000000005',
+  6: '10000000-0000-0000-0000-000000000006',
+  7: '10000000-0000-0000-0000-000000000007',
+  8: '10000000-0000-0000-0000-000000000008',
+};
+
+// Local messages stored when Supabase insert fails (RLS blocks demo user)
+let _localMessages = {};
+
+function _getCurrentUserId() {
+  return (authState.user && authState.user.id) || '00000000-0000-0000-0000-000000000001';
+}
+
+function _getTherapistUUID(therapistId) {
+  return therapistUUIDs[parseInt(therapistId)] || therapistUUIDs[1];
+}
+
+function _formatChatTime(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return (isToday ? '' : (d.getMonth() + 1) + '/' + d.getDate() + ' ') + hh + ':' + mm;
+}
+
+function _cleanupChatSubscription() {
+  if (window._chatSubscription) {
+    supabase.removeChannel(window._chatSubscription);
+    window._chatSubscription = null;
+  }
+}
+
+function _renderChatBubble(msg) {
+  const userId = _getCurrentUserId();
+  let body, time, isSent;
+  if (msg.sender_id) {
+    // Supabase or local message object
+    isSent = msg.sender_id === userId;
+    body = msg.body;
+    time = _formatChatTime(msg.created_at);
+  } else {
+    // Mock message object
+    isSent = msg.from === 'user';
+    body = getLocalizedText(msg.text);
+    time = msg.time;
+  }
+  return `<div class="chat-bubble ${isSent ? 'chat-sent' : 'chat-received'}">
+    ${_escapeHtml(body)}
+    <span class="chat-time">${time}</span>
+  </div>`;
+}
+
+function _escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function _scrollChatToBottom() {
+  const container = document.querySelector('.chat-messages');
+  if (container) {
+    container.scrollTop = container.scrollHeight;
+  }
+}
+
+async function _loadChatMessages(therapistId) {
+  const userId = _getCurrentUserId();
+  const therapistUUID = _getTherapistUUID(therapistId);
+
+  try {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('therapist_id', therapistUUID)
+      .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    if (data && data.length > 0) return { source: 'supabase', messages: data };
+  } catch (e) {
+    console.log('Supabase messages load failed (RLS or network), falling back to mock data:', e.message);
+  }
+
+  // Fallback to mock data
+  return { source: 'mock', messages: getChatMessages(parseInt(therapistId)) };
+}
+
+async function _markMessagesAsRead(therapistId) {
+  const userId = _getCurrentUserId();
+  const therapistUUID = _getTherapistUUID(therapistId);
+
+  try {
+    await supabase
+      .from('messages')
+      .update({ is_read: true })
+      .eq('therapist_id', therapistUUID)
+      .eq('recipient_id', userId)
+      .eq('is_read', false);
+  } catch (e) {
+    console.log('Mark as read failed (RLS):', e.message);
+  }
+}
+
+function _subscribeToChatMessages(therapistId) {
+  const therapistUUID = _getTherapistUUID(therapistId);
+  const userId = _getCurrentUserId();
+
+  const channel = supabase
+    .channel('chat-' + therapistUUID)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: 'therapist_id=eq.' + therapistUUID,
+      },
+      (payload) => {
+        const msg = payload.new;
+        // Skip if it's our own message (already displayed locally)
+        if (msg.sender_id === userId) return;
+        const container = document.querySelector('.chat-messages');
+        if (container) {
+          container.insertAdjacentHTML('beforeend', _renderChatBubble(msg));
+          _scrollChatToBottom();
+        }
+      }
+    )
+    .subscribe();
+
+  return channel;
+}
+
+async function onSendChatMessage(therapistId) {
+  const input = document.querySelector('.chat-input-bar input');
+  if (!input) return;
+  const body = input.value.trim();
+  if (!body) return;
+
+  const userId = _getCurrentUserId();
+  const therapistUUID = _getTherapistUUID(therapistId);
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
+
+  const msgObj = {
+    sender_id: userId,
+    recipient_id: therapistUUID,
+    therapist_id: therapistUUID,
+    body: body,
+    is_read: false,
+    expires_at: expiresAt,
+    created_at: now.toISOString(),
+  };
+
+  // Clear input immediately for responsive UX
+  input.value = '';
+  input.focus();
+
+  // Render locally right away
+  const container = document.querySelector('.chat-messages');
+  if (container) {
+    container.insertAdjacentHTML('beforeend', _renderChatBubble(msgObj));
+    _scrollChatToBottom();
+  }
+
+  // Try to persist to Supabase
+  try {
+    const { error } = await supabase
+      .from('messages')
+      .insert({
+        sender_id: userId,
+        recipient_id: therapistUUID,
+        therapist_id: therapistUUID,
+        body: body,
+        expires_at: expiresAt,
+      });
+    if (error) throw error;
+  } catch (e) {
+    console.log('Supabase insert failed (RLS), stored locally:', e.message);
+    // Store in local array for session persistence
+    const key = therapistUUID;
+    if (!_localMessages[key]) _localMessages[key] = [];
+    _localMessages[key].push(msgObj);
+  }
+}
+
+async function renderChat(el, header, therapistId) {
   const th = getTherapist(therapistId);
-  if (!th) { navigate('#/search'); return; }
+  if (!th) { navigate('#/messages'); return; }
+
+  // Clean up any previous subscription
+  _cleanupChatSubscription();
 
   const name = getLocalizedText(th.name);
-  renderHeaderWithBack(header, name, '#/therapist/' + therapistId);
-  const messages = getChatMessages(parseInt(therapistId));
+  renderHeaderWithBack(header, name, 'javascript:void(0)');
+  header.querySelector('.header-back').onclick = () => history.back();
 
+  // Render skeleton with loading state
   el.innerHTML = `
     <div class="chat-screen">
       <div class="chat-info-bar">${t('chatInfoWindow')}</div>
       <button class="chat-video-btn" onclick="navigate('#/videocall/${therapistId}')">${t('chatStartVideo')}</button>
       <div class="chat-messages">
-        ${messages.map(m => `
-          <div class="chat-bubble ${m.from === 'user' ? 'chat-sent' : 'chat-received'}">
-            ${getLocalizedText(m.text)}
-            <span class="chat-time">${m.time}</span>
-          </div>
-        `).join('')}
+        <div class="chat-loading">${t('chatLoadingMessages')}</div>
       </div>
       <div class="chat-input-bar">
-        <input type="text" placeholder="${t('chatPlaceholder')}">
-        <button class="chat-send-btn">➤</button>
+        <input type="text" placeholder="${t('chatPlaceholder')}" onkeydown="if(event.key==='Enter'){event.preventDefault();onSendChatMessage('${therapistId}');}">
+        <button class="chat-send-btn" onclick="onSendChatMessage('${therapistId}')">➤</button>
       </div>
     </div>
   `;
+
+  // Load messages
+  const result = await _loadChatMessages(therapistId);
+  const container = document.querySelector('.chat-messages');
+  if (!container) return; // User navigated away
+
+  // Also include any locally stored messages
+  const therapistUUID = _getTherapistUUID(therapistId);
+  const localMsgs = _localMessages[therapistUUID] || [];
+
+  if (result.source === 'supabase') {
+    const allMessages = [...result.messages, ...localMsgs];
+    allMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    container.innerHTML = allMessages.map(m => _renderChatBubble(m)).join('');
+  } else {
+    // Mock messages + any local messages appended
+    const mockHtml = result.messages.map(m => _renderChatBubble(m)).join('');
+    const localHtml = localMsgs.map(m => _renderChatBubble(m)).join('');
+    container.innerHTML = mockHtml + localHtml;
+  }
+
+  _scrollChatToBottom();
+
+  // Mark unread messages as read
+  _markMessagesAsRead(therapistId);
+
+  // Subscribe to real-time updates
+  window._chatSubscription = _subscribeToChatMessages(therapistId);
 }
 
 // ===== Video Call =====
@@ -2065,13 +2667,24 @@ function selectMood(btn) {
 function onSaveJournal() {
   const notes = document.getElementById('journal-notes').value.trim();
   if (!selectedMood || !notes) return;
-  journalEntries.unshift({
+  const entry = {
     mood: selectedMood.key,
     moodEmoji: selectedMood.emoji,
     notes: notes,
     date: new Date().toISOString().slice(0, 10),
-  });
+  };
+  journalEntries.unshift(entry);
   saveJournal();
+
+  // Try Supabase insert (fire-and-forget with fallback)
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  supabase.from('journal_entries').insert({
+    user_id: userId,
+    mood: entry.mood,
+    mood_emoji: entry.moodEmoji,
+    notes: entry.notes,
+  }).then(({ error }) => { if (error) console.warn('Supabase journal insert failed:', error); });
+
   selectedMood = null;
   showToast(t('journalSaved'));
   navigate('#/journal');
@@ -2183,11 +2796,9 @@ function renderRetreatDetail(el, header, id) {
 }
 
 // ===== Forum / Message Board =====
-let forumReplyData = JSON.parse(localStorage.getItem('iyashi-forum-replies') || '{}');
-function saveForumReplies() { localStorage.setItem('iyashi-forum-replies', JSON.stringify(forumReplyData)); }
-
-let forumUserThreads = JSON.parse(localStorage.getItem('iyashi-forum-threads') || '[]');
-function saveForumThreads() { localStorage.setItem('iyashi-forum-threads', JSON.stringify(forumUserThreads)); }
+// In-memory arrays for user-created threads/replies (no longer persisted to localStorage)
+let forumReplyData = {};
+let forumUserThreads = [];
 
 function renderForum(el, header) {
   renderHeaderWithBack(header, t('forumTitle'), '#/');
@@ -2226,7 +2837,7 @@ function renderForumThread(el, header, id) {
     renderForumNewThread(el, header);
     return;
   }
-  const thread = forumThreads.find(t => t.id === parseInt(id)) || forumUserThreads.find(t => t.id === id);
+  const thread = forumThreads.find(t => String(t.id) === String(id)) || forumUserThreads.find(t => String(t.id) === String(id));
   if (!thread) { navigate('#/forum'); return; }
   renderHeaderWithBack(header, t('forumTitle'), '#/forum');
   const userReplies = forumReplyData[thread.id] || [];
@@ -2281,43 +2892,116 @@ function renderForumNewThread(el, header) {
   `;
 }
 
-function onForumCreateThread() {
+async function onForumCreateThread() {
   const title = document.getElementById('forum-thread-title').value.trim();
   const body = document.getElementById('forum-thread-body').value.trim();
   if (!title || !body) return;
-  const thread = {
-    id: 'user-' + Date.now(),
-    title: title,
-    body: body,
-    author: authState.user ? authState.user.name : 'User',
-    date: new Date().toISOString().slice(0, 10),
+
+  const lang = getLang();
+  const authorName = authState.user?.name || 'Anonymous';
+  const authorId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  const now = new Date().toISOString();
+
+  const row = {
+    author_id: authorId,
+    title_ja: lang === 'ja' ? title : '',
+    title_en: lang === 'en' ? title : '',
+    body_ja: lang === 'ja' ? body : '',
+    body_en: lang === 'en' ? body : '',
+    tags: [],
+  };
+
+  // Build the local thread object used by the UI
+  const localThread = {
+    id: null, // will be set from Supabase or fallback
+    title: { ja: row.title_ja, en: row.title_en },
+    body: { ja: row.body_ja, en: row.body_en },
+    author: { ja: authorName, en: authorName },
+    date: now.slice(0, 10),
     replies: [],
     tags: [],
   };
-  forumUserThreads.unshift(thread);
-  saveForumThreads();
+
+  try {
+    const { data, error } = await supabase
+      .from('forum_threads')
+      .insert(row)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Success — use the Supabase-generated id
+    localThread.id = data.id;
+    localThread.date = data.created_at ? data.created_at.slice(0, 10) : localThread.date;
+    forumThreads.unshift(localThread);
+  } catch (err) {
+    console.warn('Supabase forum_threads insert failed (RLS or network), adding locally:', err);
+    localThread.id = 'local-' + Date.now();
+    forumUserThreads.unshift(localThread);
+  }
+
   showToast(t('forumPost') + '!');
   navigate('#/forum');
 }
 
-function onForumReply(threadId) {
+async function onForumReply(threadId) {
   const text = document.getElementById('forum-reply-input').value.trim();
   if (!text) return;
-  if (!forumReplyData[threadId]) forumReplyData[threadId] = [];
-  forumReplyData[threadId].push({
-    author: authState.user ? authState.user.name : 'User',
-    text: text,
-    date: new Date().toISOString().slice(0, 10),
-  });
-  saveForumReplies();
+
+  const lang = getLang();
+  const authorName = authState.user?.name || 'Anonymous';
+  const authorId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  const now = new Date().toISOString();
+
+  const row = {
+    thread_id: threadId,
+    author_id: authorId,
+    body_ja: lang === 'ja' ? text : '',
+    body_en: lang === 'en' ? text : '',
+  };
+
+  const localReply = {
+    author: { ja: authorName, en: authorName },
+    text: { ja: row.body_ja, en: row.body_en },
+    date: now.slice(0, 10),
+  };
+
+  try {
+    const { data, error } = await supabase
+      .from('forum_replies')
+      .insert(row)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Success — add to the thread's replies array directly
+    localReply.date = data.created_at ? data.created_at.slice(0, 10) : localReply.date;
+    const thread = forumThreads.find(t => String(t.id) === String(threadId))
+                || forumUserThreads.find(t => String(t.id) === String(threadId));
+    if (thread) {
+      thread.replies.push(localReply);
+    }
+  } catch (err) {
+    console.warn('Supabase forum_replies insert failed (RLS or network), adding locally:', err);
+    if (!forumReplyData[threadId]) forumReplyData[threadId] = [];
+    forumReplyData[threadId].push(localReply);
+  }
+
   router();
 }
 
 // ===== Init =====
 window.addEventListener('hashchange', router);
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   if (!window.location.hash) {
     window.location.hash = '#/';
   }
+  await Promise.all([
+    initSupabaseAuth(),
+    loadSupabaseData(),
+  ]);
+  await loadUserData();
   router();
 });
