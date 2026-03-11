@@ -111,7 +111,7 @@
 
 ---
 
-## Phase 3: Rich Features — IN PROGRESS (2/5)
+## Phase 3: Rich Features — IN PROGRESS (3/5)
 
 ### 3.1 Video Calls — NOT STARTED
 - [ ] Create Daily.co account
@@ -129,14 +129,14 @@
 - [x] Reply posting → insert into `forum_replies`
 - [x] Thread listing with reply counts
 
-### 3.4 Remaining Features ✅ (Partial)
+### 3.4 Remaining Features ✅
 - [x] Favorites migrated to Supabase (`favorites` table)
 - [x] Waitlist migrated to Supabase (`waitlist` table)
 - [x] Journal entries migrated to Supabase (`journal_entries` table)
-- [ ] Points system — NOT WIRED to DB
-- [ ] Notifications — NOT WIRED to DB
-- [ ] Retreat booking flow — NOT WIRED to Stripe
-- [ ] Gift card redemption — NOT WIRED
+- [x] Points system wired to Supabase (`points_transactions` table) — earn, redeem, load from DB
+- [x] Notifications wired to Supabase (`notifications` table) — fetch, mark read, unread badge
+- [x] Retreat booking flow wired to Stripe checkout
+- [x] Gift card redemption — code lookup, validation, expiry check, points credit
 
 ### 3.5 Therapist Payout System — NOT STARTED
 - [ ] Stripe Connect onboarding

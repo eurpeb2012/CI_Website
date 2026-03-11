@@ -156,6 +156,37 @@ function earnPoints(amount, desc) {
   pointsData.balance += pts;
   pointsData.history.unshift({ type: 'earned', points: pts, desc, date: new Date().toISOString().slice(0,10) });
   savePoints();
+  // Sync to Supabase
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  supabase.from('points_transactions').insert({
+    user_id: userId, points: pts, transaction_type: 'earned', description: desc,
+  }).then(({ error }) => { if (error) console.warn('Points sync failed:', error); });
+}
+function redeemPoints(pts, desc) {
+  if (pts > pointsData.balance) return false;
+  pointsData.balance -= pts;
+  pointsData.history.unshift({ type: 'redeemed', points: pts, desc, date: new Date().toISOString().slice(0,10) });
+  savePoints();
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  supabase.from('points_transactions').insert({
+    user_id: userId, points: -pts, transaction_type: 'redeemed', description: desc,
+  }).then(({ error }) => { if (error) console.warn('Points redeem sync failed:', error); });
+  return true;
+}
+async function loadPoints() {
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  try {
+    const { data, error } = await supabase.from('points_transactions').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (!error && data && data.length > 0) {
+      let balance = 0;
+      const history = data.map(t => {
+        balance += t.points;
+        return { type: t.transaction_type, points: Math.abs(t.points), desc: t.description || '', date: t.created_at ? t.created_at.slice(0, 10) : '' };
+      });
+      pointsData = { balance, history };
+      savePoints();
+    }
+  } catch (e) { console.warn('loadPoints: Supabase failed, using localStorage', e); }
 }
 
 // ===== Journal =====
@@ -199,7 +230,7 @@ async function loadWaitlist() {
 
 // ===== Load User Data (Supabase with localStorage fallback) =====
 async function loadUserData() {
-  await Promise.all([loadFavorites(), loadWaitlist(), loadJournal()]);
+  await Promise.all([loadFavorites(), loadWaitlist(), loadJournal(), loadPoints(), loadNotifications()]);
 }
 
 // ===== Sort State =====
@@ -1596,7 +1627,7 @@ function renderUserProfile(el, header) {
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/notifications')">
-        <span>🔔 ${t('notificationTitle')}</span>
+        <span>🔔 ${t('notificationTitle')}${notificationsData.filter(n => !n.isRead).length > 0 ? ` <span style="background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:0.75rem;margin-left:4px">${notificationsData.filter(n => !n.isRead).length}</span>` : ''}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/settings')">
@@ -2642,6 +2673,15 @@ function renderGiftCard(el, header) {
         </div>
         <button class="btn-primary" onclick="purchaseGiftCard()">${t('giftCardSend')}</button>
       </div>
+      <div class="gift-card-redeem mt-20">
+        <h2>${t('giftCardRedeemTitle')}</h2>
+        <p class="section-desc">${t('giftCardRedeemDesc')}</p>
+        <div class="form-group">
+          <input type="text" id="gift-code-input" placeholder="GC-XXXXXXXX" maxlength="11" style="text-transform:uppercase;letter-spacing:2px;font-weight:600;text-align:center">
+        </div>
+        <button class="btn-secondary" onclick="redeemGiftCard()">${t('giftCardRedeem')}</button>
+        <div id="gift-redeem-result"></div>
+      </div>
     </div>
   `;
 }
@@ -2690,6 +2730,42 @@ async function purchaseGiftCard() {
     showToast(t('paymentError'));
     btn.disabled = false;
     btn.textContent = t('giftCardSend');
+  }
+}
+
+async function redeemGiftCard() {
+  const input = document.getElementById('gift-code-input');
+  const resultEl = document.getElementById('gift-redeem-result');
+  if (!input || !resultEl) return;
+  const code = input.value.trim().toUpperCase();
+  if (!code || code.length < 5) { showToast(t('giftCardInvalidCode')); return; }
+
+  resultEl.innerHTML = `<p style="color:var(--text-muted);margin-top:12px">${t('paymentProcessing')}</p>`;
+  try {
+    // Look up gift card in Supabase
+    const { data, error } = await supabase.from('gift_cards').select('*').eq('code', code).eq('status', 'active').single();
+    if (error || !data) {
+      resultEl.innerHTML = `<p style="color:#c0392b;margin-top:12px">${t('giftCardInvalidCode')}</p>`;
+      return;
+    }
+    // Check expiry
+    if (data.expires_at && new Date(data.expires_at) < new Date()) {
+      resultEl.innerHTML = `<p style="color:#c0392b;margin-top:12px">${t('giftCardExpired')}</p>`;
+      return;
+    }
+    // Mark as redeemed
+    await supabase.from('gift_cards').update({ status: 'redeemed' }).eq('id', data.id);
+    // Add points equivalent (¥100 = 1 point, so gift card amount gives proportional points)
+    earnPoints(data.amount, `${t('giftCardRedeemed')} (${code})`);
+    resultEl.innerHTML = `
+      <div class="gift-redeem-success" style="background:#f0faf4;border-radius:12px;padding:16px;margin-top:12px;text-align:center">
+        <p style="font-size:1.2rem;font-weight:600;color:#2d9a62">¥${Number(data.amount).toLocaleString()} ${t('giftCardRedeemed')}</p>
+        <p style="color:#555;margin-top:4px">+${Math.floor(data.amount / 100)} ${t('points')} ${t('pointsEarned')}</p>
+      </div>`;
+    input.value = '';
+  } catch (e) {
+    console.error('Gift card redeem error:', e);
+    resultEl.innerHTML = `<p style="color:#c0392b;margin-top:12px">${t('paymentError')}</p>`;
   }
 }
 
@@ -2889,31 +2965,62 @@ function onSaveJournal() {
 }
 
 // ===== Notifications =====
-function renderNotifications(el, header) {
+let notificationsData = [];
+async function loadNotifications() {
+  const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
+  try {
+    const { data, error } = await supabase.from('notifications').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(50);
+    if (!error && data) {
+      notificationsData = data.map(n => ({
+        id: n.id,
+        icon: n.type === 'booking' ? '📅' : n.type === 'gift_card' ? '🎁' : n.type === 'waitlist' ? '🔔' : n.type === 'points' ? '🎯' : '📢',
+        text: n.body || n.title || '',
+        date: n.created_at ? n.created_at.slice(0, 10) : '',
+        isRead: n.is_read,
+      }));
+    }
+  } catch (e) { console.warn('loadNotifications: Supabase failed', e); }
+}
+async function markNotificationsRead() {
+  const unreadIds = notificationsData.filter(n => !n.isRead).map(n => n.id);
+  if (unreadIds.length === 0) return;
+  notificationsData.forEach(n => n.isRead = true);
+  const userId = authState.user?.id;
+  if (userId) {
+    supabase.from('notifications').update({ is_read: true }).eq('user_id', userId).eq('is_read', false)
+      .then(({ error }) => { if (error) console.warn('Mark read failed:', error); });
+  }
+}
+async function renderNotifications(el, header) {
   renderHeaderWithBack(header, t('notificationTitle'), '#/profile');
-  const notifications = [];
-  // Generate mock notifications from booking data
-  if (authState.isLoggedIn) {
+  // Load from Supabase
+  await loadNotifications();
+  // Merge local fallback notifications from bookings/waitlist if DB returned nothing
+  const notifications = [...notificationsData];
+  if (notifications.length === 0 && authState.isLoggedIn) {
     mockBookingHistory.filter(b => b.status === 'upcoming').forEach(b => {
       notifications.push({
         icon: '📅',
         text: `${t('reminderTitle')}: ${getLocalizedText(b.sessionName)} - ${b.date} ${b.time}`,
         date: b.date,
+        isRead: true,
       });
     });
     if (waitlistIds.length > 0) {
       waitlistIds.forEach(id => {
         const th = getTherapist(id);
-        if (th) notifications.push({ icon: '🔔', text: `${t('waitlistJoined')}: ${getLocalizedText(th.name)}`, date: '' });
+        if (th) notifications.push({ icon: '🔔', text: `${t('waitlistJoined')}: ${getLocalizedText(th.name)}`, date: '', isRead: true });
       });
     }
   }
+  // Mark as read
+  markNotificationsRead();
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('notificationTitle')}</h1>
       ${notifications.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">🔔</div><p>${t('notificationEmpty')}</p></div>` : ''}
       ${notifications.map(n => `
-        <div class="notification-item">
+        <div class="notification-item${n.isRead === false ? ' notification-unread' : ''}">
           <span class="notification-icon">${n.icon}</span>
           <div class="notification-text">${n.text}</div>
           ${n.date ? `<span class="notification-date">${n.date}</span>` : ''}
@@ -2988,9 +3095,43 @@ function renderRetreatDetail(el, header, id) {
         </div>
       </div>
       <div class="retreat-note mt-12">${t('retreatNote')}</div>
-      <button class="btn-primary mt-16" onclick="requireAuth('book-retreat', () => { showToast(t('retreatBookNow') + '!'); })">${t('retreatBookNow')}</button>
+      <button class="btn-primary mt-16" id="retreat-book-btn" onclick="requireAuth('book-retreat', () => { bookRetreat('${retreat.id}'); })">${t('retreatBookNow')} - ¥${retreat.price.toLocaleString()}</button>
     </div>
   `;
+}
+
+async function bookRetreat(retreatId) {
+  const retreat = retreats.find(r => String(r.id) === String(retreatId));
+  if (!retreat) return;
+  const btn = document.getElementById('retreat-book-btn');
+  if (btn) { btn.disabled = true; btn.textContent = t('paymentProcessing'); }
+  const lang = localStorage.getItem('iyashi-lang') || 'ja';
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'booking',
+        therapistId: '00000000-0000-0000-0000-000000000000',
+        sessionId: String(retreat.id),
+        bookingDate: new Date().toISOString().slice(0, 10),
+        bookingTime: '00:00',
+        userId: authState.user?.id || null,
+        sessionName: getLocalizedText(retreat.title),
+        therapistName: getLocalizedText(retreat.provider),
+        price: retreat.price,
+        platformFee: Math.round(retreat.price * 0.09),
+        locale: lang,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    window.location.href = data.url;
+  } catch (e) {
+    console.error('Retreat checkout failed:', e);
+    showToast(t('paymentError'));
+    if (btn) { btn.disabled = false; btn.textContent = `${t('retreatBookNow')} - ¥${retreat.price.toLocaleString()}`; }
+  }
 }
 
 // ===== Forum / Message Board =====

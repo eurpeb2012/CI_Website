@@ -2957,6 +2957,20 @@ body {
   color: var(--text-muted);
   white-space: nowrap;
 }
+.notification-unread {
+  background: var(--green-50, #f0faf4);
+  border-left: 3px solid var(--green-500, #3dba78);
+}
+
+/* Gift Card Redeem */
+.gift-card-redeem {
+  border-top: 1px solid var(--gray-100);
+  padding-top: 20px;
+}
+.gift-card-redeem h2 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
 
 /* Empty State Box */
 .empty-state-box {

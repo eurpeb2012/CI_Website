@@ -431,6 +431,12 @@ const translations = {
     giftCardMessagePlaceholder: 'お祝いのメッセージを添えて...',
     giftCardSend: 'ギフトカードを送る',
     giftCardSuccess: 'ギフトカードを送信しました！',
+    giftCardRedeemTitle: 'ギフトカードを使う',
+    giftCardRedeemDesc: 'お持ちのギフトコードを入力してください',
+    giftCardRedeem: 'コードを適用',
+    giftCardRedeemed: 'ギフトカード適用済み',
+    giftCardInvalidCode: '無効なコードです。ご確認ください',
+    giftCardExpired: 'このギフトカードは有効期限切れです',
 
     // Waitlist
     waitlistJoin: 'キャンセル待ちに登録',
@@ -1045,6 +1051,12 @@ const translations = {
     giftCardMessagePlaceholder: 'Add a personal message...',
     giftCardSend: 'Send Gift Card',
     giftCardSuccess: 'Gift card sent!',
+    giftCardRedeemTitle: 'Redeem Gift Card',
+    giftCardRedeemDesc: 'Enter your gift card code below',
+    giftCardRedeem: 'Apply Code',
+    giftCardRedeemed: 'Gift card applied',
+    giftCardInvalidCode: 'Invalid code. Please check and try again',
+    giftCardExpired: 'This gift card has expired',
 
     // Waitlist
     waitlistJoin: 'Join Waitlist',
