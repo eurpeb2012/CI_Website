@@ -66,7 +66,7 @@
 - [x] Booking record created in database on confirm
 - [x] Booking history queries from DB
 
-### 2.3 Stripe Payment Integration ✅ (Code Complete — Pending Config)
+### 2.3 Stripe Payment Integration ✅
 - [x] Stripe account created with test keys (`pk_test_...`, `sk_test_...`)
 - [x] CF Pages Function: `functions/api/create-checkout-session.js`
   - Handles 3 purchase types: booking, gift card, digital product
@@ -82,10 +82,10 @@
 - [x] Frontend wired: booking confirm → Stripe Checkout → success page
 - [x] Gift card purchase wired to Stripe (amount selection + recipient email)
 - [x] Digital product purchase wired to Stripe
-- [x] SQL migration: `sql/005_stripe_updates.sql` (pending_payment status + purchases table)
-- [ ] **USER ACTION: Run `sql/005_stripe_updates.sql` in Supabase SQL Editor**
-- [ ] **USER ACTION: Set Cloudflare env vars** (see below)
-- [ ] **USER ACTION: Create Stripe webhook endpoint** (see below)
+- [x] SQL migration: `sql/005_stripe_updates.sql` — applied
+- [x] Cloudflare env vars set (all 5 via wrangler secrets)
+- [x] Stripe webhook endpoint created (`checkout.session.completed` + `checkout.session.expired`)
+- [x] Stripe running in **sandbox/test mode** — ready for end-to-end testing
 - [ ] Stripe Connect for therapist payouts — DEFERRED to Phase 3.5
 
 ### 2.4 Real-Time Chat ✅
@@ -98,7 +98,7 @@
 - [x] Message delivery status (✓ sent / ✓✓ read)
 - [x] Action bar in chat (video call, view profile, book session)
 
-### 2.5 Email Notifications ✅ (Code Complete — Pending Config)
+### 2.5 Email Notifications ✅
 - [x] Resend account created with API key
 - [x] CF Pages Function: `functions/api/send-email.js`
   - Standalone email API endpoint
@@ -106,7 +106,7 @@
   - Styled templates matching app branding (green gradient header, structured layout)
 - [x] Webhook auto-sends emails after Stripe payment completion
 - [x] Booking metadata passed through Stripe for email content
-- [ ] **USER ACTION: Set `RESEND_API_KEY` env var in Cloudflare**
+- [x] `RESEND_API_KEY` env var set in Cloudflare
 - [ ] Database triggers for automated reminder emails — DEFERRED
 
 ---
@@ -178,28 +178,71 @@
 
 ---
 
-## Pending User Actions (Blocking)
+## Configuration Status — ALL SET ✅
 
-### Cloudflare Environment Variables
-Set in Cloudflare dashboard → Workers & Pages → healing-garden → Settings → Environment Variables:
+### Cloudflare Environment Variables (Secrets)
+All set via `wrangler pages secret put` on Mar 11, 2026:
 
-| Variable | Value | Status |
+| Variable | Status |
+|---|---|
+| `STRIPE_SECRET_KEY` | ✅ Set |
+| `SUPABASE_URL` | ✅ Set |
+| `SUPABASE_SERVICE_KEY` | ✅ Set |
+| `APP_URL` | ✅ Set |
+| `STRIPE_WEBHOOK_SECRET` | ✅ Set |
+| `RESEND_API_KEY` | ✅ Set |
+
+### Stripe Webhook
+- ✅ Endpoint: `https://healing-garden-3w5.pages.dev/api/stripe-webhook`
+- ✅ Events: `checkout.session.completed`, `checkout.session.expired`
+
+### SQL Migrations
+- ✅ `sql/005_stripe_updates.sql` — applied in Supabase SQL Editor
+
+### Going Live (Future)
+When ready to accept real payments:
+1. Create Stripe live keys (`pk_live_...`, `sk_live_...`) in Stripe Dashboard
+2. Update `STRIPE_SECRET_KEY` env var in Cloudflare with live secret key
+3. Update `js/app.js` Stripe publishable key to `pk_live_...`
+4. Create a new webhook endpoint in Stripe (live mode) and update `STRIPE_WEBHOOK_SECRET`
+
+---
+
+## Testing Stripe Checkout (Sandbox Mode)
+
+Stripe is running in **sandbox/test mode** — no real charges are made.
+
+### How to Test
+1. Go to https://healing-garden-3w5.pages.dev/
+2. Log in with demo account
+3. Find a therapist → select a session → pick date/time → confirm booking
+4. You'll be redirected to Stripe's hosted checkout page
+
+### Test Card Numbers
+| Card | Number | Behavior |
 |---|---|---|
-| `STRIPE_SECRET_KEY` | `sk_test_51T9t7a...` | ✅ Set |
-| `SUPABASE_URL` | `https://lmgznapsmdgmbwgulsyt.supabase.co` | ✅ Set |
-| `APP_URL` | `https://healing-garden-3w5.pages.dev` | ❌ Set via dashboard (wrangler timed out) |
-| `SUPABASE_SERVICE_KEY` | Get from Supabase → Settings → API → service_role | ❌ Need from user |
-| `STRIPE_WEBHOOK_SECRET` | Get from Stripe after creating webhook | ❌ Need from user |
-| `RESEND_API_KEY` | `re_bvneUE4e_FJXNE4Wpxvs7qVZDAkzSXahn` | ❌ Set via dashboard |
+| **Visa (success)** | `4242 4242 4242 4242` | Payment succeeds |
+| **Visa (declined)** | `4000 0000 0000 0002` | Payment is declined |
+| **Requires auth** | `4000 0025 0000 3155` | 3D Secure authentication required |
 
-### Stripe Webhook Setup
-1. Go to Stripe Dashboard → Developers → Webhooks → Add endpoint
-2. URL: `https://healing-garden-3w5.pages.dev/api/stripe-webhook`
-3. Events: `checkout.session.completed`, `checkout.session.expired`
-4. Copy signing secret (`whsec_...`) → set as `STRIPE_WEBHOOK_SECRET` env var
+- **Expiry**: Any future date (e.g., `12/30`)
+- **CVC**: Any 3 digits (e.g., `123`)
+- **Name/Address**: Any values
 
-### SQL Migration
-Run `sql/005_stripe_updates.sql` in Supabase SQL Editor
+### What to Verify After Successful Payment
+1. **Stripe Dashboard** (https://dashboard.stripe.com/test/payments) — payment appears
+2. **Supabase** — booking status changes from `pending_payment` to `upcoming`
+3. **Email** — confirmation email sent via Resend (check Resend dashboard if not received)
+4. **App** — redirects back to success page
+
+### Test Flows
+- **Booking**: Therapist → Session → Calendar → Checkout → ✓ Booking confirmed
+- **Gift Card**: Gift Card page → Amount → Recipient email → Checkout → ✓ Gift card code generated + emailed
+- **Digital Product**: Digital Products → Buy → Checkout → ✓ Purchase recorded
+
+### Viewing Webhook Activity
+- Stripe Dashboard → Developers → Webhooks → click endpoint → see event deliveries
+- Check for `checkout.session.completed` events with 200 response
 
 ---
 
