@@ -2972,6 +2972,39 @@ body {
   margin-bottom: 8px;
 }
 
+/* Skeleton Loading Screens */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200, #e0e0e0) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+.skeleton-title {
+  height: 28px;
+  width: 60%;
+  margin-bottom: 16px;
+}
+.skeleton-text {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.skeleton-card {
+  height: 120px;
+  flex: 1;
+  border-radius: 12px;
+}
+.skeleton-card-wide {
+  height: 90px;
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 12px;
+}
+
 /* Empty State Box */
 .empty-state-box {
   text-align: center;

@@ -233,6 +233,55 @@ async function loadUserData() {
   await Promise.all([loadFavorites(), loadWaitlist(), loadJournal(), loadPoints(), loadNotifications()]);
 }
 
+// ===== File Upload (Supabase Storage) =====
+async function uploadAvatar(file, bucket, path) {
+  if (!file) return null;
+  const maxSize = 2 * 1024 * 1024; // 2MB
+  if (file.size > maxSize) { showToast(t('uploadTooLarge')); return null; }
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!allowed.includes(file.type)) { showToast(t('uploadInvalidType')); return null; }
+  try {
+    const ext = file.name.split('.').pop();
+    const filePath = `${path}/${Date.now()}.${ext}`;
+    const { data, error } = await supabase.storage.from(bucket).upload(filePath, file, { upsert: true });
+    if (error) { console.error('Upload failed:', error); showToast(t('uploadFailed')); return null; }
+    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
+    return urlData?.publicUrl || null;
+  } catch (e) { console.error('Upload error:', e); showToast(t('uploadFailed')); return null; }
+}
+
+function createFileInput(onSelect) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/jpeg,image/png,image/webp';
+  input.onchange = () => { if (input.files[0]) onSelect(input.files[0]); };
+  input.click();
+}
+
+async function onUploadUserAvatar() {
+  createFileInput(async (file) => {
+    const url = await uploadAvatar(file, 'avatars', 'users');
+    if (!url) return;
+    const userId = authState.user?.id;
+    if (userId) {
+      await supabase.from('users').update({ avatar_url: url }).eq('id', userId);
+      authState.user.avatar_url = url;
+    }
+    showToast(t('uploadSuccess'));
+    router();
+  });
+}
+
+async function onUploadTherapistAvatar(therapistId) {
+  createFileInput(async (file) => {
+    const url = await uploadAvatar(file, 'avatars', 'therapists');
+    if (!url) return;
+    await supabase.from('therapists').update({ avatar_url: url }).eq('id', therapistId);
+    showToast(t('uploadSuccess'));
+    router();
+  });
+}
+
 // ===== Sort State =====
 let currentSort = 'recommended';
 
@@ -1448,8 +1497,8 @@ function renderApply(el, header) {
       <h1 class="page-title">${t('applyTitle')}</h1>
       <div class="apply-form">
         <div class="photo-upload">
-          <div class="photo-placeholder">📷</div>
-          <button class="photo-upload-btn">${t('applyUpload')}</button>
+          <div class="photo-placeholder" id="apply-photo-preview">📷</div>
+          <button class="photo-upload-btn" onclick="createFileInput(async (file) => { const url = await uploadAvatar(file, 'avatars', 'applicants'); if(url) document.getElementById('apply-photo-preview').innerHTML = '<img src=&quot;'+url+'&quot; style=&quot;width:100px;height:100px;border-radius:50%;object-fit:cover&quot;>'; })">${t('applyUpload')}</button>
         </div>
         <div class="form-group">
           <label>${t('applyName')}</label>
@@ -1544,8 +1593,8 @@ function renderUserProfile(el, header) {
     <div class="page">
       <div class="user-profile-header">
         ${isLoggedIn && authState.user.avatar_url
-          ? `<img class="user-avatar" src="${authState.user.avatar_url}" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`
-          : `<div class="user-avatar">👤</div>`}
+          ? `<img class="user-avatar" src="${authState.user.avatar_url}" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;cursor:pointer" onclick="onUploadUserAvatar()" title="${t('applyUpload')}">`
+          : `<div class="user-avatar" style="cursor:pointer" onclick="onUploadUserAvatar()" title="${t('applyUpload')}">👤</div>`}
         <div class="user-info">
           <h2>${userName}</h2>
           <p>${userIdDisplay}</p>
@@ -2496,8 +2545,11 @@ function renderTherapistProfileEdit(el, header) {
       <h1 class="page-title">${t('profileEditTitle')}</h1>
       <div class="profile-edit-form">
         <div class="photo-upload">
-          <div class="profile-avatar" style="background-color:${th.avatarColor};width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white">${name.charAt(0)}</div>
-          <button class="photo-upload-btn">${t('applyUpload')}</button>
+          ${th.avatar_url
+            ? `<img id="therapist-avatar-preview" src="${th.avatar_url}" style="width:80px;height:80px;border-radius:50%;object-fit:cover">`
+            : `<div id="therapist-avatar-preview" class="profile-avatar" style="background-color:${th.avatarColor};width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white">${name.charAt(0)}</div>`
+          }
+          <button class="photo-upload-btn" onclick="onUploadTherapistAvatar('${th.id}')">${t('applyUpload')}</button>
         </div>
         <div class="form-group">
           <label>${t('applyName')}</label>
@@ -3337,6 +3389,22 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (!window.location.hash) {
     window.location.hash = '#/';
   }
+  // Show skeleton loading screen while data loads
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div class="page" style="padding-top:20px">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text" style="width:80%"></div>
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+      <div class="skeleton skeleton-card-wide"></div>
+      <div class="skeleton skeleton-card-wide"></div>
+      <div class="skeleton skeleton-card-wide"></div>
+    </div>
+  `;
   try {
     await Promise.all([
       initSupabaseAuth(),
