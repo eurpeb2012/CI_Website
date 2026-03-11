@@ -87,6 +87,11 @@ async function handleBooking(body, stripeKey, supabaseUrl, supabaseServiceKey, a
   params.append('metadata[user_id]', userId || '');
   params.append('metadata[therapist_id]', therapistId);
   params.append('metadata[platform_fee]', String(platformFee || 0));
+  params.append('metadata[session_name]', sessionName || '');
+  params.append('metadata[therapist_name]', therapistName || '');
+  params.append('metadata[booking_date]', bookingDate || '');
+  params.append('metadata[booking_time]', bookingTime || '');
+  params.append('metadata[price]', String(price));
   params.append('success_url', `${appUrl}/?session_id={CHECKOUT_SESSION_ID}#/booking/success`);
   params.append('cancel_url', `${appUrl}/#/booking`);
   if (locale === 'ja') params.append('locale', 'ja');

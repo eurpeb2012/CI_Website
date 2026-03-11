@@ -6,6 +6,8 @@ export async function onRequestPost(context) {
   const STRIPE_WEBHOOK_SECRET = env.STRIPE_WEBHOOK_SECRET;
   const SUPABASE_URL = env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = env.SUPABASE_SERVICE_KEY;
+  const RESEND_API_KEY = env.RESEND_API_KEY;
+  const APP_URL = env.APP_URL || 'https://healing-garden-3w5.pages.dev';
 
   if (!STRIPE_WEBHOOK_SECRET) {
     return new Response('Webhook secret not configured', { status: 500 });
@@ -30,7 +32,7 @@ export async function onRequestPost(context) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object, SUPABASE_URL, SUPABASE_SERVICE_KEY);
+        await handleCheckoutCompleted(event.data.object, SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND_API_KEY, APP_URL);
         break;
       case 'checkout.session.expired':
         await handleCheckoutExpired(event.data.object, SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -46,9 +48,10 @@ export async function onRequestPost(context) {
   return new Response('ok', { status: 200 });
 }
 
-async function handleCheckoutCompleted(session, supabaseUrl, supabaseKey) {
+async function handleCheckoutCompleted(session, supabaseUrl, supabaseKey, resendKey, appUrl) {
   const meta = session.metadata || {};
   const paymentIntentId = session.payment_intent;
+  const customerEmail = session.customer_details?.email;
 
   if (meta.type === 'booking' && meta.booking_id) {
     // Update booking status to 'upcoming' and store payment intent
@@ -57,6 +60,18 @@ async function handleCheckoutCompleted(session, supabaseUrl, supabaseKey) {
       payment_intent_id: paymentIntentId,
     });
     console.log('Booking confirmed:', meta.booking_id);
+
+    // Send confirmation email
+    if (resendKey && customerEmail) {
+      await sendEmail(resendKey, appUrl, 'booking_confirmation', {
+        userEmail: customerEmail,
+        sessionName: meta.session_name || 'Therapy Session',
+        therapistName: meta.therapist_name || '',
+        bookingDate: meta.booking_date || '',
+        bookingTime: meta.booking_time || '',
+        price: meta.price || session.amount_total,
+      });
+    }
 
   } else if (meta.type === 'gift_card') {
     // Create gift card record
@@ -73,7 +88,16 @@ async function handleCheckoutCompleted(session, supabaseUrl, supabaseKey) {
       expires_at: expiresAt,
     });
     console.log('Gift card created:', code);
-    // TODO: Send email to recipient via Resend
+
+    // Send gift card email to recipient
+    if (resendKey && meta.recipient_email) {
+      await sendEmail(resendKey, appUrl, 'gift_card', {
+        recipientEmail: meta.recipient_email,
+        amount: meta.amount,
+        message: meta.message || '',
+        code,
+      });
+    }
 
   } else if (meta.type === 'digital_product') {
     // Create purchase record
@@ -184,4 +208,47 @@ function generateGiftCardCode() {
     code += chars[Math.floor(Math.random() * chars.length)];
   }
   return code;
+}
+
+// Send email via the send-email function (calls Resend directly)
+async function sendEmail(resendKey, appUrl, template, data) {
+  try {
+    // Import and reuse the email builder from send-email.js isn't possible
+    // in CF Pages Functions, so call Resend directly with inline templates
+    const { buildEmailDirect } = await import('./send-email-templates.js').catch(() => ({}));
+
+    // Fallback: call Resend API directly with a simple email
+    const isJa = true; // Default to Japanese for webhook-triggered emails
+    let to, subject, html;
+
+    if (template === 'booking_confirmation') {
+      to = data.userEmail;
+      subject = `【癒しの庭】ご予約が確定しました - ${data.sessionName}`;
+      html = `<div style="font-family:sans-serif;max-width:600px;margin:0 auto"><h2 style="color:#2d9a62">ご予約が確定しました ✓</h2><p><strong>${data.sessionName}</strong></p><p>セラピスト: ${data.therapistName}</p><p>日付: ${data.bookingDate} ${data.bookingTime}</p><p>料金: ¥${Number(data.price).toLocaleString()}</p><hr><p>ご予約ありがとうございます。</p><p style="color:#888;font-size:0.8rem">癒しの庭 / Healing Garden</p></div>`;
+    } else if (template === 'gift_card') {
+      to = data.recipientEmail;
+      subject = '🎁 癒しの庭のギフトカードが届きました！';
+      html = `<div style="font-family:sans-serif;max-width:600px;margin:0 auto"><h2 style="color:#2d9a62">🎁 ギフトカードが届きました！</h2><div style="text-align:center;padding:20px;background:#f0faf4;border-radius:12px;margin:20px 0"><p style="font-size:2rem">¥${Number(data.amount).toLocaleString()}</p><p style="font-size:1.2rem;font-weight:700;letter-spacing:2px;color:#2d9a62">${data.code}</p></div>${data.message ? `<p style="font-style:italic;color:#555">"${data.message}"</p>` : ''}<p>上記のコードをご予約時にご利用ください。</p><p style="color:#888;font-size:0.8rem">癒しの庭 / Healing Garden</p></div>`;
+    } else {
+      return;
+    }
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: '癒しの庭 Healing Garden <onboarding@resend.dev>',
+        to,
+        subject,
+        html,
+      }),
+    });
+    console.log('Email sent:', template, to);
+  } catch (e) {
+    console.error('Email send failed:', e);
+    // Don't throw — email failure shouldn't break the webhook
+  }
 }
