@@ -2331,7 +2331,7 @@ function renderTherapistSessionEdit(el, header, sessionId) {
   renderHeaderWithBack(header, t('sessionEditTitle'), '#/therapist-dashboard/sessions');
   const thId = therapistMode.therapistId || 1;
   const th = getTherapist(thId);
-  const session = th.sessions.find(s => s.id === parseInt(sessionId));
+  const session = th.sessions.find(s => String(s.id) === String(sessionId));
   if (!session) { navigate('#/therapist-dashboard/sessions'); return; }
 
   const name = getLocalizedText(session.name);
@@ -2675,7 +2675,7 @@ function renderBlog(el, header) {
 }
 
 function renderBlogDetail(el, header, blogId) {
-  const article = blogArticles.find(a => a.id === blogId);
+  const article = blogArticles.find(a => String(a.id) === String(blogId));
   if (!article) { navigate('#/blog'); return; }
   const th = getTherapist(article.therapistId);
   renderHeaderWithBack(header, t('blogTitle'), '#/blog');
@@ -2873,7 +2873,7 @@ function renderRetreats(el, header) {
 }
 
 function renderRetreatDetail(el, header, id) {
-  const retreat = retreats.find(r => r.id === parseInt(id));
+  const retreat = retreats.find(r => String(r.id) === String(id));
   if (!retreat) { navigate('#/retreats'); return; }
   renderHeaderWithBack(header, getLocalizedText(retreat.title), '#/retreats');
   const includes = getLocalizedText(retreat.includes);
