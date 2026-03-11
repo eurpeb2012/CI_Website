@@ -710,7 +710,7 @@ function renderTherapistCard(th) {
         ${th.responseTime ? `<div class="card-response-time">💬 ${t('responseTime')}: ${th.responseTime}</div>` : ''}
         ${th.slidingScale ? `<div class="card-sliding-scale">💚 ${t('slidingScale')}</div>` : ''}
       </div>
-      <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${th.id})" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">${isFavorite(th.id) ? '❤️' : '🤍'}</button>
+      <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${th.id}')" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">${isFavorite(th.id) ? '❤️' : '🤍'}</button>
     </div>
   `;
 }
@@ -882,8 +882,8 @@ function renderTherapistProfile(el, header, id) {
         ${th.responseTime ? `<p class="profile-response-time">💬 ${t('responseTime')}: ${th.responseTime}</p>` : ''}
         ${th.slidingScale ? `<p class="profile-sliding-scale">💚 ${t('slidingScale')}</p>` : ''}
         <div class="profile-actions-row">
-          <button class="btn-icon-action${isFavorite(th.id) ? ' active' : ''}" onclick="toggleFavorite(${th.id})">${isFavorite(th.id) ? '❤️' : '🤍'} ${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}</button>
-          <button class="btn-icon-action" onclick="onShareTherapist(${th.id})">📤 ${t('shareTherapist')}</button>
+          <button class="btn-icon-action${isFavorite(th.id) ? ' active' : ''}" onclick="toggleFavorite('${th.id}')">${isFavorite(th.id) ? '❤️' : '🤍'} ${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}</button>
+          <button class="btn-icon-action" onclick="onShareTherapist('${th.id}')">📤 ${t('shareTherapist')}</button>
         </div>
       </div>
 
@@ -929,7 +929,7 @@ function renderTherapistProfile(el, header, id) {
                 ${s.delivery.map(d => `<span class="delivery-tag">${deliveryLabels[d] || d}</span>`).join('')}
               </div>
             </div>
-            <button class="session-book-btn" onclick="onBookSession(${th.id}, ${s.id})">${t('profileBook')}</button>
+            <button class="session-book-btn" onclick="onBookSession('${th.id}', '${s.id}')">${t('profileBook')}</button>
           </div>
         `).join('')}
       </div>
@@ -952,8 +952,8 @@ function renderTherapistProfile(el, header, id) {
       ` : ''}
 
       <div class="profile-section">
-        <button class="btn-secondary" style="max-width:100%" onclick="onMessageTherapist(${th.id})">${t('profileMessage')}</button>
-        <button class="btn-outline-secondary mt-8" style="max-width:100%" onclick="onToggleWaitlist(${th.id})">
+        <button class="btn-secondary" style="max-width:100%" onclick="onMessageTherapist('${th.id}')">${t('profileMessage')}</button>
+        <button class="btn-outline-secondary mt-8" style="max-width:100%" onclick="onToggleWaitlist('${th.id}')">
           ${onWaitlist ? `✓ ${t('waitlistJoined')}` : `🔔 ${t('waitlistJoin')}`}
         </button>
         <p class="help-text mt-4">${t('waitlistDesc')}</p>
@@ -2047,7 +2047,7 @@ async function renderChat(el, header, therapistId) {
       <div class="chat-actions-bar">
         <button class="chat-action-btn" onclick="navigate('#/videocall/${therapistId}')">📹 ${t('chatStartVideo')}</button>
         <button class="chat-action-btn" onclick="navigate('#/therapist/${therapistId}')">👤 ${t('chatViewProfile')}</button>
-        <button class="chat-action-btn" onclick="onBookFromChat(${therapistId})">📅 ${t('chatBookSession')}</button>
+        <button class="chat-action-btn" onclick="onBookFromChat('${therapistId}')">📅 ${t('chatBookSession')}</button>
       </div>
       <div class="chat-messages">
         <div class="chat-loading">${t('chatLoadingMessages')}</div>
@@ -2173,7 +2173,7 @@ function renderReviewForm(el, header, therapistId) {
           <label>${t('reviewText')}</label>
           <textarea id="review-text" placeholder="${t('reviewTextPlaceholder')}"></textarea>
         </div>
-        <button class="btn-primary" onclick="onSubmitReview(${therapistId})">${t('reviewSubmit')}</button>
+        <button class="btn-primary" onclick="onSubmitReview('${therapistId}')">${t('reviewSubmit')}</button>
       </div>
     </div>
   `;
