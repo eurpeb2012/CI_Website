@@ -297,32 +297,36 @@ const routes = [
 ];
 
 function router() {
-  // Clean up chat subscription when navigating away
-  _cleanupChatSubscription();
+  try {
+    // Clean up chat subscription when navigating away
+    _cleanupChatSubscription();
 
-  const route = getRoute();
-  const content = document.getElementById('content');
-  const header = document.getElementById('header');
+    const route = getRoute();
+    const content = document.getElementById('content');
+    const header = document.getElementById('header');
 
-  let matched = false;
-  for (const r of routes) {
-    const match = route.match(r.pattern);
-    if (match) {
-      matched = true;
-      const params = match.slice(1);
-      renderRoute(r.handler, content, header, params);
-      setActiveNav(r.nav);
-      break;
+    let matched = false;
+    for (const r of routes) {
+      const match = route.match(r.pattern);
+      if (match) {
+        matched = true;
+        const params = match.slice(1);
+        renderRoute(r.handler, content, header, params);
+        setActiveNav(r.nav);
+        break;
+      }
     }
-  }
 
-  if (!matched) {
-    renderRoute('landing', content, header, []);
-    setActiveNav('home');
-  }
+    if (!matched) {
+      renderRoute('landing', content, header, []);
+      setActiveNav('home');
+    }
 
-  updateBottomNav();
-  window.scrollTo(0, 0);
+    updateBottomNav();
+    window.scrollTo(0, 0);
+  } catch (e) {
+    console.error('Router error:', e);
+  }
 }
 
 function renderRoute(handler, el, header, params) {
@@ -374,7 +378,12 @@ function renderRoute(handler, el, header, params) {
     forumThread: () => renderForumThread(el, header, params[0]),
     forumNew: () => renderForumNewThread(el, header),
   };
-  (handlers[handler] || handlers.landing)();
+  try {
+    (handlers[handler] || handlers.landing)();
+  } catch (e) {
+    console.error('Render error [' + handler + ']:', e);
+    el.innerHTML = '<div class="page"><div class="empty-state-box"><div class="empty-state-icon">⚠️</div><p>Error loading page. <button class="btn-primary mt-12" onclick="navigate(\'#/\')">Back to Home</button></p></div></div>';
+  }
 }
 
 function setActiveNav(tab) {
@@ -3107,10 +3116,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (!window.location.hash) {
     window.location.hash = '#/';
   }
-  await Promise.all([
-    initSupabaseAuth(),
-    loadSupabaseData(),
-  ]);
-  await loadUserData();
+  try {
+    await Promise.all([
+      initSupabaseAuth(),
+      loadSupabaseData(),
+    ]);
+    await loadUserData();
+  } catch (e) {
+    console.warn('Init data load failed, using mock data:', e);
+  }
   router();
 });
