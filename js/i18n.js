@@ -113,6 +113,10 @@ const translations = {
     bookingError: '予約に失敗しました。もう一度お試しください。',
     bookingSuccess: '予約が完了しました！',
     bookingSuccessMsg: '確認メールをお送りしました。',
+    paymentProcessing: 'お支払い処理中...',
+    paymentError: '決済に失敗しました。もう一度お試しください。',
+    paymentConfirmed: 'お支払いが確認されました',
+    giftCardEmailRequired: 'メールアドレスを入力してください',
     bookingBackHome: 'ホームに戻る',
 
     // Apply
@@ -723,6 +727,10 @@ const translations = {
     bookingError: 'Booking failed. Please try again.',
     bookingSuccess: 'Booking Confirmed!',
     bookingSuccessMsg: 'A confirmation email has been sent.',
+    paymentProcessing: 'Processing payment...',
+    paymentError: 'Payment failed. Please try again.',
+    paymentConfirmed: 'Payment confirmed',
+    giftCardEmailRequired: 'Please enter an email address',
     bookingBackHome: 'Back to Home',
 
     // Apply

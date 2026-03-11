@@ -1301,39 +1301,45 @@ async function confirmBooking() {
   if (!th || !session || !state.bookingDate || !state.bookingTime) return;
 
   btn.disabled = true;
-  btn.textContent = t('bookingLoading');
+  btn.textContent = t('paymentProcessing');
 
   const userId = authState.user?.id || '00000000-0000-0000-0000-000000000001';
-  const therapistUUID = toTherapistUUID(th.id);
-  const sessionUUID = toSessionUUID(session.id);
+  const therapistId = String(th.id);
+  const sessionId = String(session.id);
   const dateStr = state.bookingDate.getFullYear() + '-' +
     String(state.bookingDate.getMonth() + 1).padStart(2, '0') + '-' +
     String(state.bookingDate.getDate()).padStart(2, '0');
-  const timeStr = state.bookingTime + ':00';
+  const timeStr = state.bookingTime;
 
   const tier = therapistTiers[th.tier] || therapistTiers.free;
   const platformFee = Math.round(session.price * (tier.platformFee / 100));
+  const lang = localStorage.getItem('iyashi-lang') || 'ja';
 
   try {
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert({
-        user_id: userId,
-        therapist_id: therapistUUID,
-        session_id: sessionUUID,
-        booking_date: dateStr,
-        booking_time: timeStr,
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'booking',
+        therapistId,
+        sessionId,
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        userId,
+        sessionName: getLocalizedText(session.name),
+        therapistName: getLocalizedText(th.name),
         price: session.price,
-        platform_fee: platformFee,
-        status: 'upcoming'
-      })
-      .select();
-
-    if (error) throw error;
-    navigate('#/booking/success');
+        platformFee,
+        locale: lang,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    // Redirect to Stripe Checkout
+    window.location.href = data.url;
   } catch (e) {
-    console.error('Booking insert failed:', e);
-    showToast(t('bookingError'));
+    console.error('Checkout failed:', e);
+    showToast(t('paymentError'));
     btn.disabled = false;
     btn.textContent = t('bookingConfirm');
   }
@@ -1380,6 +1386,13 @@ function renderBooking(el, header) {
 
 function renderBookingSuccess(el, header) {
   renderHeaderSimple(header, t('appName'));
+  // Check for Stripe session_id in URL query params
+  const urlParams = new URLSearchParams(window.location.search);
+  const stripeSessionId = urlParams.get('session_id');
+  // Clean up the URL query param
+  if (stripeSessionId) {
+    window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+  }
   // Earn points on booking
   if (state.bookingSession && authState.isLoggedIn) {
     earnPoints(state.bookingSession.price, getLocalizedText(state.bookingSession.name));
@@ -1389,6 +1402,7 @@ function renderBookingSuccess(el, header) {
       <div class="success-icon">✓</div>
       <h2>${t('bookingSuccess')}</h2>
       <p>${t('bookingSuccessMsg')}</p>
+      ${stripeSessionId ? `<p class="payment-confirmed-msg">💳 ${t('paymentConfirmed')}</p>` : ''}
       ${authState.isLoggedIn && state.bookingSession ? `<p class="points-earned-msg">🎯 +${Math.floor(state.bookingSession.price / 100)} ${t('points')} ${t('pointsEarned')}!</p>` : ''}
       <button class="btn-primary" onclick="navigate('#/')">${t('bookingBackHome')}</button>
     </div>
@@ -2626,7 +2640,7 @@ function renderGiftCard(el, header) {
           <label>${t('giftCardMessage')}</label>
           <textarea placeholder="${t('giftCardMessagePlaceholder')}" style="min-height:80px"></textarea>
         </div>
-        <button class="btn-primary" onclick="navigate('#/gift-card/success')">${t('giftCardSend')}</button>
+        <button class="btn-primary" onclick="purchaseGiftCard()">${t('giftCardSend')}</button>
       </div>
     </div>
   `;
@@ -2635,6 +2649,48 @@ function renderGiftCard(el, header) {
 function selectGiftAmount(btn) {
   document.querySelectorAll('.gift-amount-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+}
+
+async function purchaseGiftCard() {
+  const selectedBtn = document.querySelector('.gift-amount-btn.selected');
+  const emailInput = document.querySelector('.gift-card-form input[type="email"]');
+  const messageInput = document.querySelector('.gift-card-form textarea');
+
+  if (!selectedBtn || !emailInput) return;
+  const email = emailInput.value.trim();
+  if (!email) { showToast(t('giftCardEmailRequired')); return; }
+
+  const amountIdx = Array.from(document.querySelectorAll('.gift-amount-btn')).indexOf(selectedBtn);
+  const amount = giftCardOptions[amountIdx]?.amount;
+  if (!amount) return;
+
+  const btn = document.querySelector('.gift-card-form .btn-primary');
+  btn.disabled = true;
+  btn.textContent = t('paymentProcessing');
+  const lang = localStorage.getItem('iyashi-lang') || 'ja';
+
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'gift_card',
+        amount,
+        recipientEmail: email,
+        message: messageInput?.value?.trim() || '',
+        userId: authState.user?.id || null,
+        locale: lang,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    window.location.href = data.url;
+  } catch (e) {
+    console.error('Gift card checkout failed:', e);
+    showToast(t('paymentError'));
+    btn.disabled = false;
+    btn.textContent = t('giftCardSend');
+  }
 }
 
 function renderGiftCardSuccess(el, header) {
@@ -2672,6 +2728,30 @@ function renderBlog(el, header) {
       }).join('')}
     </div>
   `;
+}
+
+async function purchaseDigitalProduct(productId, productName, price) {
+  const lang = localStorage.getItem('iyashi-lang') || 'ja';
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'digital_product',
+        productId,
+        productName,
+        price,
+        userId: authState.user?.id || null,
+        locale: lang,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    window.location.href = data.url;
+  } catch (e) {
+    console.error('Digital product checkout failed:', e);
+    showToast(t('paymentError'));
+  }
 }
 
 function renderBlogDetail(el, header, blogId) {
@@ -2719,7 +2799,7 @@ function renderDigitalProducts(el, header) {
               ${th ? `<span class="dp-author">${getLocalizedText(th.name)}</span>` : ''}
               <span class="dp-price">¥${p.price.toLocaleString()}</span>
             </div>
-            <button class="btn-small" onclick="alert('${t('digitalProductBuy')}!')">${t('digitalProductBuy')}</button>
+            <button class="btn-small" onclick="purchaseDigitalProduct('${p.id}', '${getLocalizedText(p.name).replace(/'/g, "\\'")}', ${p.price})">${t('digitalProductBuy')}</button>
           </div>
         `;
       }).join('')}
