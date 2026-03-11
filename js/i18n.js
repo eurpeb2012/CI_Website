@@ -217,9 +217,14 @@ const translations = {
     messagesEmpty: 'メッセージはまだありません',
     messagesNoMessages: 'まだメッセージはありません',
     messagesLoginRequired: 'メッセージを見るにはログインしてください',
+    messagesNewChat: '新しいメッセージ',
+    messagesStartConversation: 'セラピストを探す',
 
     // Chat
     chatTitle: 'チャット',
+    chatViewProfile: 'プロフィール',
+    chatBookSession: '予約する',
+    chatEmptyPrompt: 'メッセージを送って会話を始めましょう！',
     chatInfoWindow: 'メッセージは3日間有効です',
     chatPlaceholder: 'メッセージを入力...',
     chatStartVideo: 'ビデオ通話を開始',
@@ -822,9 +827,14 @@ const translations = {
     messagesEmpty: 'No messages yet',
     messagesNoMessages: 'No messages yet',
     messagesLoginRequired: 'Please log in to view messages',
+    messagesNewChat: 'New Message',
+    messagesStartConversation: 'Find a Therapist',
 
     // Chat
     chatTitle: 'Chat',
+    chatViewProfile: 'Profile',
+    chatBookSession: 'Book',
+    chatEmptyPrompt: 'Send a message to start the conversation!',
     chatInfoWindow: 'Messages are available for 3 days',
     chatPlaceholder: 'Type a message...',
     chatStartVideo: 'Start Video Call',

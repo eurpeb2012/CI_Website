@@ -1697,46 +1697,114 @@ function renderSignup(el, header) {
 }
 
 // ===== Messages List =====
+function _getConversations() {
+  const conversations = [];
+  if (!authState.isLoggedIn) return conversations;
+  const seen = new Set();
+
+  // Include therapists from booking history
+  mockBookingHistory.forEach(b => {
+    if (seen.has(b.therapistId)) return;
+    seen.add(b.therapistId);
+    const th = getTherapist(b.therapistId);
+    if (th) conversations.push(_buildConversation(th));
+  });
+
+  // Include any therapist with mock chat data not already covered
+  for (const idStr of Object.keys(typeof mockChats !== 'undefined' ? mockChats : {})) {
+    const id = parseInt(idStr);
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const th = getTherapist(id);
+    if (th) conversations.push(_buildConversation(th));
+  }
+
+  // Include therapists with local messages
+  for (const uuid of Object.keys(_localMessages)) {
+    const id = _uuidToTherapistId(uuid);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    const th = getTherapist(id);
+    if (th) conversations.push(_buildConversation(th));
+  }
+
+  // Sort: conversations with messages first (by time desc), then no-message ones
+  conversations.sort((a, b) => {
+    if (a.hasMessages && !b.hasMessages) return -1;
+    if (!a.hasMessages && b.hasMessages) return 1;
+    return 0;
+  });
+
+  return conversations;
+}
+
+function _buildConversation(th) {
+  const msgs = getChatMessages(th.id);
+  const therapistUUID = _getTherapistUUID(th.id);
+  const localMsgs = _localMessages[therapistUUID] || [];
+  const lastMock = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+  const lastLocal = localMsgs.length > 0 ? localMsgs[localMsgs.length - 1] : null;
+  const hasMessages = msgs.length > 0 || localMsgs.length > 0;
+
+  let lastMessage = t('messagesNoMessages');
+  let time = '';
+  let unread = false;
+
+  if (lastLocal) {
+    lastMessage = lastLocal.body;
+    time = _formatChatTime(lastLocal.created_at);
+  } else if (lastMock) {
+    lastMessage = getLocalizedText(lastMock.text);
+    time = lastMock.time;
+    // Mock: last message from therapist counts as "unread"
+    if (lastMock.from === 'therapist') unread = true;
+  }
+
+  const name = getLocalizedText(th.name);
+  return {
+    therapistId: th.id,
+    name,
+    initial: name.charAt(0),
+    avatarColor: th.avatarColor,
+    lastMessage,
+    time,
+    hasMessages,
+    unread,
+    responseTime: th.responseTime || '',
+  };
+}
+
+function _uuidToTherapistId(uuid) {
+  for (const [id, u] of Object.entries(therapistUUIDs)) {
+    if (u === uuid) return parseInt(id);
+  }
+  return null;
+}
+
 function renderMessagesList(el, header) {
   renderHeaderWithBack(header, t('messagesTitle'), '#/profile');
 
-  // Build conversation list from booking history (therapists user has interacted with)
-  const conversations = [];
-  if (authState.isLoggedIn) {
-    const seen = new Set();
-    mockBookingHistory.forEach(b => {
-      if (seen.has(b.therapistId)) return;
-      seen.add(b.therapistId);
-      const th = getTherapist(b.therapistId);
-      if (!th) return;
-      const msgs = getChatMessages(b.therapistId);
-      const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
-      conversations.push({
-        therapistId: b.therapistId,
-        name: getLocalizedText(th.name),
-        initial: getLocalizedText(th.name).charAt(0),
-        avatarColor: th.avatarColor,
-        lastMessage: lastMsg ? getLocalizedText(lastMsg.text) : t('messagesNoMessages'),
-        time: lastMsg ? lastMsg.time : '',
-      });
-    });
-  }
+  const conversations = _getConversations();
 
   el.innerHTML = `
     <div class="page">
-      <h1 class="page-title">${t('messagesTitle')}</h1>
+      <div class="messages-header-row">
+        <h1 class="page-title" style="margin:0">${t('messagesTitle')}</h1>
+        <button class="btn-small" onclick="navigate('#/search')" style="white-space:nowrap">+ ${t('messagesNewChat')}</button>
+      </div>
       ${!authState.isLoggedIn ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesLoginRequired')}</p><button class="btn-primary mt-12" onclick="navigate('#/signup')">${t('signupSubmit')}</button></div>` :
-        conversations.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesEmpty')}</p></div>` :
+        conversations.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesEmpty')}</p><button class="btn-primary mt-12" onclick="navigate('#/search')">${t('messagesStartConversation')}</button></div>` :
         conversations.map(c => `
-          <div class="profile-menu-item" onclick="navigate('#/chat/${c.therapistId}')" style="padding:12px 16px">
-            <div style="display:flex;align-items:center;gap:12px;flex:1">
-              <div class="profile-avatar" style="background-color:${c.avatarColor};width:40px;height:40px;min-width:40px;font-size:1rem;display:flex;align-items:center;justify-content:center;border-radius:50%;color:#fff">${c.initial}</div>
-              <div style="flex:1;min-width:0">
-                <h3 style="margin:0;font-size:0.95rem">${c.name}</h3>
-                <p style="margin:2px 0 0;font-size:0.85rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.lastMessage}</p>
+          <div class="conversation-item${c.unread ? ' conversation-unread' : ''}" onclick="navigate('#/chat/${c.therapistId}')">
+            <div class="conversation-avatar" style="background-color:${c.avatarColor}">${c.initial}</div>
+            <div class="conversation-info">
+              <div class="conversation-top-row">
+                <h3 class="conversation-name">${c.name}</h3>
+                ${c.time ? `<span class="conversation-time">${c.time}</span>` : ''}
               </div>
-              ${c.time ? `<span style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">${c.time}</span>` : ''}
+              <p class="conversation-preview">${c.lastMessage}</p>
             </div>
+            ${c.unread ? '<div class="conversation-unread-dot"></div>' : ''}
           </div>
         `).join('')}
     </div>
@@ -1788,21 +1856,24 @@ function _cleanupChatSubscription() {
 
 function _renderChatBubble(msg) {
   const userId = _getCurrentUserId();
-  let body, time, isSent;
+  let body, time, isSent, isRead;
   if (msg.sender_id) {
     // Supabase or local message object
     isSent = msg.sender_id === userId;
     body = msg.body;
     time = _formatChatTime(msg.created_at);
+    isRead = msg.is_read;
   } else {
     // Mock message object
     isSent = msg.from === 'user';
     body = getLocalizedText(msg.text);
     time = msg.time;
+    isRead = true; // mock messages are always "read"
   }
+  const status = isSent ? `<span class="chat-status">${isRead ? '✓✓' : '✓'}</span>` : '';
   return `<div class="chat-bubble ${isSent ? 'chat-sent' : 'chat-received'}">
     ${_escapeHtml(body)}
-    <span class="chat-time">${time}</span>
+    <div class="chat-meta"><span class="chat-time">${time}</span>${status}</div>
   </div>`;
 }
 
@@ -1948,14 +2019,27 @@ async function renderChat(el, header, therapistId) {
   _cleanupChatSubscription();
 
   const name = getLocalizedText(th.name);
+  const location = getLocalizedText(th.location);
+  const initial = name.charAt(0);
   renderHeaderWithBack(header, name, 'javascript:void(0)');
   header.querySelector('.header-back').onclick = () => history.back();
 
   // Render skeleton with loading state
   el.innerHTML = `
     <div class="chat-screen">
+      <div class="chat-therapist-bar" onclick="navigate('#/therapist/${therapistId}')">
+        <div class="chat-therapist-avatar" style="background-color:${th.avatarColor}">${initial}</div>
+        <div class="chat-therapist-info">
+          <span class="chat-therapist-name">${name}</span>
+          <span class="chat-therapist-detail">${location}${th.responseTime ? ' · ' + th.responseTime : ''}</span>
+        </div>
+      </div>
       <div class="chat-info-bar">${t('chatInfoWindow')}</div>
-      <button class="chat-video-btn" onclick="navigate('#/videocall/${therapistId}')">${t('chatStartVideo')}</button>
+      <div class="chat-actions-bar">
+        <button class="chat-action-btn" onclick="navigate('#/videocall/${therapistId}')">📹 ${t('chatStartVideo')}</button>
+        <button class="chat-action-btn" onclick="navigate('#/therapist/${therapistId}')">👤 ${t('chatViewProfile')}</button>
+        <button class="chat-action-btn" onclick="onBookFromChat(${therapistId})">📅 ${t('chatBookSession')}</button>
+      </div>
       <div class="chat-messages">
         <div class="chat-loading">${t('chatLoadingMessages')}</div>
       </div>
@@ -1975,24 +2059,49 @@ async function renderChat(el, header, therapistId) {
   const therapistUUID = _getTherapistUUID(therapistId);
   const localMsgs = _localMessages[therapistUUID] || [];
 
+  let allMsgs = [];
   if (result.source === 'supabase') {
-    const allMessages = [...result.messages, ...localMsgs];
-    allMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-    container.innerHTML = allMessages.map(m => _renderChatBubble(m)).join('');
+    allMsgs = [...result.messages, ...localMsgs];
+    allMsgs.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
   } else {
-    // Mock messages + any local messages appended
-    const mockHtml = result.messages.map(m => _renderChatBubble(m)).join('');
-    const localHtml = localMsgs.map(m => _renderChatBubble(m)).join('');
-    container.innerHTML = mockHtml + localHtml;
+    allMsgs = [...result.messages, ...localMsgs];
   }
 
-  _scrollChatToBottom();
+  if (allMsgs.length === 0) {
+    // Empty state - encourage user to start the conversation
+    container.innerHTML = `
+      <div class="chat-empty-state">
+        <div class="chat-empty-avatar" style="background-color:${th.avatarColor}">${initial}</div>
+        <h3>${name}</h3>
+        <p>${t('chatEmptyPrompt')}</p>
+      </div>
+    `;
+  } else {
+    container.innerHTML = allMsgs.map(m => _renderChatBubble(m)).join('');
+    _scrollChatToBottom();
+  }
 
   // Mark unread messages as read
   _markMessagesAsRead(therapistId);
 
   // Subscribe to real-time updates
   window._chatSubscription = _subscribeToChatMessages(therapistId);
+}
+
+function onBookFromChat(therapistId) {
+  const th = getTherapist(therapistId);
+  if (th && th.sessions.length > 0) {
+    state.bookingTherapist = th;
+    state.bookingSession = th.sessions[0];
+    state.bookingDate = null;
+    state.bookingTime = null;
+    state.bookingCalMonth = new Date().getMonth();
+    state.bookingCalYear = new Date().getFullYear();
+    state.bookingConflicts = [];
+    navigate('#/booking');
+  } else {
+    navigate('#/therapist/' + therapistId);
+  }
 }
 
 // ===== Video Call =====

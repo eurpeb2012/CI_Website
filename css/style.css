@@ -1404,11 +1404,145 @@ body {
 }
 
 /* ===== Chat Screen ===== */
+/* ===== Messages List ===== */
+.messages-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.conversation-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.conversation-item:active {
+  background: var(--gray-50);
+}
+.conversation-unread {
+  background: var(--theme-primary-50);
+}
+.conversation-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+}
+.conversation-top-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.conversation-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.conversation-preview {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-unread .conversation-name,
+.conversation-unread .conversation-preview {
+  font-weight: 600;
+}
+.conversation-unread-dot {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  border-radius: 50%;
+  background: var(--theme-primary-500);
+  flex-shrink: 0;
+}
+
+/* ===== Chat Screen ===== */
 .chat-screen {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 140px);
   padding: 0;
+}
+
+.chat-therapist-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+}
+.chat-therapist-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.chat-therapist-info {
+  display: flex;
+  flex-direction: column;
+}
+.chat-therapist-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.chat-therapist-detail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.chat-actions-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--gray-100);
+  overflow-x: auto;
+}
+.chat-action-btn {
+  padding: 6px 12px;
+  background: var(--theme-primary-50);
+  border: 1px solid var(--theme-primary-200);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--theme-primary-700);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chat-action-btn:active {
+  background: var(--theme-primary-100);
 }
 
 .chat-info-bar {
@@ -1418,6 +1552,37 @@ body {
   font-size: 0.8rem;
   color: var(--text-secondary);
   text-align: center;
+}
+
+.chat-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  flex: 1;
+}
+.chat-empty-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.chat-empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+.chat-empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .chat-messages {
@@ -1452,10 +1617,19 @@ body {
   border-bottom-left-radius: 4px;
 }
 
-.chat-bubble .chat-time {
-  display: block;
-  font-size: 0.65rem;
+.chat-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
   margin-top: 4px;
+}
+.chat-bubble .chat-time {
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+.chat-status {
+  font-size: 0.6rem;
   opacity: 0.7;
 }
 
@@ -1496,19 +1670,6 @@ body {
   flex-shrink: 0;
 }
 
-.chat-video-btn {
-  display: block;
-  margin: 0 20px 12px;
-  padding: 10px;
-  background: var(--theme-primary-100);
-  border: 1px solid var(--theme-primary-200);
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--theme-primary-700);
-  cursor: pointer;
-  text-align: center;
-}
 
 .chat-loading {
   text-align: center;
