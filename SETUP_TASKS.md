@@ -123,7 +123,7 @@
 - [x] Avatar upload for users and therapists (Supabase storage)
 - [x] File validation: 2MB max, JPEG/PNG/WebP only
 - [x] Upload wired to: user profile, therapist profile edit, apply form
-- [ ] Supabase storage buckets need to be created in dashboard (avatars)
+- [x] Supabase storage bucket created: `avatars` (public)
 - [ ] Gallery image management — DEFERRED
 - [ ] Signed URLs for paid digital product downloads — DEFERRED
 
