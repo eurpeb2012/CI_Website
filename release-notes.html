@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healing Garden - Release Notes v1.0</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f0; color: #333; line-height: 1.6; }
+    .header { background: linear-gradient(135deg, #3dba78, #2d9a62); color: white; padding: 48px 24px; text-align: center; }
+    .header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    .header p { font-size: 1.1rem; opacity: 0.9; }
+    .header .version { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 16px; border-radius: 20px; margin-top: 12px; font-size: 0.9rem; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    .links { display: flex; gap: 16px; justify-content: center; margin: 24px 0 0; flex-wrap: wrap; }
+    .links a { background: white; color: #2d9a62; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s; }
+    .links a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .section h2 { color: #2d9a62; font-size: 1.4rem; margin-bottom: 16px; border-bottom: 2px solid #e8f5e9; padding-bottom: 8px; }
+    .section h3 { color: #444; font-size: 1.1rem; margin: 20px 0 8px; }
+    .section h3:first-of-type { margin-top: 0; }
+    ul { padding-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+    .badge-new { background: #e8f5e9; color: #2d9a62; }
+    .badge-improved { background: #e3f2fd; color: #1976d2; }
+    .badge-fixed { background: #fff3e0; color: #e65100; }
+    .badge-security { background: #fce4ec; color: #c62828; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #eee; }
+    th { background: #f9f9f6; font-weight: 600; color: #555; }
+    td code { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }
+    .test-step { background: #f9f9f6; border-left: 3px solid #3dba78; padding: 12px 16px; margin: 8px 0; border-radius: 0 8px 8px 0; }
+    .test-step strong { color: #2d9a62; }
+    .stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .stack span { background: #f0faf4; color: #2d9a62; padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .stat { text-align: center; padding: 16px; background: #f9f9f6; border-radius: 8px; }
+    .stat .num { font-size: 1.8rem; font-weight: 700; color: #2d9a62; }
+    .stat .label { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .footer { text-align: center; padding: 32px 24px; color: #999; font-size: 0.85rem; }
+    .footer a { color: #2d9a62; text-decoration: none; }
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.6rem; }
+      .links { flex-direction: column; align-items: center; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div style="font-size: 3rem; margin-bottom: 8px;">🌿</div>
+  <h1>癒しの庭 / Healing Garden</h1>
+  <p>Release Notes</p>
+  <span class="version">v1.0.0 — March 11, 2026</span>
+  <div class="links">
+    <a href="https://healing-garden-3w5.pages.dev/">🌿 Open App</a>
+    <a href="https://healing-garden-3w5.pages.dev/admin.html">📊 Admin Panel</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Overview -->
+  <div class="section">
+    <h2>Overview</h2>
+    <p>Healing Garden is a bilingual (JP/EN) therapy marketplace platform connecting users with therapists for sessions, retreats, and wellness products. This release represents the complete POC-to-production build with full payment processing, real-time communication, and video calling.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="num">21</div><div class="label">Database Tables</div></div>
+      <div class="stat"><div class="num">40+</div><div class="label">App Screens</div></div>
+      <div class="stat"><div class="num">12</div><div class="label">Admin Screens</div></div>
+      <div class="stat"><div class="num">4</div><div class="label">API Endpoints</div></div>
+      <div class="stat"><div class="num">6</div><div class="label">SQL Migrations</div></div>
+      <div class="stat"><div class="num">2</div><div class="label">Languages</div></div>
+    </div>
+
+    <h3>Tech Stack</h3>
+    <div class="stack">
+      <span>Cloudflare Pages</span>
+      <span>Supabase (PostgreSQL)</span>
+      <span>Stripe Checkout</span>
+      <span>Daily.co Video</span>
+      <span>Resend Email</span>
+      <span>Vanilla JS SPA</span>
+    </div>
+  </div>
+
+  <!-- App Features -->
+  <div class="section">
+    <h2>🌿 App Features (User-Facing)</h2>
+
+    <h3>Search & Discovery</h3>
+    <ul>
+      <li>Therapist search with category, delivery method, and price filters <span class="badge badge-new">NEW</span></li>
+      <li>Therapist profiles with reviews, gallery, sessions, and availability</li>
+      <li>Retreat listings with detailed descriptions and booking</li>
+      <li>Blog articles by therapists</li>
+      <li>Digital products (PDF, video, audio) with purchase</li>
+      <li>Sort by recommended, rating, price, or newest</li>
+    </ul>
+
+    <h3>Booking & Payments</h3>
+    <ul>
+      <li>Interactive calendar with date/time slot selection <span class="badge badge-new">NEW</span></li>
+      <li>Conflict detection (prevents double-booking)</li>
+      <li>Stripe Checkout integration for secure payments <span class="badge badge-new">NEW</span></li>
+      <li>Retreat booking wired to Stripe <span class="badge badge-new">NEW</span></li>
+      <li>Gift card purchase and email delivery <span class="badge badge-new">NEW</span></li>
+      <li>Gift card redemption with code validation <span class="badge badge-new">NEW</span></li>
+      <li>Digital product purchase via Stripe <span class="badge badge-new">NEW</span></li>
+      <li>Booking confirmation emails via Resend <span class="badge badge-new">NEW</span></li>
+      <li>JPY zero-decimal currency handling</li>
+      <li>9% platform fee calculation</li>
+    </ul>
+
+    <h3>Communication</h3>
+    <ul>
+      <li>Real-time chat with Supabase Realtime subscriptions <span class="badge badge-new">NEW</span></li>
+      <li>Conversation list with unread indicators</li>
+      <li>Message delivery status (✓ sent / ✓✓ read)</li>
+      <li>Video calls via Daily.co with embedded iframe <span class="badge badge-new">NEW</span></li>
+      <li>Call duration tracking and logging</li>
+      <li>Action bar in chat (video call, view profile, book session)</li>
+    </ul>
+
+    <h3>User Features</h3>
+    <ul>
+      <li>Points system — earn ¥100 = 1 point, synced to Supabase <span class="badge badge-new">NEW</span></li>
+      <li>Points redemption via gift card codes <span class="badge badge-new">NEW</span></li>
+      <li>Favorites with Supabase persistence</li>
+      <li>Waitlist with notification support</li>
+      <li>Journal with mood tracking and Supabase sync</li>
+      <li>Notifications from Supabase with unread badge <span class="badge badge-new">NEW</span></li>
+      <li>Avatar upload via Supabase Storage <span class="badge badge-new">NEW</span></li>
+      <li>Referral system with unique codes</li>
+    </ul>
+
+    <h3>Forum / Message Board</h3>
+    <ul>
+      <li>Thread creation and listing with reply counts</li>
+      <li>Reply posting with database persistence</li>
+      <li>XSS-safe rendering of all user content <span class="badge badge-security">SECURITY</span></li>
+    </ul>
+
+    <h3>Therapist Dashboard</h3>
+    <ul>
+      <li>Earnings overview and booking management</li>
+      <li>Client list and session management</li>
+      <li>Profile editing with avatar upload <span class="badge badge-improved">IMPROVED</span></li>
+      <li>Referral tracking</li>
+    </ul>
+
+    <h3>Platform</h3>
+    <ul>
+      <li>Bilingual JP/EN with instant toggle</li>
+      <li>3 themes: Spring, Summer, Evening</li>
+      <li>Demo login with Supabase auth</li>
+      <li>Skeleton loading screen during data fetch <span class="badge badge-new">NEW</span></li>
+      <li>Graceful fallback to mock data when Supabase unavailable</li>
+      <li>Hash-based SPA routing with UUID support</li>
+    </ul>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="section">
+    <h2>📊 Admin Panel Features</h2>
+
+    <h3>Business Operations (10 Screens)</h3>
+    <ul>
+      <li><strong>Dashboard</strong> — Aggregate stats: therapists, users, bookings, revenue, platform fees</li>
+      <li><strong>Therapists</strong> — List with tier/status filtering, detail view with status/tier/verified CRUD</li>
+      <li><strong>Users</strong> — Searchable user list with detail view and booking history</li>
+      <li><strong>Bookings</strong> — Filterable booking transactions with status badges</li>
+      <li><strong>Revenue</strong> — Monthly revenue chart with therapist earnings breakdown</li>
+      <li><strong>Moderation</strong> — Content review queue with approve/remove/dismiss actions</li>
+      <li><strong>Referrals</strong> — Referral code tracking and commission summary</li>
+      <li><strong>Calendar Settings</strong> — Booking window, tier defaults, blackout dates</li>
+    </ul>
+
+    <h3>Technical/DevOps (2 Screens) <span class="badge badge-new">NEW</span></h3>
+    <ul>
+      <li><strong>Audit Log</strong> — Filterable event log (bookings, signups, moderation) with timestamps</li>
+      <li><strong>System Health</strong> — Real-time DB latency, Stripe API status, CDN status, table row counts, environment info with refresh</li>
+    </ul>
+
+    <h3>Security <span class="badge badge-security">SECURITY</span></h3>
+    <ul>
+      <li>Admin auth gate — requires Supabase session + admin role</li>
+      <li>XSS-safe moderation content preview</li>
+      <li>Falls back to demo access when Supabase unavailable</li>
+    </ul>
+  </div>
+
+  <!-- API Endpoints -->
+  <div class="section">
+    <h2>API Endpoints (Cloudflare Pages Functions)</h2>
+    <table>
+      <thead><tr><th>Endpoint</th><th>Purpose</th><th>Rate Limit</th></tr></thead>
+      <tbody>
+        <tr><td><code>POST /api/create-checkout-session</code></td><td>Create Stripe checkout for bookings, gift cards, digital products</td><td>10/min/IP</td></tr>
+        <tr><td><code>POST /api/stripe-webhook</code></td><td>Handle Stripe payment events (signature verified)</td><td>—</td></tr>
+        <tr><td><code>POST /api/send-email</code></td><td>Send transactional emails via Resend (4 templates)</td><td>5/min/IP</td></tr>
+        <tr><td><code>POST /api/create-video-room</code></td><td>Create Daily.co video room with meeting token</td><td>5/min/IP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Security -->
+  <div class="section">
+    <h2>🔒 Security</h2>
+    <ul>
+      <li><strong>XSS Prevention</strong> — <code>_escapeHtml()</code> applied to all user-generated content (journal, forum, reviews, moderation)</li>
+      <li><strong>SQL Injection</strong> — Safe; all queries use Supabase parameterized methods</li>
+      <li><strong>Row-Level Security</strong> — Enabled on all 21 tables with 30+ policies</li>
+      <li><strong>Stripe Webhooks</strong> — HMAC-SHA256 signature verification with constant-time comparison</li>
+      <li><strong>Rate Limiting</strong> — Per-IP limits on all API endpoints</li>
+      <li><strong>Admin Auth</strong> — Session + role check before rendering admin panel</li>
+      <li><strong>Secrets Management</strong> — All API keys stored as Cloudflare encrypted secrets</li>
+      <li><strong>File Upload Validation</strong> — 2MB max, JPEG/PNG/WebP only</li>
+    </ul>
+  </div>
+
+  <!-- Bug Fixes -->
+  <div class="section">
+    <h2>🐛 Bug Fixes</h2>
+    <ul>
+      <li>Fixed chat/messages navigation: added Messages list page, corrected nav tab highlighting <span class="badge badge-fixed">FIXED</span></li>
+      <li>Fixed UUID onclick handlers: quoted all ID arguments so Supabase UUIDs don't break JS <span class="badge badge-fixed">FIXED</span></li>
+      <li>Fixed UUID comparison in detail pages: retreat, blog, session edit use <code>String()</code> not <code>parseInt()</code> <span class="badge badge-fixed">FIXED</span></li>
+      <li>Added error handling to router/render/init to prevent silent failures <span class="badge badge-fixed">FIXED</span></li>
+      <li>Made Supabase client initialization resilient to CDN load failures <span class="badge badge-fixed">FIXED</span></li>
+    </ul>
+  </div>
+
+  <!-- Test Guide -->
+  <div class="section">
+    <h2>🧪 Test Guide</h2>
+
+    <h3>Getting Started</h3>
+    <div class="test-step"><strong>Step 1:</strong> Open the app at <a href="https://healing-garden-3w5.pages.dev/">healing-garden-3w5.pages.dev</a></div>
+    <div class="test-step"><strong>Step 2:</strong> Tap the profile icon → Log in with the demo account</div>
+    <div class="test-step"><strong>Step 3:</strong> Switch language (JP/EN) via Settings if needed</div>
+
+    <h3>Test Flow: Book a Session</h3>
+    <div class="test-step"><strong>1.</strong> Home → Browse therapists or use Search</div>
+    <div class="test-step"><strong>2.</strong> Tap a therapist → View profile → Select a session</div>
+    <div class="test-step"><strong>3.</strong> Pick a date and time slot on the calendar</div>
+    <div class="test-step"><strong>4.</strong> Agree to cancellation policy → Confirm booking</div>
+    <div class="test-step"><strong>5.</strong> Redirected to Stripe Checkout → Use test card below</div>
+    <div class="test-step"><strong>6.</strong> After payment → Redirected back to success page with points earned</div>
+
+    <h3>Test Flow: Gift Card</h3>
+    <div class="test-step"><strong>1.</strong> Home → Gift Cards</div>
+    <div class="test-step"><strong>2.</strong> Select amount → Enter recipient email → Add message (optional)</div>
+    <div class="test-step"><strong>3.</strong> Send → Stripe Checkout → Pay with test card</div>
+    <div class="test-step"><strong>4.</strong> Recipient gets email with gift card code</div>
+    <div class="test-step"><strong>5.</strong> To redeem: Gift Cards page → Enter code → Apply</div>
+
+    <h3>Test Flow: Video Call</h3>
+    <div class="test-step"><strong>1.</strong> Go to any therapist's chat (Profile → Messages → Select conversation)</div>
+    <div class="test-step"><strong>2.</strong> Tap the video call button (📹) in the chat action bar</div>
+    <div class="test-step"><strong>3.</strong> Daily.co video room opens in embedded iframe</div>
+    <div class="test-step"><strong>4.</strong> End call → Returns to chat, duration logged</div>
+
+    <h3>Test Flow: Retreat Booking</h3>
+    <div class="test-step"><strong>1.</strong> Home → Retreats → Select a retreat</div>
+    <div class="test-step"><strong>2.</strong> View details → Book Now</div>
+    <div class="test-step"><strong>3.</strong> Redirected to Stripe Checkout → Pay with test card</div>
+
+    <h3>Test Flow: Admin Panel</h3>
+    <div class="test-step"><strong>1.</strong> Open <a href="https://healing-garden-3w5.pages.dev/admin.html">admin panel</a></div>
+    <div class="test-step"><strong>2.</strong> Dashboard shows aggregate stats</div>
+    <div class="test-step"><strong>3.</strong> Navigate sidebar: Therapists, Users, Bookings, Revenue, Moderation</div>
+    <div class="test-step"><strong>4.</strong> System Health → Check DB latency and Stripe status</div>
+    <div class="test-step"><strong>5.</strong> Audit Log → Filter by event type</div>
+
+    <h3>Stripe Test Card Numbers</h3>
+    <table>
+      <thead><tr><th>Card</th><th>Number</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Visa (success)</td><td><code>4242 4242 4242 4242</code></td><td>Payment succeeds</td></tr>
+        <tr><td>Visa (declined)</td><td><code>4000 0000 0000 0002</code></td><td>Payment is declined</td></tr>
+        <tr><td>3D Secure</td><td><code>4000 0025 0000 3155</code></td><td>Requires authentication</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:8px;color:#888;font-size:0.9rem"><strong>Expiry:</strong> Any future date (e.g., 12/30) &nbsp;|&nbsp; <strong>CVC:</strong> Any 3 digits &nbsp;|&nbsp; <strong>Name:</strong> Any value</p>
+
+    <h3>Verify After Payment</h3>
+    <ul>
+      <li><strong>Stripe Dashboard</strong> — <a href="https://dashboard.stripe.com/test/payments">dashboard.stripe.com/test/payments</a> → payment appears</li>
+      <li><strong>Supabase</strong> — Booking status changes from <code>pending_payment</code> to <code>upcoming</code></li>
+      <li><strong>Email</strong> — Confirmation email sent (check <a href="https://resend.com">Resend dashboard</a>)</li>
+      <li><strong>Webhook</strong> — Stripe Dashboard → Developers → Webhooks → event deliveries</li>
+    </ul>
+  </div>
+
+  <!-- Configuration -->
+  <div class="section">
+    <h2>⚙️ Configuration Status</h2>
+    <table>
+      <thead><tr><th>Service</th><th>Status</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td>Cloudflare Pages</td><td>✅ Live</td><td>healing-garden-3w5.pages.dev</td></tr>
+        <tr><td>Supabase</td><td>✅ Connected</td><td>Tokyo region, 21 tables, RLS enabled</td></tr>
+        <tr><td>Stripe</td><td>✅ Sandbox</td><td>Checkout + Webhooks configured</td></tr>
+        <tr><td>Resend</td><td>✅ Connected</td><td>4 email templates (JP/EN)</td></tr>
+        <tr><td>Daily.co</td><td>✅ Connected</td><td>healinggarden.daily.co</td></tr>
+        <tr><td>Supabase Storage</td><td>✅ Ready</td><td>avatars bucket (public)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Environment Variables (7 secrets)</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>✅ Set</td></tr>
+        <tr><td><code>SUPABASE_URL</code></td><td>✅ Set</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_KEY</code></td><td>✅ Set</td></tr>
+        <tr><td><code>APP_URL</code></td><td>✅ Set</td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>✅ Set</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td>✅ Set</td></tr>
+        <tr><td><code>DAILY_API_KEY</code></td><td>✅ Set</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Remaining -->
+  <div class="section">
+    <h2>📋 Remaining / Deferred</h2>
+    <ul>
+      <li><strong>Therapist Payouts (3.5)</strong> — Stripe Connect onboarding, monthly payout calculation</li>
+      <li><strong>Launch Prep (4.4)</strong> — Custom domain + SSL, privacy policy, PWA manifest, error monitoring</li>
+      <li><strong>OAuth</strong> — Google and Apple sign-in (deferred)</li>
+      <li><strong>Email Triggers</strong> — Automated booking reminder emails via DB triggers</li>
+      <li><strong>Gallery Management</strong> — Therapist photo gallery upload/management</li>
+      <li><strong>Digital Product Downloads</strong> — Signed URLs for paid file downloads</li>
+      <li><strong>Going Live</strong> — Swap Stripe test keys for live keys, create live webhook endpoint</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>癒しの庭 / Healing Garden &nbsp;|&nbsp; v1.0.0 &nbsp;|&nbsp; March 11, 2026</p>
+  <p style="margin-top:8px"><a href="https://github.com/eurpeb2012/CI_Website">GitHub Repository</a></p>
+</div>
+
+</body>
+</html>
