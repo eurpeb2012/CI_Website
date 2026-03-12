@@ -1,8 +1,27 @@
 // Cloudflare Pages Function: Create Stripe Checkout Session
 // Handles bookings, gift cards, and digital product purchases
 
+// Simple in-memory rate limiter (resets per worker instance)
+const rateLimitMap = new Map();
+function checkRateLimit(ip, limit = 10, windowMs = 60000) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.start > windowMs) {
+    rateLimitMap.set(ip, { start: now, count: 1 });
+    return true;
+  }
+  entry.count++;
+  if (entry.count > limit) return false;
+  return true;
+}
+
 export async function onRequestPost(context) {
   const { env, request } = context;
+  // Rate limit: 10 checkout requests per minute per IP
+  const clientIP = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (!checkRateLimit(clientIP, 10)) {
+    return jsonResponse({ error: 'Too many requests' }, 429);
+  }
   const STRIPE_SECRET_KEY = env.STRIPE_SECRET_KEY;
   const SUPABASE_URL = env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = env.SUPABASE_SERVICE_KEY;

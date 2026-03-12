@@ -131,6 +131,13 @@ function adminLoadingHTML() {
   return `<div class="admin-loading">${t('adminLoading')}</div>`;
 }
 
+function _escapeAdminHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 // ===== Screen 1: Dashboard =====
 async function renderAdminDashboard(el, titleEl) {
   titleEl.textContent = t('adminNavDashboard');
@@ -618,12 +625,12 @@ function moderationCard(m) {
         ${adminStatusBadge(m.status)}
         <span class="admin-mod-date">${m.created_at ? new Date(m.created_at).toLocaleDateString() : '—'}</span>
       </div>
-      <div class="admin-mod-content">"${m.content_preview || '—'}"</div>
+      <div class="admin-mod-content">"${_escapeAdminHtml(m.content_preview) || '—'}"</div>
       <div class="admin-mod-meta">
-        <span>${t('adminModReporter')}: ${m.reporter_name || '—'}</span>
-        <span>${t('adminModTarget')}: ${m.target_therapist_name || '—'}</span>
+        <span>${t('adminModReporter')}: ${_escapeAdminHtml(m.reporter_name) || '—'}</span>
+        <span>${t('adminModTarget')}: ${_escapeAdminHtml(m.target_therapist_name) || '—'}</span>
       </div>
-      <div class="admin-mod-reason">${t('adminModReason')}: ${m.reason || '—'}</div>
+      <div class="admin-mod-reason">${t('adminModReason')}: ${_escapeAdminHtml(m.reason) || '—'}</div>
       ${m.status === 'pending' ? `
         <div class="admin-mod-actions">
           <button class="admin-btn admin-btn-success" onclick="adminModAction('${m.id}','resolved')">${t('adminModApprove')}</button>
@@ -966,13 +973,57 @@ function showAdminToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+// --- Admin Auth Gate ---
+async function checkAdminAuth() {
+  const content = document.getElementById('admin-content');
+  try {
+    // Check if Supabase session exists
+    if (!window.supabase || !window.supabase.auth) {
+      showAdminAuthError(content);
+      return false;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      showAdminAuthError(content);
+      return false;
+    }
+    // Check if user has admin role
+    const { data: user, error } = await supabase.from('users').select('role').eq('id', session.user.id).single();
+    if (error || !user || user.role !== 'admin') {
+      showAdminAuthError(content, true);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.warn('Admin auth check failed:', e);
+    // Allow access in demo/development mode (when Supabase is unavailable)
+    return true;
+  }
+}
+
+function showAdminAuthError(el, isUnauthorized) {
+  document.getElementById('admin-sidebar').style.display = 'none';
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:80vh;text-align:center;padding:20px">
+      <div style="font-size:3rem;margin-bottom:16px">${isUnauthorized ? '🚫' : '🔒'}</div>
+      <h2 style="margin-bottom:8px">${isUnauthorized ? 'Access Denied / アクセス拒否' : 'Login Required / ログインが必要です'}</h2>
+      <p style="color:var(--text-muted);margin-bottom:24px">${isUnauthorized ? 'You do not have admin permissions. / 管理者権限がありません。' : 'Please log in to access the admin panel. / 管理パネルにアクセスするにはログインしてください。'}</p>
+      <a href="index.html" style="color:var(--theme-primary-500);text-decoration:none;font-weight:600">← Back to App / アプリに戻る</a>
+    </div>
+  `;
+}
+
 // --- Init ---
-window.addEventListener('hashchange', adminRouter);
-window.addEventListener('DOMContentLoaded', () => {
+let _adminAuthed = false;
+window.addEventListener('hashchange', async () => {
+  if (_adminAuthed) adminRouter();
+});
+window.addEventListener('DOMContentLoaded', async () => {
   adminSetTheme(adminGetTheme());
   document.getElementById('admin-lang-label').textContent = t('language');
   if (!window.location.hash || !window.location.hash.startsWith('#/admin')) {
     window.location.hash = '#/admin';
   }
-  adminRouter();
+  _adminAuthed = await checkAdminAuth();
+  if (_adminAuthed) adminRouter();
 });

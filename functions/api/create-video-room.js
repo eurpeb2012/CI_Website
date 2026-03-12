@@ -1,8 +1,27 @@
 // Cloudflare Pages Function: Create Daily.co Video Room
 // Creates a temporary room for a therapy session video call
 
+// Simple in-memory rate limiter
+const rateLimitMap = new Map();
+function checkRateLimit(ip, limit = 5, windowMs = 60000) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.start > windowMs) {
+    rateLimitMap.set(ip, { start: now, count: 1 });
+    return true;
+  }
+  entry.count++;
+  if (entry.count > limit) return false;
+  return true;
+}
+
 export async function onRequestPost(context) {
   const { env, request } = context;
+  // Rate limit: 5 video room requests per minute per IP
+  const clientIP = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (!checkRateLimit(clientIP, 5)) {
+    return jsonResponse({ error: 'Too many requests' }, 429);
+  }
   const DAILY_API_KEY = env.DAILY_API_KEY;
 
   if (!DAILY_API_KEY) {

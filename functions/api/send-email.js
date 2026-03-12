@@ -1,8 +1,27 @@
 // Cloudflare Pages Function: Send Email via Resend
 // Handles booking confirmations, reminders, cancellations, and gift card notifications
 
+// Simple in-memory rate limiter
+const rateLimitMap = new Map();
+function checkRateLimit(ip, limit = 5, windowMs = 60000) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.start > windowMs) {
+    rateLimitMap.set(ip, { start: now, count: 1 });
+    return true;
+  }
+  entry.count++;
+  if (entry.count > limit) return false;
+  return true;
+}
+
 export async function onRequestPost(context) {
   const { env, request } = context;
+  // Rate limit: 5 email requests per minute per IP
+  const clientIP = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (!checkRateLimit(clientIP, 5)) {
+    return jsonResponse({ error: 'Too many requests' }, 429);
+  }
   const RESEND_API_KEY = env.RESEND_API_KEY;
   const APP_URL = env.APP_URL || 'https://healing-garden-3w5.pages.dev';
 

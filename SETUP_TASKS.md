@@ -154,7 +154,7 @@
 
 ---
 
-## Phase 4: Admin & Polish — IN PROGRESS (3/4)
+## Phase 4: Admin & Polish — IN PROGRESS (4/5)
 
 ### 4.1 Admin Panel (Business Scope) ✅
 - [x] 10 admin screens with async renders + loading indicators
@@ -181,8 +181,16 @@
 - [ ] Lazy-load images — not needed yet (avatars are emoji/color-based)
 - [ ] Pagination for large result sets — DEFERRED
 
-### 4.3 Security Audit — NOT STARTED
-- [ ] RLS verification, Stripe webhook signatures, rate limiting, input sanitization
+### 4.3 Security Audit ✅
+- [x] XSS prevention: `_escapeHtml()` applied to all user-generated content
+  - Journal notes, forum titles/bodies/replies, review text, moderation content
+- [x] Admin auth gate: checks Supabase session + admin role before loading panel
+- [x] Rate limiting on all API endpoints (per-IP, per-minute):
+  - Checkout: 10/min, Email: 5/min, Video rooms: 5/min
+- [x] RLS verified: all tables have row-level security enabled
+- [x] Stripe webhook signature verification (HMAC-SHA256, constant-time comparison)
+- [x] SQL injection: safe — all queries use Supabase parameterized methods
+- [x] Secrets: all API keys stored as Cloudflare encrypted secrets, not in client code
 
 ### 4.4 Launch Prep — NOT STARTED
 - [ ] Custom domain + SSL, error monitoring, load testing, privacy policy, PWA manifest

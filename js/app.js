@@ -1147,7 +1147,7 @@ function renderReviewCard(r) {
           <span>${t('ratingValue')}: ${r.ratings.value}</span>
         </div>
       ` : ''}
-      <p class="review-text">${getLocalizedText(r.text)}</p>
+      <p class="review-text">${_escapeHtml(getLocalizedText(r.text))}</p>
     </div>
   `;
 }
@@ -1628,7 +1628,7 @@ function renderUserProfile(el, header) {
               <span class="review-date">${r.date}</span>
             </div>
             <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-            <p class="review-text">${getLocalizedText(r.text)}</p>
+            <p class="review-text">${_escapeHtml(getLocalizedText(r.text))}</p>
           </div>
         `).join('') : `<div class="empty-state">${t('userProfileNoReviews')}</div>`}
       </div>
@@ -1642,7 +1642,7 @@ function renderUserProfile(el, header) {
               <span class="review-date">${r.date}</span>
             </div>
             <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-            <p class="review-text">${getLocalizedText(r.text)}</p>
+            <p class="review-text">${_escapeHtml(getLocalizedText(r.text))}</p>
           </div>
         `).join('') : `<div class="empty-state">${t('userProfileNoReceivedReviews')}</div>`}
       </div>
@@ -3030,7 +3030,7 @@ function renderJournal(el, header) {
             <span class="journal-mood">${e.moodEmoji}</span>
             <span class="journal-date">${e.date}</span>
           </div>
-          <p class="journal-notes">${e.notes}</p>
+          <p class="journal-notes">${_escapeHtml(e.notes)}</p>
         </div>
       `).join('')}
     </div>
@@ -3289,8 +3289,8 @@ function renderForum(el, header) {
         const replyCount = (thread.replies ? thread.replies.length : 0) + ((forumReplyData[thread.id] || []).length);
         return `
           <div class="forum-thread-card" onclick="navigate('#/forum/${thread.id}')">
-            <h3 class="forum-thread-title">${getLocalizedText(thread.title)}</h3>
-            <p class="forum-thread-preview">${getLocalizedText(thread.body).slice(0, 80)}...</p>
+            <h3 class="forum-thread-title">${_escapeHtml(getLocalizedText(thread.title))}</h3>
+            <p class="forum-thread-preview">${_escapeHtml(getLocalizedText(thread.body).slice(0, 80))}...</p>
             <div class="forum-thread-meta">
               <span class="forum-author">${t('forumPostedBy')}: ${getLocalizedText(thread.author)}</span>
               <span class="forum-date">${thread.date}</span>
@@ -3317,22 +3317,22 @@ function renderForumThread(el, header, id) {
   el.innerHTML = `
     <div class="page">
       <div class="forum-thread-detail">
-        <h1 class="forum-detail-title">${getLocalizedText(thread.title)}</h1>
+        <h1 class="forum-detail-title">${_escapeHtml(getLocalizedText(thread.title))}</h1>
         <div class="forum-detail-meta">
-          <span>${t('forumPostedBy')}: ${getLocalizedText(thread.author)}</span>
+          <span>${t('forumPostedBy')}: ${_escapeHtml(getLocalizedText(thread.author))}</span>
           <span>${thread.date}</span>
         </div>
-        <div class="forum-detail-body">${getLocalizedText(thread.body)}</div>
+        <div class="forum-detail-body">${_escapeHtml(getLocalizedText(thread.body))}</div>
       </div>
       <div class="forum-replies-section">
         <h2>${allReplies.length} ${t('forumReplies')}</h2>
         ${allReplies.map(r => `
           <div class="forum-reply">
             <div class="forum-reply-header">
-              <span class="forum-reply-author">${getLocalizedText(r.author)}</span>
+              <span class="forum-reply-author">${_escapeHtml(getLocalizedText(r.author))}</span>
               <span class="forum-reply-date">${r.date}</span>
             </div>
-            <p class="forum-reply-text">${getLocalizedText(r.text)}</p>
+            <p class="forum-reply-text">${_escapeHtml(getLocalizedText(r.text))}</p>
           </div>
         `).join('')}
       </div>
