@@ -2208,13 +2208,14 @@ function onBookFromChat(therapistId) {
 }
 
 // ===== Video Call =====
-function renderVideoCall(el, header, therapistId) {
+async function renderVideoCall(el, header, therapistId) {
   const th = getTherapist(therapistId);
   if (!th) { navigate('#/search'); return; }
 
   const name = getLocalizedText(th.name);
   header.innerHTML = '';
 
+  // Show connecting screen
   el.innerHTML = `
     <div class="videocall-screen">
       <div class="videocall-remote">
@@ -2224,15 +2225,95 @@ function renderVideoCall(el, header, therapistId) {
           <p class="call-status">${t('videoConnecting')}</p>
         </div>
       </div>
+      <div class="videocall-controls">
+        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+      </div>
+    </div>
+  `;
+
+  // Track call start time
+  window._vcStartTime = Date.now();
+
+  // Request video room from API
+  try {
+    const res = await fetch('/api/create-video-room', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        therapistId: String(th.id),
+        userId: authState.user?.id || null,
+        sessionName: authState.user?.name || 'User',
+      }),
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      // API not configured — show placeholder UI
+      renderVideoCallPlaceholder(el, th, name, therapistId);
+      return;
+    }
+
+    // Embed Daily.co prebuilt iframe
+    const roomUrl = data.token ? `${data.roomUrl}?t=${data.token}` : data.roomUrl;
+    el.innerHTML = `
+      <div class="videocall-screen">
+        <iframe id="daily-frame" src="${roomUrl}" allow="camera;microphone;fullscreen;display-capture"
+          style="width:100%;height:100%;border:none;position:absolute;top:0;left:0"></iframe>
+        <div class="videocall-controls" style="position:absolute;bottom:0;left:0;right:0;z-index:10">
+          <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    console.warn('Video room creation failed, using placeholder:', e);
+    renderVideoCallPlaceholder(el, th, name, therapistId);
+  }
+}
+
+function renderVideoCallPlaceholder(el, th, name, therapistId) {
+  el.innerHTML = `
+    <div class="videocall-screen">
+      <div class="videocall-remote">
+        <div class="videocall-remote-placeholder">
+          <div class="avatar-large" style="background-color:${th.avatarColor}">${name.charAt(0)}</div>
+          <p>${name}</p>
+          <p class="call-status" id="vc-status">${t('videoConnecting')}</p>
+        </div>
+      </div>
       <div class="videocall-self">${t('videoSelfView')}</div>
       <div class="videocall-controls">
         <button class="vc-btn vc-mute" onclick="toggleVCBtn(this)">🎤<br><span>${t('videoMute')}</span></button>
         <button class="vc-btn vc-camera" onclick="toggleVCBtn(this)">📷<br><span>${t('videoCamera')}</span></button>
-        <button class="vc-btn vc-end" onclick="navigate('#/chat/${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
         <button class="vc-btn vc-blur" onclick="toggleVCBtn(this)">🌫️<br><span>${t('videoBlur')}</span></button>
       </div>
     </div>
   `;
+  // Simulate connection after delay
+  setTimeout(() => {
+    const status = document.getElementById('vc-status');
+    if (status) status.textContent = t('videoConnected');
+  }, 2000);
+}
+
+function endVideoCall(therapistId) {
+  // Track call duration
+  const duration = window._vcStartTime ? Math.round((Date.now() - window._vcStartTime) / 1000) : 0;
+  window._vcStartTime = null;
+  // Remove Daily iframe if present
+  const frame = document.getElementById('daily-frame');
+  if (frame) frame.src = '';
+  if (duration > 0) {
+    console.log(`Video call ended. Duration: ${duration}s`);
+    // Record duration to Supabase if logged in
+    const userId = authState.user?.id;
+    if (userId && therapistId) {
+      supabase.from('video_call_logs').insert({
+        user_id: userId, therapist_id: therapistId, duration_seconds: duration,
+      }).then(({ error }) => { if (error) console.warn('Video log insert failed:', error); });
+    }
+  }
+  navigate('#/chat/' + therapistId);
 }
 
 function toggleVCBtn(btn) {

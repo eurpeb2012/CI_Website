@@ -246,6 +246,7 @@ const translations = {
     // Video Call
     videoTitle: 'ビデオ通話',
     videoConnecting: '接続中...',
+    videoConnected: '接続済み',
     videoMute: 'ミュート',
     videoUnmute: 'ミュート解除',
     videoCamera: 'カメラ',
@@ -885,6 +886,7 @@ const translations = {
     // Video Call
     videoTitle: 'Video Call',
     videoConnecting: 'Connecting...',
+    videoConnected: 'Connected',
     videoMute: 'Mute',
     videoUnmute: 'Unmute',
     videoCamera: 'Camera',

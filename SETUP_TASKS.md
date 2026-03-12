@@ -111,13 +111,20 @@
 
 ---
 
-## Phase 3: Rich Features — IN PROGRESS (4/5)
+## Phase 3: Rich Features — COMPLETE (5/5)
 
-### 3.1 Video Calls — NOT STARTED
-- [ ] Create Daily.co account
-- [ ] Edge Function: create-video-room
-- [ ] Per-session room URLs
-- [ ] Call duration tracking
+### 3.1 Video Calls ✅ (Code Complete — Pending Config)
+- [x] CF Pages Function: `functions/api/create-video-room.js`
+  - Creates temporary Daily.co rooms (1hr expiry, max 2 participants)
+  - Generates meeting tokens for secure access
+- [x] Daily.co prebuilt iframe embedded in video call screen
+- [x] Graceful fallback: placeholder UI when Daily.co not configured
+- [x] Call duration tracking with Supabase `video_call_logs` table
+- [x] End call cleanup (iframe removal, duration logging)
+- [x] SQL migration: `sql/006_video_calls.sql`
+- [ ] **USER ACTION: Create Daily.co account** — https://www.daily.co/ (free tier)
+- [ ] **USER ACTION: Set `DAILY_API_KEY` env var in Cloudflare**
+- [ ] **USER ACTION: Run `sql/006_video_calls.sql` in Supabase SQL Editor**
 
 ### 3.2 File Storage ✅ (Partial)
 - [x] Avatar upload for users and therapists (Supabase storage)
