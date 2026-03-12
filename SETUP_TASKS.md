@@ -111,7 +111,7 @@
 
 ---
 
-## Phase 3: Rich Features — IN PROGRESS (3/5)
+## Phase 3: Rich Features — IN PROGRESS (4/5)
 
 ### 3.1 Video Calls — NOT STARTED
 - [ ] Create Daily.co account
@@ -119,10 +119,13 @@
 - [ ] Per-session room URLs
 - [ ] Call duration tracking
 
-### 3.2 File Storage — NOT STARTED
-- [ ] Supabase storage buckets: avatars, gallery, products
-- [ ] Avatar/gallery/product file upload
-- [ ] Signed URLs for paid downloads
+### 3.2 File Storage ✅ (Partial)
+- [x] Avatar upload for users and therapists (Supabase storage)
+- [x] File validation: 2MB max, JPEG/PNG/WebP only
+- [x] Upload wired to: user profile, therapist profile edit, apply form
+- [ ] Supabase storage buckets need to be created in dashboard (avatars)
+- [ ] Gallery image management — DEFERRED
+- [ ] Signed URLs for paid digital product downloads — DEFERRED
 
 ### 3.3 Forum (Database-Backed) ✅
 - [x] Thread creation → insert into `forum_threads`
@@ -145,7 +148,7 @@
 
 ---
 
-## Phase 4: Admin & Polish — IN PROGRESS (1/4)
+## Phase 4: Admin & Polish — IN PROGRESS (3/4)
 
 ### 4.1 Admin Panel (Business Scope) ✅
 - [x] 10 admin screens with async renders + loading indicators
@@ -161,14 +164,16 @@
 - [x] Calendar Settings: from `platform_settings` table
 - [x] DB views created (`sql/004_admin_views.sql`)
 
-### 4.1b Admin Panel (Technical/DevOps Scope) — NOT STARTED
-- [ ] Login audit logs
-- [ ] App performance metrics
-- [ ] Error monitoring dashboard
-- [ ] Infrastructure status
+### 4.1b Admin Panel (Technical/DevOps Scope) ✅
+- [x] Audit Log screen — filterable event log (bookings, signups, moderation)
+- [x] System Health screen — DB latency, Stripe status, table stats, environment info
+- [x] Refresh button for real-time health checks
 
-### 4.2 Performance — NOT STARTED
-- [ ] Query caching, lazy-load images, skeleton screens
+### 4.2 Performance ✅ (Partial)
+- [x] Skeleton loading screen during initial data load (pulse animation)
+- [ ] Query caching — data already cached in memory after init
+- [ ] Lazy-load images — not needed yet (avatars are emoji/color-based)
+- [ ] Pagination for large result sets — DEFERRED
 
 ### 4.3 Security Audit — NOT STARTED
 - [ ] RLS verification, Stripe webhook signatures, rate limiting, input sanitization
