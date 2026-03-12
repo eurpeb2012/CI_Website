@@ -1,5 +1,7 @@
 # Healing Garden - POC to Production Setup Tasks
 
+> **Overall Progress: ~90% complete** — Phase 1-3 done, Phase 4 nearly done. Only launch prep (4.4) and therapist payouts (3.5) remain as deferred items. App is live and functional at https://healing-garden-3w5.pages.dev/
+
 ## Prerequisites (User)
 
 - [x] **1. Create Supabase account** — https://supabase.com (free)
@@ -210,13 +212,18 @@ All set via `wrangler pages secret put` on Mar 11, 2026:
 | `APP_URL` | ✅ Set |
 | `STRIPE_WEBHOOK_SECRET` | ✅ Set |
 | `RESEND_API_KEY` | ✅ Set |
+| `DAILY_API_KEY` | ✅ Set |
 
 ### Stripe Webhook
 - ✅ Endpoint: `https://healing-garden-3w5.pages.dev/api/stripe-webhook`
 - ✅ Events: `checkout.session.completed`, `checkout.session.expired`
 
 ### SQL Migrations
-- ✅ `sql/005_stripe_updates.sql` — applied in Supabase SQL Editor
+- ✅ `sql/005_stripe_updates.sql` — applied
+- ✅ `sql/006_video_calls.sql` — applied
+
+### Supabase Storage
+- ✅ `avatars` bucket created (public)
 
 ### Going Live (Future)
 When ready to accept real payments:
