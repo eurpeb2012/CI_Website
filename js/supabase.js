@@ -11,7 +11,7 @@ try {
   } else {
     console.warn('Supabase CDN not loaded, app will use mock data');
     window.supabase = {
-      auth: { getSession: () => Promise.resolve({ data: { session: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
+      auth: { getSession: () => Promise.resolve({ data: { session: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }), signInWithOAuth: () => Promise.resolve({ error: 'No Supabase' }), signInWithOtp: () => Promise.resolve({ error: 'No Supabase' }), signOut: () => Promise.resolve({}) },
       from: () => ({ select: () => ({ eq: () => ({ eq: () => ({ data: null, error: 'No Supabase' }), data: null, error: 'No Supabase', order: () => ({ data: null, error: 'No Supabase' }) }), order: () => ({ data: null, error: 'No Supabase' }), data: null, error: 'No Supabase' }), insert: () => Promise.resolve({ error: 'No Supabase' }), update: () => ({ eq: () => ({ eq: () => ({ eq: () => Promise.resolve({}) }) }) }), delete: () => ({ eq: () => ({ eq: () => Promise.resolve({}) }) }) }),
       removeChannel: () => {},
       channel: () => ({ on: () => ({ subscribe: () => ({}) }) }),
@@ -20,7 +20,7 @@ try {
 } catch (e) {
   console.warn('Supabase init failed:', e);
   window.supabase = {
-    auth: { getSession: () => Promise.resolve({ data: { session: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
+    auth: { getSession: () => Promise.resolve({ data: { session: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }), signInWithOAuth: () => Promise.resolve({ error: 'No Supabase' }), signInWithOtp: () => Promise.resolve({ error: 'No Supabase' }), signOut: () => Promise.resolve({}) },
     from: () => ({ select: () => ({ eq: () => ({ data: null, error: 'No Supabase' }), order: () => ({ data: null, error: 'No Supabase' }), data: null, error: 'No Supabase' }), insert: () => Promise.resolve({ error: 'No Supabase' }), update: () => ({ eq: () => ({ eq: () => ({ eq: () => Promise.resolve({}) }) }) }), delete: () => ({ eq: () => ({ eq: () => Promise.resolve({}) }) }) }),
     removeChannel: () => {},
     channel: () => ({ on: () => ({ subscribe: () => ({}) }) }),

@@ -215,9 +215,15 @@ const translations = {
     signupNotice: '登録は無料です。閲覧はログインなしでもできます。',
     signupRequired: 'この操作にはアカウント登録が必要です',
     signupSocialHint: 'お持ちのアカウントで簡単ログイン',
+    signInLine: 'LINEでログイン',
     signInGoogle: 'Googleでログイン',
     signInApple: 'Appleでログイン',
+    signInMagicLink: 'メールでログイン',
+    magicLinkPlaceholder: 'メールアドレスを入力',
+    magicLinkSent: 'ログインリンクを送信しました。メールをご確認ください。',
+    magicLinkSending: '送信中...',
     or: 'または',
+    loginButton: 'ログイン',
     authError: 'ログインに失敗しました。もう一度お試しください。',
 
     // Settings
@@ -865,9 +871,15 @@ const translations = {
     signupNotice: 'Registration is free. You can browse without logging in.',
     signupRequired: 'This action requires an account',
     signupSocialHint: 'Sign in with your existing account',
+    signInLine: 'Sign in with LINE',
     signInGoogle: 'Sign in with Google',
     signInApple: 'Sign in with Apple',
+    signInMagicLink: 'Sign in with Email',
+    magicLinkPlaceholder: 'Enter your email',
+    magicLinkSent: 'Login link sent! Check your email.',
+    magicLinkSending: 'Sending...',
     or: 'or',
+    loginButton: 'Log In',
     authError: 'Login failed. Please try again.',
 
     // Settings
