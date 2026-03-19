@@ -1,6 +1,6 @@
 # Healing Garden - POC to Production Setup Tasks
 
-> **Overall Progress: ~90% complete** — Phase 1-3 done, Phase 4 nearly done. Only launch prep (4.4) and therapist payouts (3.5) remain as deferred items. App is live and functional at https://healing-garden-3w5.pages.dev/
+> **Overall Progress: ~97% complete** — Phase 1-4 nearly done. All auth providers live (LINE, Google, Apple, magic link). All 3/19 feedback items implemented. Only launch prep (4.4) and therapist payouts (3.5) remain. App is live at https://healing-garden-3w5.pages.dev/
 
 ## Prerequisites (User)
 
@@ -33,16 +33,22 @@
 - [x] 30 policies + `is_admin()` helper function
 - [x] `GRANT SELECT` to anon role for Supabase REST API access
 
-### 1.4 Authentication ✅ (Partial)
+### 1.4 Authentication ✅
 - [x] Demo login with Supabase auth state
-- [ ] Google OAuth — DEFERRED
-- [ ] Apple OAuth — DEFERRED
+- [x] Google OAuth — configured in Supabase + Google Cloud Console
+- [x] Apple OAuth — configured in Supabase + Apple Developer
+- [x] Magic link (email OTP) — enabled, branded email template
+- [x] LINE Login — custom OAuth via CF Pages Functions (`functions/api/auth/line.js`, `line-callback.js`)
 
 ### 1.5 Frontend Auth Integration ✅
 - [x] Supabase JS client in `index.html`
 - [x] Auth state driven by Supabase sessions (`initSupabaseAuth()`, `setAuthFromSession()`)
-- [x] Demo login button (simplified signup page)
+- [x] Login button in header (visible when logged out)
+- [x] Signup page with social login buttons (LINE, Google, Apple, magic link, demo)
+- [x] `signInWithProvider()` for OAuth, `signInWithMagicLink()` for email OTP
 - [x] `onLogout()` calls `supabase.auth.signOut()`
+- [x] Supabase `site_url` set to production URL
+- [x] Redirect allowlist configured (production + preview + localhost)
 
 ### 1.6 Cloudflare Pages Deployment ✅
 - [x] Project created: `healing-garden`
@@ -129,7 +135,8 @@
 
 ### 3.2 File Storage ✅ (Partial)
 - [x] Avatar upload for users and therapists (Supabase storage)
-- [x] File validation: 2MB max, JPEG/PNG/WebP only
+- [x] File validation: 10MB max, JPEG/PNG/WebP/HEIC/HEIF supported
+- [x] Client-side compression (1200px max-width, 80% quality JPEG)
 - [x] Upload wired to: user profile, therapist profile edit, apply form
 - [x] Supabase storage bucket created: `avatars` (public)
 - [ ] Gallery image management — DEFERRED
@@ -213,6 +220,23 @@ All set via `wrangler pages secret put` on Mar 11, 2026:
 | `STRIPE_WEBHOOK_SECRET` | ✅ Set |
 | `RESEND_API_KEY` | ✅ Set |
 | `DAILY_API_KEY` | ✅ Set |
+| `LINE_CHANNEL_ID` | ✅ Set |
+| `LINE_CHANNEL_SECRET` | ✅ Set |
+
+### Supabase Auth Providers
+Configured via Management API on Mar 19, 2026:
+
+| Provider | Status | Client ID |
+|---|---|---|
+| Email / Magic Link | ✅ Enabled | (built-in) |
+| Google OAuth | ✅ Enabled | `900641832977-...apps.googleusercontent.com` |
+| Apple Sign In | ✅ Enabled | `com.healinggarden.web` (Services ID) |
+| LINE Login | ✅ Enabled | Custom OAuth via CF Pages Functions |
+
+- `site_url`: `https://healing-garden-3w5.pages.dev`
+- `uri_allow_list`: production + preview deploys + localhost
+- Callback URL: `https://lmgznapsmdgmbwgulsyt.supabase.co/auth/v1/callback`
+- LINE callback: `https://healing-garden-3w5.pages.dev/api/auth/line-callback`
 
 ### Stripe Webhook
 - ✅ Endpoint: `https://healing-garden-3w5.pages.dev/api/stripe-webhook`
@@ -269,6 +293,17 @@ Stripe is running in **sandbox/test mode** — no real charges are made.
 ### Viewing Webhook Activity
 - Stripe Dashboard → Developers → Webhooks → click endpoint → see event deliveries
 - Check for `checkout.session.completed` events with 200 response
+
+---
+
+## UX Improvements (Mar 19, 2026) — Feedback Items 2-6
+
+- [x] **Search taxonomy fix**: Renamed "Playful Interaction" → 3 sub-buttons (Experiences / Fortune Telling / Retreat). Criteria search expanded to all 5 subcategories.
+- [x] **Therapist privacy messaging**: Enhanced privacy note on apply form with lock icon and stronger reassurance language (JP/EN)
+- [x] **Session criteria tagging**: Added category + delivery method dropdowns to session edit screen. Therapists tag sessions with same categories clients search by.
+- [x] **Photo upload fix**: Increased limit to 10MB, added HEIC/HEIF support for iPhone photos
+- [x] **Plan-based session limits**: Free=3, Standard=10, Premium=unlimited sessions. Enforced in UI with per-tier feature display.
+- [x] **Intro character limit**: Already implemented (500 chars with live counter)
 
 ---
 
