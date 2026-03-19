@@ -234,16 +234,32 @@ async function loadUserData() {
 }
 
 // ===== File Upload (Supabase Storage) =====
+function compressImage(file, maxWidth = 1200, quality = 0.8) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', quality);
+    };
+    img.onerror = () => resolve(file);
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 async function uploadAvatar(file, bucket, path) {
   if (!file) return null;
-  const maxSize = 2 * 1024 * 1024; // 2MB
+  const maxSize = 10 * 1024 * 1024; // 10MB
   if (file.size > maxSize) { showToast(t('uploadTooLarge')); return null; }
-  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-  if (!allowed.includes(file.type)) { showToast(t('uploadInvalidType')); return null; }
+  const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+  if (!allowed.includes(file.type) && !file.name.match(/\.(heic|heif)$/i)) { showToast(t('uploadInvalidType')); return null; }
   try {
-    const ext = file.name.split('.').pop();
-    const filePath = `${path}/${Date.now()}.${ext}`;
-    const { data, error } = await supabase.storage.from(bucket).upload(filePath, file, { upsert: true });
+    const compressed = await compressImage(file);
+    const filePath = `${path}/${Date.now()}.jpg`;
+    const { data, error } = await supabase.storage.from(bucket).upload(filePath, compressed, { upsert: true, contentType: 'image/jpeg' });
     if (error) { console.error('Upload failed:', error); showToast(t('uploadFailed')); return null; }
     const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
     return urlData?.publicUrl || null;
@@ -253,7 +269,7 @@ async function uploadAvatar(file, bucket, path) {
 function createFileInput(onSelect) {
   const input = document.createElement('input');
   input.type = 'file';
-  input.accept = 'image/jpeg,image/png,image/webp';
+  input.accept = 'image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif';
   input.onchange = () => { if (input.files[0]) onSelect(input.files[0]); };
   input.click();
 }
@@ -718,11 +734,11 @@ function renderPlayfulSubMenu(el, header) {
       <div class="step-indicator">
         <div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
       </div>
-      <h1 class="page-title">${t('categoryPlayful')}</h1>
+      <h1 class="page-title">${t('categoryTitle')}</h1>
       <div class="category-cards">
-        <div class="category-card" onclick="state.category='playful'; navigate('#/search/feeling/delivery')">
+        <div class="category-card" onclick="state.category='experiences'; navigate('#/search/feeling/delivery')">
           <div class="category-icon">🎨</div>
-          <div><h3>${t('categoryPlayful')}</h3><p>${t('categoryPlayfulDesc')}</p></div>
+          <div><h3>${t('categoryExperiences')}</h3><p>${t('categoryExperiencesDesc')}</p></div>
         </div>
         <div class="category-card" onclick="state.category='fortune-telling'; navigate('#/search/feeling/delivery')">
           <div class="category-icon">🔮</div>
@@ -859,7 +875,9 @@ function renderCriteria(el, header) {
     { value: '', label: t('criteriaTypeAll') },
     { value: 'physical', label: t('categoryPhysical') },
     { value: 'mental', label: t('categoryMental') },
-    { value: 'playful', label: t('categoryPlayful') },
+    { value: 'experiences', label: t('categoryExperiences') },
+    { value: 'fortune-telling', label: t('categoryFortuneTelling') },
+    { value: 'retreat', label: t('categoryRetreat') },
   ];
   const locationOptions = [
     { value: '', label: t('criteriaLocationAll') },
@@ -1508,6 +1526,7 @@ function renderApply(el, header) {
           <label>${t('applyEmail')} *</label>
           <input type="email" placeholder="${t('applyEmailPlaceholder')}">
         </div>
+        <div class="privacy-notice" style="margin-bottom:16px;padding:14px 16px;background:var(--theme-primary-50);border:1px solid var(--theme-primary-200);border-radius:var(--radius-sm);font-size:13px;line-height:1.5">${t('applyPrivacyNote')}</div>
         <div class="form-group">
           <label>${t('applyAddress')} *</label>
           <input type="text" placeholder="${t('applyAddressPlaceholder')}">
@@ -1518,21 +1537,12 @@ function renderApply(el, header) {
         </div>
         <div class="form-group">
           <label>${t('applyIntro')}</label>
-          <textarea placeholder="${t('applyIntroPlaceholder')}"></textarea>
+          <textarea id="apply-intro" placeholder="${t('applyIntroPlaceholder')}" maxlength="500" oninput="updateIntroCount()"></textarea>
+          <div id="intro-char-count" style="text-align:right;font-size:12px;color:var(--text-secondary);margin-top:4px">0 / 500 ${t('applyIntroLimit')}</div>
         </div>
         <div class="form-group">
           <label>${t('applyLocation')}</label>
           <input type="text" placeholder="${t('applyLocationPlaceholder')}">
-        </div>
-        <div class="form-group">
-          <label>${t('applySessions')}</label>
-          <div class="session-entry">
-            <input type="text" placeholder="${t('applySessionName')}">
-            <textarea placeholder="${t('applySessionDesc')}" style="min-height:60px"></textarea>
-            <input type="number" placeholder="${t('applySessionPrice')}">
-            <input type="number" placeholder="${t('applySessionDuration')}">
-          </div>
-          <button class="add-session-btn mt-12">${t('applyAddSession')}</button>
         </div>
         <div class="form-group">
           <label>${t('applyPlanTitle')}</label>
@@ -1540,7 +1550,7 @@ function renderApply(el, header) {
             ${['free', 'standard', 'premium'].map((tier, i) => {
               const td = therapistTiers[tier];
               return `
-                <div class="plan-card ${i === 0 ? 'selected' : ''}" onclick="selectPlan(this)">
+                <div class="plan-card ${i === 0 ? 'selected' : ''}" data-tier="${tier}" onclick="selectPlan(this, '${tier}')">
                   <h3>${t(td.nameKey)}</h3>
                   <p>${t(td.descKey)}</p>
                   <div class="plan-price">${t(td.priceKey)}</div>
@@ -1553,15 +1563,116 @@ function renderApply(el, header) {
           </div>
           <div class="info-box mt-12">${t('tierPlatformFee')}<br><br>${t('tierReentryNote')}</div>
         </div>
+        <div class="form-group">
+          <label>${t('applySessions')} <span id="session-limit-label" style="font-size:12px;color:var(--text-secondary)">(1 / 3)</span></label>
+          <div id="session-entries">
+            <div class="session-entry">
+              <input type="text" placeholder="${t('applySessionName')}">
+              <textarea placeholder="${t('applySessionDesc')}" style="min-height:60px"></textarea>
+              <input type="number" placeholder="${t('applySessionPrice')}">
+              <input type="number" placeholder="${t('applySessionDuration')}">
+              <select class="mt-4">
+                <option value="">${t('applySessionCategory')}</option>
+                <option value="physical">${t('categoryPhysical')}</option>
+                <option value="mental">${t('categoryMental')}</option>
+                <option value="experiences">${t('categoryExperiences')}</option>
+                <option value="fortune-telling">${t('categoryFortuneTelling')}</option>
+                <option value="retreat">${t('categoryRetreat')}</option>
+              </select>
+              <select class="mt-4">
+                <option value="">${t('applySessionDelivery')}</option>
+                <option value="in-person">${t('deliveryInPerson')}</option>
+                <option value="video">${t('deliveryVideo')}</option>
+                <option value="telephone">${t('deliveryTelephone')}</option>
+                <option value="email">${t('deliveryEmail')}</option>
+              </select>
+            </div>
+          </div>
+          <button class="add-session-btn mt-12" id="add-session-btn" onclick="addSessionEntry()">${t('applyAddSession')}</button>
+        </div>
         <button class="btn-primary mt-12" onclick="navigate('#/apply/success')">${t('applySubmit')}</button>
       </div>
     </div>
   `;
 }
 
-function selectPlan(el) {
+let selectedTier = 'free';
+
+function selectPlan(el, tier) {
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+  selectedTier = tier;
+  enforceSessionLimit();
+}
+
+function getSessionLimit() {
+  const td = therapistTiers[selectedTier];
+  return td ? (td.maxSessions || td.maxBookings) : 3;
+}
+
+function addSessionEntry() {
+  const container = document.getElementById('session-entries');
+  const limit = getSessionLimit();
+  if (container.children.length >= limit) {
+    showToast(t('applySessionLimitReached'));
+    return;
+  }
+  const entry = document.createElement('div');
+  entry.className = 'session-entry';
+  entry.innerHTML = `
+    <input type="text" placeholder="${t('applySessionName')}">
+    <textarea placeholder="${t('applySessionDesc')}" style="min-height:60px"></textarea>
+    <input type="number" placeholder="${t('applySessionPrice')}">
+    <input type="number" placeholder="${t('applySessionDuration')}">
+    <select class="mt-4">
+      <option value="">${t('applySessionCategory')}</option>
+      <option value="physical">${t('categoryPhysical')}</option>
+      <option value="mental">${t('categoryMental')}</option>
+      <option value="experiences">${t('categoryExperiences')}</option>
+      <option value="fortune-telling">${t('categoryFortuneTelling')}</option>
+      <option value="retreat">${t('categoryRetreat')}</option>
+    </select>
+    <select class="mt-4">
+      <option value="">${t('applySessionDelivery')}</option>
+      <option value="in-person">${t('deliveryInPerson')}</option>
+      <option value="video">${t('deliveryVideo')}</option>
+      <option value="telephone">${t('deliveryTelephone')}</option>
+      <option value="email">${t('deliveryEmail')}</option>
+    </select>
+  `;
+  container.appendChild(entry);
+  updateSessionLabel();
+}
+
+function enforceSessionLimit() {
+  const container = document.getElementById('session-entries');
+  if (!container) return;
+  const limit = getSessionLimit();
+  while (container.children.length > limit) {
+    container.removeChild(container.lastChild);
+  }
+  updateSessionLabel();
+}
+
+function updateSessionLabel() {
+  const container = document.getElementById('session-entries');
+  const label = document.getElementById('session-limit-label');
+  const btn = document.getElementById('add-session-btn');
+  if (!container || !label) return;
+  const count = container.children.length;
+  const limit = getSessionLimit();
+  if (limit === Infinity) {
+    label.textContent = `(${count})`;
+  } else {
+    label.textContent = `(${count} / ${limit})`;
+  }
+  if (btn) btn.style.display = count >= limit ? 'none' : '';
+}
+
+function updateIntroCount() {
+  const ta = document.getElementById('apply-intro');
+  const counter = document.getElementById('intro-char-count');
+  if (ta && counter) counter.textContent = `${ta.value.length} / 500 ${t('applyIntroLimit')}`;
 }
 
 function renderApplySuccess(el, header) {
@@ -2512,6 +2623,9 @@ function renderTherapistSessionEdit(el, header, sessionId) {
   const name = getLocalizedText(session.name);
   const desc = getLocalizedText(session.description);
 
+  const currentCategory = session.category || '';
+  const currentDelivery = session.delivery || '';
+
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('sessionEditTitle')}</h1>
@@ -2531,6 +2645,27 @@ function renderTherapistSessionEdit(el, header, sessionId) {
         <div class="form-group">
           <label>${t('applySessionDuration')}</label>
           <input type="number" value="${session.duration}">
+        </div>
+        <div class="form-group">
+          <label>${t('applySessionCategory')}</label>
+          <select>
+            <option value="">${t('applySessionCategory')}</option>
+            <option value="physical" ${currentCategory === 'physical' ? 'selected' : ''}>${t('categoryPhysical')}</option>
+            <option value="mental" ${currentCategory === 'mental' ? 'selected' : ''}>${t('categoryMental')}</option>
+            <option value="experiences" ${currentCategory === 'experiences' || currentCategory === 'playful' ? 'selected' : ''}>${t('categoryExperiences')}</option>
+            <option value="fortune-telling" ${currentCategory === 'fortune-telling' ? 'selected' : ''}>${t('categoryFortuneTelling')}</option>
+            <option value="retreat" ${currentCategory === 'retreat' ? 'selected' : ''}>${t('categoryRetreat')}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>${t('applySessionDelivery')}</label>
+          <select>
+            <option value="">${t('applySessionDelivery')}</option>
+            <option value="in-person" ${currentDelivery === 'in-person' ? 'selected' : ''}>${t('deliveryInPerson')}</option>
+            <option value="video" ${currentDelivery === 'video' ? 'selected' : ''}>${t('deliveryVideo')}</option>
+            <option value="telephone" ${currentDelivery === 'telephone' ? 'selected' : ''}>${t('deliveryTelephone')}</option>
+            <option value="email" ${currentDelivery === 'email' ? 'selected' : ''}>${t('deliveryEmail')}</option>
+          </select>
         </div>
         <button class="btn-primary" onclick="navigate('#/therapist-dashboard/sessions')">${t('sessionSave')}</button>
       </div>

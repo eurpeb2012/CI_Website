@@ -1116,12 +1116,14 @@ body {
 }
 
 .session-entry input,
-.session-entry textarea {
+.session-entry textarea,
+.session-entry select {
   padding: 10px 12px;
   border: 1px solid var(--theme-primary-100);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-family: inherit;
+  background: #fff;
 }
 
 .add-session-btn {
@@ -2233,6 +2235,54 @@ body {
 
   #app {
     box-shadow: var(--shadow-lg);
+  }
+}
+
+@media (min-width: 600px) {
+  #app {
+    max-width: 600px;
+  }
+  .bottom-nav {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 900px) {
+  #app {
+    max-width: 760px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .bottom-nav {
+    max-width: 760px;
+  }
+  .page-title {
+    font-size: 1.6rem;
+  }
+  .category-cards,
+  .delivery-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .plan-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .therapist-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #app {
+    max-width: 960px;
+  }
+  .bottom-nav {
+    max-width: 960px;
   }
 }
 
