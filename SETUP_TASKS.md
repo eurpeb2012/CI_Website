@@ -1,6 +1,6 @@
 # Healing Garden - POC to Production Setup Tasks
 
-> **Overall Progress: ~97% complete** — Phase 1-4 nearly done. All auth providers live (LINE, Google, Apple, magic link). All 3/19 feedback items implemented. Only launch prep (4.4) and therapist payouts (3.5) remain. App is live at https://healing-garden-3w5.pages.dev/
+> **Overall Progress: ~97% complete — Now prepping for beta.** Phase 1-4 nearly done. All auth providers live (LINE, Google, Apple, magic link). All 3/19 feedback items implemented. Remaining: beta prep (domain, privacy policy, data cleanup, polish), therapist payouts (deferred). App is live at https://healing-garden-3w5.pages.dev/
 
 ## Prerequisites (User)
 
@@ -201,8 +201,18 @@
 - [x] SQL injection: safe — all queries use Supabase parameterized methods
 - [x] Secrets: all API keys stored as Cloudflare encrypted secrets, not in client code
 
-### 4.4 Launch Prep — NOT STARTED
-- [ ] Custom domain + SSL, error monitoring, load testing, privacy policy, PWA manifest
+### 4.4 Beta Prep — IN PROGRESS (as of Mar 20, 2026)
+- [ ] Custom domain + SSL (waiting on domain name decision / trademark check)
+- [ ] Privacy policy & terms of service pages
+- [ ] Demo data cleanup — replace fake data with realistic beta seed or empty state
+- [ ] Error/empty state audit — verify all screens handle zero-data gracefully
+- [ ] Stripe mode decision — keep sandbox for beta or switch to live
+- [ ] Onboarding hints for first-time users
+- [ ] Email template encoding fix (Japanese chars in magic link email)
+- [ ] Mobile polish pass — test on real iPhone/Android devices
+- [ ] In-app feedback mechanism for beta testers
+- [ ] Update all callback URLs once custom domain is set (Supabase, Google, Apple, LINE, Stripe)
+- [ ] PWA manifest for add-to-home-screen
 
 ---
 
