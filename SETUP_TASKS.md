@@ -1,6 +1,6 @@
 # Healing Garden - POC to Production Setup Tasks
 
-> **Overall Progress: ~97% complete — Now prepping for beta.** Phase 1-4 nearly done. All auth providers live (LINE, Google, Apple, magic link). All 3/19 feedback items implemented. Remaining: beta prep (domain, privacy policy, data cleanup, polish), therapist payouts (deferred). App is live at https://healing-garden-3w5.pages.dev/
+> **Overall Progress: ~99% complete — Beta ready (Mar 20, 2026).** All auth providers live. All 3/20 requirements batches complete. Custom domain live. Remaining: run SQL migrations 009 + 010. App is live at https://houseofinspirationtokyo.com (also https://healing-garden-3w5.pages.dev/)
 
 ## Prerequisites (User)
 
@@ -202,17 +202,32 @@
 - [x] Secrets: all API keys stored as Cloudflare encrypted secrets, not in client code
 
 ### 4.4 Beta Prep — IN PROGRESS (as of Mar 20, 2026)
-- [ ] Custom domain + SSL (waiting on domain name decision / trademark check)
-- [ ] Privacy policy & terms of service pages
-- [ ] Demo data cleanup — replace fake data with realistic beta seed or empty state
-- [ ] Error/empty state audit — verify all screens handle zero-data gracefully
+- [x] Auth trigger: `sql/007_auth_user_trigger.sql` — auto-creates `public.users` row on signup (applied Mar 20, 2026)
+- [x] **3/20 requirements (Batch 1)**: Plan limits (Free=1, Std=3, Prem=10), removed 9% fee from plan UI, removed re-entry fee, privacy notice prominence, delivery method multi-select
+- [x] **3/20 requirements (Batch 2)**: Legal name, structured address (47 prefectures), DOB dropdowns, phone field, contact visibility toggles, hide/pause account toggle — `sql/008_therapist_profile_fields.sql` applied
+- [x] **3/20 requirements (Batch 3)**: Booking window enforcement (Free=1mo/Std=3mo/Prem=6mo), beta Premium grant (per-user + all users), admin role assignment dropdown, demo data cleanup script + warning panel, HEIC photo upload fix — `sql/009_client_plans.sql` applied; `sql/010_clear_demo_data.sql` ready (run at launch)
+- [ ] **Run `sql/010_clear_demo_data.sql`** — at launch only (irreversible)
+- [x] Custom domain — `houseofinspirationtokyo.com` registered on GoDaddy (Mar 23, 2026)
+- [x] Cloudflare zone created — nameservers: `lewis.ns.cloudflare.com`, `tia.ns.cloudflare.com`
+- [x] Cloudflare Pages custom domains added — `houseofinspirationtokyo.com` + `www` (pending DNS propagation)
+- [x] `APP_URL` env var updated to `https://houseofinspirationtokyo.com`
+- [x] Fallback URLs updated in CF Functions (send-email, create-checkout-session, stripe-webhook)
+- [x] Supabase `site_url` updated to `https://houseofinspirationtokyo.com`
+- [x] Supabase redirect allow list updated (new domain + old pages.dev + localhost)
+- [x] GoDaddy nameservers pointed to Cloudflare — DNS records updated, custom domain active (Mar 24, 2026)
+- [x] Google Cloud Console — `houseofinspirationtokyo.com` added to authorized origins (Mar 24, 2026)
+- [x] Apple Developer — `houseofinspirationtokyo.com` added to Services ID domains (Mar 24, 2026)
+- [x] LINE Developers — callback URL added (Mar 24, 2026)
+- [x] Stripe — webhook endpoint URL updated to new domain (Mar 24, 2026)
+- [x] Domain setup details: see [DOMAIN_SETUP.md](DOMAIN_SETUP.md)
+- [x] Privacy policy & terms of service pages — JP/EN, linked from landing + signup (Mar 27, 2026)
+- [x] Error/empty state audit — all list screens handle zero-data gracefully (Mar 27, 2026)
 - [ ] Stripe mode decision — keep sandbox for beta or switch to live
-- [ ] Onboarding hints for first-time users
-- [ ] Email template encoding fix (Japanese chars in magic link email)
+- [x] Onboarding hints for first-time users — overlay on first visit (Mar 27, 2026)
+- [x] Email template encoding fix — our emails use UTF-8; magic link email encoding is Supabase dashboard setting (Mar 27, 2026)
 - [ ] Mobile polish pass — test on real iPhone/Android devices
-- [ ] In-app feedback mechanism for beta testers
-- [ ] Update all callback URLs once custom domain is set (Supabase, Google, Apple, LINE, Stripe)
-- [ ] PWA manifest for add-to-home-screen
+- [x] In-app feedback mechanism — feedback FAB + form with Supabase storage (Mar 27, 2026)
+- [x] PWA manifest for add-to-home-screen — manifest.json, service worker, apple meta tags (Mar 27, 2026)
 
 ---
 
@@ -243,13 +258,13 @@ Configured via Management API on Mar 19, 2026:
 | Apple Sign In | ✅ Enabled | `com.healinggarden.web` (Services ID) |
 | LINE Login | ✅ Enabled | Custom OAuth via CF Pages Functions |
 
-- `site_url`: `https://healing-garden-3w5.pages.dev`
-- `uri_allow_list`: production + preview deploys + localhost
+- `site_url`: `https://houseofinspirationtokyo.com`
+- `uri_allow_list`: production + www + old pages.dev + localhost
 - Callback URL: `https://lmgznapsmdgmbwgulsyt.supabase.co/auth/v1/callback`
-- LINE callback: `https://healing-garden-3w5.pages.dev/api/auth/line-callback`
+- LINE callback: `https://houseofinspirationtokyo.com/api/auth/line-callback`
 
 ### Stripe Webhook
-- ✅ Endpoint: `https://healing-garden-3w5.pages.dev/api/stripe-webhook`
+- ✅ Endpoint: `https://houseofinspirationtokyo.com/api/stripe-webhook`
 - ✅ Events: `checkout.session.completed`, `checkout.session.expired`
 
 ### SQL Migrations
@@ -330,7 +345,7 @@ Stripe is running in **sandbox/test mode** — no real charges are made.
 ## Reference
 
 - Architecture details: [ARCHITECTURE.md](ARCHITECTURE.md)
-- Live site: https://healing-garden-3w5.pages.dev/
+- Live site: https://houseofinspirationtokyo.com (also https://healing-garden-3w5.pages.dev/)
 - Repo: https://github.com/eurpeb2012/CI_Website
 - Stripe Dashboard: https://dashboard.stripe.com/test
 - Supabase Dashboard: https://supabase.com/dashboard

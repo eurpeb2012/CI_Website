@@ -1,3 +1,63 @@
+// ===== SVG Icon System =====
+const icons = {
+  // Brand
+  leaf: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42V22"/><path d="M24 22C24 22 10 24 8 12C8 12 18 8 24 22Z"/><path d="M24 28C24 28 38 26 40 14C40 14 30 10 24 28Z"/><path d="M20 36c-3 0-5-2-5-5" opacity=".5"/><path d="M28 34c3 0 5-2 5-5" opacity=".5"/></svg>`,
+
+  // Search & Navigation
+  search: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="21" cy="21" r="11"/><path d="M29 29l9 9"/><path d="M16 18c0-3 2-5 5-5" opacity=".4"/></svg>`,
+  feeling: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="14"/><path d="M17 27c2 4 5 5 7 5s5-1 7-5"/><circle cx="19" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="29" cy="20" r="1.5" fill="currentColor" stroke="none"/><path d="M10 14c2-1 3 0 4 1" opacity=".3"/><path d="M34 14c2 1 4 0 4-1" opacity=".3"/></svg>`,
+
+  // Categories
+  physical: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8c3 0 5 2 5 5s-2 5-5 5-5-2-5-5 2-5 5-5Z"/><path d="M16 24c0-2 4-4 8-4s8 2 8 4"/><path d="M14 28l-4 12M34 28l4 12"/><path d="M20 28v14M28 28v14"/><path d="M10 38c2-1 4 0 5 2" opacity=".3"/></svg>`,
+  mental: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 40V28"/><path d="M24 28c-8 0-14-5-14-11s6-11 14-11 14 5 14 11-6 11-14 11Z"/><path d="M18 18h0M24 14h0M30 18h0" stroke-width="3" opacity=".5"/><path d="M20 40h8"/></svg>`,
+  creative: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="12"/><path d="M18 18c0-3 3-6 6-6"/><path d="M24 32v8"/><path d="M20 40h8"/><circle cx="20" cy="20" r="2" fill="currentColor" opacity=".2"/><circle cx="28" cy="18" r="2.5" fill="currentColor" opacity=".15"/><circle cx="24" cy="24" r="1.5" fill="currentColor" opacity=".25"/></svg>`,
+  spiritual: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="6"/><circle cx="24" cy="24" r="1.5" fill="currentColor" stroke="none"/><path d="M24 10v4M24 34v4M10 24h4M34 24h4"/><path d="M15 15l2.5 2.5M30.5 30.5l2.5 2.5M15 33l2.5-2.5M30.5 17.5l2.5-2.5" opacity=".4"/></svg>`,
+  retreat: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 38h32"/><path d="M24 10l14 28H10L24 10Z"/><path d="M24 22v8"/><path d="M20 30h8"/><path d="M4 42c4-2 6 0 8-2s2-4 6-2" opacity=".3"/><path d="M30 42c4-2 6 0 8-2" opacity=".3"/></svg>`,
+
+  // Delivery
+  inPerson: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="14" r="5"/><circle cx="30" cy="14" r="5"/><path d="M8 34c0-6 4-10 10-10 2 0 4 1 6 2 2-1 4-2 6-2 6 0 10 4 10 10"/><path d="M24 24v6" opacity=".3"/></svg>`,
+  video: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="26" height="20" rx="3"/><path d="M32 22l10-5v14l-10-5"/></svg>`,
+  telephone: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8c-4 0-6 2-6 6 0 10 8 20 18 26 4 2 8 0 10-2l2-4-6-4-2 2c-1 1-3 0-6-3s-4-5-3-6l2-2-4-6-2 2c-2 0-3-1-3-3Z"/></svg>`,
+  email: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="12" width="36" height="24" rx="3"/><path d="M6 15l18 11 18-11"/></svg>`,
+
+  // Empty states - illustrated
+  emptySearch: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><circle cx="35" cy="35" r="16" opacity=".3"/><path d="M46 46l14 14" opacity=".3"/><path d="M28 52c-3 4-1 8 2 10s7 1 8-3" opacity=".15"/><path d="M52 28c4-3 8-1 10 2s1 7-3 8" opacity=".15"/><path d="M30 30c2-3 5-4 8-3s5 4 4 7" opacity=".2"/></svg>`,
+  emptyMessages: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M16 20h36c2 0 4 2 4 4v20c0 2-2 4-4 4H28l-8 8v-8h-4c-2 0-4-2-4-4V24c0-2 2-4 4-4Z" opacity=".25"/><path d="M24 32h20M24 38h12" opacity=".2"/><path d="M56 30h4c2 0 4 2 4 4v20c0 2-2 4-4 4h-4v8l-8-8H32" opacity=".15"/></svg>`,
+  emptyFavorites: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 65l-22-22c-6-6-6-16 0-22s16-6 22 0c6-6 16-6 22 0s6 16 0 22L40 65Z" opacity=".2"/><path d="M35 38c-2-2-2-5 0-7s5-2 7 0c2-2 5-2 7 0s2 5 0 7l-7 7-7-7Z" opacity=".35"/></svg>`,
+  emptyJournal: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="20" y="12" width="40" height="56" rx="4" opacity=".2"/><path d="M30 28h20M30 36h16M30 44h12" opacity=".2"/><path d="M16 16v48" stroke-width="2" opacity=".15"/><path d="M48 58c2-6 8-8 12-4" opacity=".2"/></svg>`,
+  emptyNotifications: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 16c-10 0-18 8-18 18v12l-4 6h44l-4-6V34c0-10-8-18-18-18Z" opacity=".2"/><path d="M34 52c0 4 3 6 6 6s6-2 6-6" opacity=".25"/><circle cx="40" cy="16" r="2" opacity=".3"/></svg>`,
+  emptyRetreat: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 14l24 42H16L40 14Z" opacity=".15"/><path d="M40 28v16M36 36h8" opacity=".2"/><path d="M10 60h60" opacity=".15"/><path d="M20 60c0-4 4-8 8-8s6 2 8 0 4-4 8-2 6 6 6 10" opacity=".12"/></svg>`,
+  emptyBlog: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="16" y="16" width="48" height="48" rx="6" opacity=".15"/><path d="M26 30h28M26 38h20M26 46h24" opacity=".2"/><path d="M56 20c4-2 8 0 8 4" opacity=".15"/></svg>`,
+  emptyProducts: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="18" y="22" width="44" height="36" rx="4" opacity=".2"/><path d="M18 32h44" opacity=".15"/><circle cx="40" cy="44" r="6" opacity=".2"/><path d="M37 44l3 3 5-6" opacity=".25"/></svg>`,
+  emptyForum: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><circle cx="28" cy="30" r="8" opacity=".15"/><circle cx="52" cy="30" r="8" opacity=".15"/><circle cx="40" cy="52" r="8" opacity=".15"/><path d="M34 26l10-2M46 34l-4 12M32 36l4 12" opacity=".12"/></svg>`,
+
+  // Success states
+  successCheck: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="28" opacity=".2"/><circle cx="40" cy="40" r="20" opacity=".3"/><path d="M30 40l7 7 13-14" stroke-width="2.5"/></svg>`,
+  successCelebrate: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="20" opacity=".2"/><path d="M30 42l7 7 13-14" stroke-width="2"/><path d="M20 20l4 2M60 20l-4 2M20 60l4-2M60 60l-4-2" opacity=".3"/><path d="M40 10v4M40 66v4M10 40h4M66 40h4" opacity=".2"/></svg>`,
+  successGift: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><rect x="18" y="36" width="44" height="28" rx="3" opacity=".2"/><rect x="14" y="28" width="52" height="12" rx="3" opacity=".25"/><path d="M40 28v36"/><path d="M40 28c-4-8-12-12-16-8s0 12 8 12" opacity=".3"/><path d="M40 28c4-8 12-12 16-8s0 12-8 12" opacity=".3"/></svg>`,
+  thankYou: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 60V36"/><path d="M40 36C40 36 22 38 20 24C20 24 32 18 40 36Z" opacity=".3"/><path d="M40 44C40 44 58 42 60 28C60 28 48 22 40 44Z" opacity=".25"/><circle cx="40" cy="18" r="6" opacity=".2"/><path d="M37 17c0-2 1-3 3-3s3 1 3 3" opacity=".3"/></svg>`,
+
+  // Dashboard menu
+  schedule: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32"/><path d="M16 8v8M32 8v8"/><circle cx="18" cy="28" r="2" fill="currentColor" opacity=".3"/><circle cx="24" cy="28" r="2" fill="currentColor" opacity=".3"/><circle cx="30" cy="28" r="2" fill="currentColor" opacity=".3"/></svg>`,
+  sessions: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="32" height="32" rx="3"/><path d="M16 16h6v6h-6zM26 16h6v6h-6zM16 26h6v6h-6z" opacity=".3"/></svg>`,
+  clients: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="16" r="6"/><circle cx="34" cy="18" r="5" opacity=".5"/><path d="M8 38c0-6 5-10 12-10s12 4 12 10"/><path d="M30 28c5 0 10 3 10 8" opacity=".5"/></svg>`,
+  earnings: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16"/><path d="M24 14v20"/><path d="M18 20c0-2 3-4 6-4s6 2 6 4-3 3-6 4-6 2-6 4 3 4 6 4 6-2 6-4"/></svg>`,
+  editProfile: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l8 8-22 22H10v-8L32 8Z"/><path d="M28 12l8 8" opacity=".3"/></svg>`,
+  referrals: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="6"/><circle cx="12" cy="34" r="5" opacity=".5"/><circle cx="36" cy="34" r="5" opacity=".5"/><path d="M20 18l-6 12M28 18l6 12" opacity=".3"/></svg>`,
+
+  // UI chrome (kept from original)
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+  dashboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+};
+
+// Helper to render icon with size
+function icon(name, size = 24) {
+  return `<span class="svg-icon" style="width:${size}px;height:${size}px;display:inline-flex">${icons[name] || ''}</span>`;
+}
+
 // ===== State =====
 let state = {
   feeling: null,
@@ -87,7 +147,27 @@ function setAuthFromSession(session) {
     email: u.email || '',
     avatar_url: meta.avatar_url || meta.picture || '',
     provider: u.app_metadata?.provider || 'email',
+    plan: 'free',
   };
+  loadUserPlan();
+}
+
+async function loadUserPlan() {
+  if (!authState.user?.id) return;
+  try {
+    const { data } = await supabase.from('users').select('plan, plan_expires_at').eq('id', authState.user.id).single();
+    if (data) {
+      const expired = data.plan_expires_at && new Date(data.plan_expires_at) < new Date();
+      authState.user.plan = expired ? 'free' : (data.plan || 'free');
+    }
+  } catch (e) { /* fallback to free */ }
+}
+
+function getBookingWindowDays() {
+  const plan = authState.user?.plan || 'free';
+  if (plan === 'premium') return 180;
+  if (plan === 'standard') return 90;
+  return 30;
 }
 
 async function signInWithProvider(provider) {
@@ -274,12 +354,22 @@ async function uploadAvatar(file, bucket, path) {
   if (!file) return null;
   const maxSize = 10 * 1024 * 1024; // 10MB
   if (file.size > maxSize) { showToast(t('uploadTooLarge')); return null; }
+  const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || file.name.match(/\.(heic|heif)$/i);
   const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
-  if (!allowed.includes(file.type) && !file.name.match(/\.(heic|heif)$/i)) { showToast(t('uploadInvalidType')); return null; }
+  if (!allowed.includes(file.type) && !isHeic) { showToast(t('uploadInvalidType')); return null; }
   try {
-    const compressed = await compressImage(file);
-    const filePath = `${path}/${Date.now()}.jpg`;
-    const { data, error } = await supabase.storage.from(bucket).upload(filePath, compressed, { upsert: true, contentType: 'image/jpeg' });
+    let uploadFile = file;
+    let contentType = file.type || 'image/jpeg';
+    let ext = 'jpg';
+    if (isHeic) {
+      // Browsers can't decode HEIC via canvas — upload original, Supabase serves it fine
+      ext = 'heic';
+    } else {
+      uploadFile = await compressImage(file);
+      contentType = 'image/jpeg';
+    }
+    const filePath = `${path}/${Date.now()}.${ext}`;
+    const { data, error } = await supabase.storage.from(bucket).upload(filePath, uploadFile, { upsert: true, contentType });
     if (error) { console.error('Upload failed:', error); showToast(t('uploadFailed')); return null; }
     const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
     return urlData?.publicUrl || null;
@@ -341,25 +431,36 @@ function suggestThemeByTime() {
 // Initialize theme
 setTheme(getTheme());
 
-// ===== Icons (inline SVG) =====
-const icons = {
-  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
-  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
-  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
-  dashboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
-  sessions: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-};
-
 // ===== Router =====
+let _prevRoute = '/';
+let _navDirection = 'forward'; // 'forward', 'back', 'tab'
+
 function navigate(hash) {
+  const newRoute = hash.slice(1);
+  const oldRoute = getRoute();
+  // Determine transition type
+  const newDepth = newRoute.split('/').filter(Boolean).length;
+  const oldDepth = oldRoute.split('/').filter(Boolean).length;
+  if (newDepth > oldDepth) {
+    _navDirection = 'forward';
+  } else if (newDepth < oldDepth) {
+    _navDirection = 'back';
+  } else {
+    _navDirection = 'tab';
+  }
+  _prevRoute = oldRoute;
   window.location.hash = hash;
 }
 
 function getRoute() {
   const hash = window.location.hash || '#/';
   return hash.slice(1); // remove #
+}
+
+function _getPageTransitionClass() {
+  if (_navDirection === 'forward') return 'slide-in';
+  if (_navDirection === 'back') return 'slide-back';
+  return 'fade-up';
 }
 
 // Route table with regex matching
@@ -410,6 +511,9 @@ const routes = [
   { pattern: /^\/forum$/, handler: 'forum', nav: 'home' },
   { pattern: /^\/forum\/new$/, handler: 'forumNew', nav: 'home' },
   { pattern: /^\/forum\/([a-f0-9-]+|\d+)$/, handler: 'forumThread', nav: 'home' },
+  { pattern: /^\/privacy$/, handler: 'privacy', nav: 'home' },
+  { pattern: /^\/terms$/, handler: 'terms', nav: 'home' },
+  { pattern: /^\/feedback$/, handler: 'feedback', nav: 'profile' },
 ];
 
 function router() {
@@ -434,9 +538,23 @@ function router() {
     }
 
     if (!matched) {
+      _navDirection = 'tab';
       renderRoute('landing', content, header, []);
       setActiveNav('home');
     }
+
+    // Apply page transition class
+    const pageEl = content.querySelector('.page, .landing');
+    if (pageEl) {
+      const cls = _getPageTransitionClass();
+      pageEl.classList.add(cls);
+    }
+
+    // Apply staggered card entrance
+    requestAnimationFrame(() => {
+      applyStagger('.therapist-card, .retreat-card, .blog-card-mini, .digital-product-card, .session-card, .review-card, .forum-thread-card', 60);
+      observeReveals();
+    });
 
     updateBottomNav();
     window.scrollTo(0, 0);
@@ -493,6 +611,9 @@ function renderRoute(handler, el, header, params) {
     forum: () => renderForum(el, header),
     forumThread: () => renderForumThread(el, header, params[0]),
     forumNew: () => renderForumNewThread(el, header),
+    privacy: () => renderPrivacy(el, header),
+    terms: () => renderTerms(el, header),
+    feedback: () => renderFeedback(el, header),
   };
   try {
     (handlers[handler] || handlers.landing)();
@@ -598,19 +719,36 @@ function renderLanding(el, header) {
   const trending = [...therapists].sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0)).slice(0, 3);
   el.innerHTML = `
     <div class="landing">
-      <div class="landing-logo">🌿</div>
+      <div class="landing-logo-wrap">
+        <div class="landing-logo">${icons.leaf}</div>
+      </div>
       <h1 class="landing-title">${t('landingTitle')}</h1>
       <p class="landing-subtitle">${t('landingSubtitle')}</p>
       <p class="landing-tagline">${t('landingTagline')}</p>
       <button class="btn-primary" onclick="navigate('#/search')">${t('landingCTA')}</button>
       <button class="btn-secondary" onclick="navigate('#/apply')">${t('landingSecondary')}</button>
 
-      <div class="landing-quick-links">
-        <button class="quick-link-btn" onclick="navigate('#/retreats')">🏕️ ${t('retreatSectionTitle')}</button>
-        <button class="quick-link-btn" onclick="navigate('#/forum')">💬 ${t('forumTitle')}</button>
-        <button class="quick-link-btn" onclick="navigate('#/gift-card')">🎁 ${t('giftCardTitle')}</button>
-        <button class="quick-link-btn" onclick="navigate('#/blog')">📝 ${t('blogTitle')}</button>
-        <button class="quick-link-btn" onclick="navigate('#/digital-products')">📦 ${t('digitalProductsTitle')}</button>
+      <div class="bento-grid">
+        <button class="bento-tile bento-retreat" onclick="navigate('#/retreats')">
+          <span class="bento-icon">${icons.retreat}</span>
+          <span class="bento-label">${t('retreatSectionTitle')}</span>
+        </button>
+        <button class="bento-tile bento-forum" onclick="navigate('#/forum')">
+          <span class="bento-icon">${icons.feeling}</span>
+          <span class="bento-label">${t('forumTitle')}</span>
+        </button>
+        <button class="bento-tile bento-gift" onclick="navigate('#/gift-card')">
+          <span class="bento-icon">${icons.successGift}</span>
+          <span class="bento-label">${t('giftCardTitle')}</span>
+        </button>
+        <button class="bento-tile bento-blog" onclick="navigate('#/blog')">
+          <span class="bento-icon">${icons.emptyBlog}</span>
+          <span class="bento-label">${t('blogTitle')}</span>
+        </button>
+        <button class="bento-tile bento-products bento-wide" onclick="navigate('#/digital-products')">
+          <span class="bento-icon">${icons.emptyProducts}</span>
+          <span class="bento-label">${t('digitalProductsTitle')}</span>
+        </button>
       </div>
 
       <div class="trending-section">
@@ -646,6 +784,10 @@ function renderLanding(el, header) {
         }).join('')}
         <button class="btn-text" onclick="navigate('#/blog')">${t('blogReadMore')} →</button>
       </div>
+
+      <div class="landing-footer">
+        <a href="#/privacy" class="legal-link">${t('privacyPolicyTitle')}</a> · <a href="#/terms" class="legal-link">${t('termsOfServiceTitle')}</a>
+      </div>
     </div>
   `;
 }
@@ -660,14 +802,14 @@ function renderSearchEntry(el, header) {
       </div>
       <h1 class="page-title">${t('searchTitle')}</h1>
       <div class="search-option" onclick="navigate('#/search/criteria')">
-        <div class="search-option-icon">🔍</div>
+        <div class="search-option-icon">${icons.search}</div>
         <div class="search-option-text">
           <h3>${t('searchByCriteria')}</h3>
           <p>${t('searchByCriteriaDesc')}</p>
         </div>
       </div>
       <div class="search-option" onclick="navigate('#/search/feeling')">
-        <div class="search-option-icon">💭</div>
+        <div class="search-option-icon">${icons.feeling}</div>
         <div class="search-option-text">
           <h3>${t('searchByFeeling')}</h3>
           <p>${t('searchByFeelingDesc')}</p>
@@ -728,9 +870,9 @@ function renderFeelingStep1(el, header) {
 function renderFeelingStep2(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search/feeling');
   const categories = [
-    { key: 'physical', icon: '💆', label: t('categoryPhysical'), desc: t('categoryPhysicalDesc') },
-    { key: 'mental', icon: '🧘', label: t('categoryMental'), desc: t('categoryMentalDesc') },
-    { key: 'playful', icon: '🎨', label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
+    { key: 'physical', icon: icons.physical, label: t('categoryPhysical'), desc: t('categoryPhysicalDesc') },
+    { key: 'mental', icon: icons.mental, label: t('categoryMental'), desc: t('categoryMentalDesc') },
+    { key: 'playful', icon: icons.creative, label: t('categoryPlayful'), desc: t('categoryPlayfulDesc') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -760,15 +902,15 @@ function renderPlayfulSubMenu(el, header) {
       <h1 class="page-title">${t('categoryTitle')}</h1>
       <div class="category-cards">
         <div class="category-card" onclick="state.category='experiences'; navigate('#/search/feeling/delivery')">
-          <div class="category-icon">🎨</div>
+          <div class="category-icon">${icons.creative}</div>
           <div><h3>${t('categoryExperiences')}</h3><p>${t('categoryExperiencesDesc')}</p></div>
         </div>
         <div class="category-card" onclick="state.category='fortune-telling'; navigate('#/search/feeling/delivery')">
-          <div class="category-icon">🔮</div>
+          <div class="category-icon">${icons.spiritual}</div>
           <div><h3>${t('categoryFortuneTelling')}</h3><p>${t('categoryFortuneTellingDesc')}</p></div>
         </div>
         <div class="category-card" onclick="state.category='retreat'; state.delivery='in-person'; navigate('#/search/feeling/results')">
-          <div class="category-icon">🏕️</div>
+          <div class="category-icon">${icons.retreat}</div>
           <div><h3>${t('categoryRetreat')}</h3><p>${t('categoryRetreatInPersonDesc')}</p></div>
         </div>
       </div>
@@ -779,10 +921,10 @@ function renderPlayfulSubMenu(el, header) {
 function renderFeelingStep3(el, header) {
   renderHeaderWithBack(header, t('navSearch'), '#/search/feeling/category');
   const deliveries = [
-    { key: 'in-person', icon: '🤝', label: t('deliveryInPerson'), desc: t('deliveryInPersonDesc') },
-    { key: 'video', icon: '💻', label: t('deliveryVideo'), desc: t('deliveryVideoDesc') },
-    { key: 'telephone', icon: '📞', label: t('deliveryTelephone'), desc: t('deliveryTelephoneDesc') },
-    { key: 'email', icon: '✉️', label: t('deliveryEmail'), desc: t('deliveryEmailDesc') },
+    { key: 'in-person', icon: icons.inPerson, label: t('deliveryInPerson'), desc: t('deliveryInPersonDesc') },
+    { key: 'video', icon: icons.video, label: t('deliveryVideo'), desc: t('deliveryVideoDesc') },
+    { key: 'telephone', icon: icons.telephone, label: t('deliveryTelephone'), desc: t('deliveryTelephoneDesc') },
+    { key: 'email', icon: icons.email, label: t('deliveryEmail'), desc: t('deliveryEmailDesc') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -829,7 +971,9 @@ function renderTherapistCard(th) {
         ${th.responseTime ? `<div class="card-response-time">💬 ${t('responseTime')}: ${th.responseTime}</div>` : ''}
         ${th.slidingScale ? `<div class="card-sliding-scale">💚 ${t('slidingScale')}</div>` : ''}
       </div>
-      <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${th.id}')" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">${isFavorite(th.id) ? '❤️' : '🤍'}</button>
+      <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${th.id}'); this.classList.add('pop')" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">
+        <svg viewBox="0 0 24 24" class="heart-svg" fill="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'none'}" stroke="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'var(--gray-400)'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
     </div>
   `;
 }
@@ -1003,7 +1147,10 @@ function renderTherapistProfile(el, header, id) {
         ${th.responseTime ? `<p class="profile-response-time">💬 ${t('responseTime')}: ${th.responseTime}</p>` : ''}
         ${th.slidingScale ? `<p class="profile-sliding-scale">💚 ${t('slidingScale')}</p>` : ''}
         <div class="profile-actions-row">
-          <button class="btn-icon-action${isFavorite(th.id) ? ' active' : ''}" onclick="toggleFavorite('${th.id}')">${isFavorite(th.id) ? '❤️' : '🤍'} ${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}</button>
+          <button class="btn-icon-action${isFavorite(th.id) ? ' active' : ''}" onclick="toggleFavorite('${th.id}')">
+            <svg viewBox="0 0 24 24" class="heart-svg" width="16" height="16" fill="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'none'}" stroke="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            ${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}
+          </button>
           <button class="btn-icon-action" onclick="onShareTherapist('${th.id}')">📤 ${t('shareTherapist')}</button>
         </div>
       </div>
@@ -1257,7 +1404,7 @@ function renderBookingCalendar() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const maxDate = new Date(today);
-  maxDate.setDate(maxDate.getDate() + 30);
+  maxDate.setDate(maxDate.getDate() + getBookingWindowDays());
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -1520,7 +1667,7 @@ function renderBookingSuccess(el, header) {
   }
   el.innerHTML = `
     <div class="success-screen">
-      <div class="success-icon">✓</div>
+      <div class="success-icon">${icons.successCheck}</div>
       <h2>${t('bookingSuccess')}</h2>
       <p>${t('bookingSuccessMsg')}</p>
       ${stripeSessionId ? `<p class="payment-confirmed-msg">💳 ${t('paymentConfirmed')}</p>` : ''}
@@ -1543,20 +1690,63 @@ function renderApply(el, header) {
         </div>
         <div class="form-group">
           <label>${t('applyName')}</label>
-          <input type="text" placeholder="${t('applyNamePlaceholder')}">
+          <input type="text" id="apply-display-name" placeholder="${t('applyNamePlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyLegalName')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">🔒 ${t('applyLegalNameNote')}</span></label>
+          <input type="text" id="apply-legal-name" placeholder="${t('applyLegalNamePlaceholder')}">
         </div>
         <div class="form-group">
           <label>${t('applyEmail')} *</label>
-          <input type="email" placeholder="${t('applyEmailPlaceholder')}">
-        </div>
-        <div class="privacy-notice" style="margin-bottom:16px;padding:14px 16px;background:var(--theme-primary-50);border:1px solid var(--theme-primary-200);border-radius:var(--radius-sm);font-size:13px;line-height:1.5">${t('applyPrivacyNote')}</div>
-        <div class="form-group">
-          <label>${t('applyAddress')} *</label>
-          <input type="text" placeholder="${t('applyAddressPlaceholder')}">
+          <input type="email" id="apply-email" placeholder="${t('applyEmailPlaceholder')}">
         </div>
         <div class="form-group">
-          <label>${t('applyBirthday')} *</label>
-          <input type="date">
+          <label>${t('applyPhone')}</label>
+          <input type="tel" id="apply-phone" placeholder="${t('applyPhonePlaceholder')}">
+        </div>
+        <div class="privacy-notice" style="margin-bottom:16px;padding:16px 18px;background:var(--theme-primary-100);border:2px solid var(--theme-primary-400);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;font-weight:500;color:var(--theme-primary-800)">${t('applyPrivacyNote')}</div>
+        <div class="form-group">
+          <label>${t('applyStreet')} *</label>
+          <input type="text" id="apply-addr-street" placeholder="${t('applyStreetPlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyCity')} *</label>
+          <input type="text" id="apply-addr-city" placeholder="${t('applyCityPlaceholder')}">
+        </div>
+        <div class="form-group">
+          <label>${t('applyPrefecture')} *</label>
+          <select id="apply-addr-prefecture">
+            <option value="">--</option>
+            ${['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'].map(p => `<option value="${p}">${p}</option>`).join('')}
+            <option value="other">その他 / Other</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div class="form-group" style="flex:1">
+            <label>${t('applyPostcode')} *</label>
+            <input type="text" id="apply-addr-postcode" placeholder="${t('applyPostcodePlaceholder')}">
+          </div>
+          <div class="form-group" style="flex:1">
+            <label>${t('applyCountry')}</label>
+            <input type="text" id="apply-addr-country" value="Japan">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>${t('applyBirthday')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">🔒 ${t('applyDobPrivacy')}</span></label>
+          <div style="display:flex;gap:8px">
+            <select id="apply-dob-year" style="flex:2">
+              <option value="">${t('applyDobYear')}</option>
+              ${Array.from({length: 70}, (_, i) => new Date().getFullYear() - 18 - i).map(y => `<option value="${y}">${y}</option>`).join('')}
+            </select>
+            <select id="apply-dob-month" style="flex:1.5">
+              <option value="">${t('applyDobMonth')}</option>
+              ${Array.from({length: 12}, (_, i) => i + 1).map(m => `<option value="${m}">${m}</option>`).join('')}
+            </select>
+            <select id="apply-dob-day" style="flex:1.5">
+              <option value="">${t('applyDobDay')}</option>
+              ${Array.from({length: 31}, (_, i) => i + 1).map(d => `<option value="${d}">${d}</option>`).join('')}
+            </select>
+          </div>
         </div>
         <div class="form-group">
           <label>${t('applyIntro')}</label>
@@ -1584,7 +1774,6 @@ function renderApply(el, header) {
               `;
             }).join('')}
           </div>
-          <div class="info-box mt-12">${t('tierPlatformFee')}<br><br>${t('tierReentryNote')}</div>
         </div>
         <div class="form-group">
           <label>${t('applySessions')} <span id="session-limit-label" style="font-size:12px;color:var(--text-secondary)">(1 / 3)</span></label>
@@ -1602,13 +1791,13 @@ function renderApply(el, header) {
                 <option value="fortune-telling">${t('categoryFortuneTelling')}</option>
                 <option value="retreat">${t('categoryRetreat')}</option>
               </select>
-              <select class="mt-4">
-                <option value="">${t('applySessionDelivery')}</option>
-                <option value="in-person">${t('deliveryInPerson')}</option>
-                <option value="video">${t('deliveryVideo')}</option>
-                <option value="telephone">${t('deliveryTelephone')}</option>
-                <option value="email">${t('deliveryEmail')}</option>
-              </select>
+              <div class="mt-4" style="font-size:13px;color:var(--text-secondary);margin-bottom:4px">${t('applySessionDelivery')}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="in-person"> ${t('deliveryInPerson')}</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="video"> ${t('deliveryVideo')}</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="telephone"> ${t('deliveryTelephone')}</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="email"> ${t('deliveryEmail')}</label>
+              </div>
             </div>
           </div>
           <button class="add-session-btn mt-12" id="add-session-btn" onclick="addSessionEntry()">${t('applyAddSession')}</button>
@@ -1655,13 +1844,13 @@ function addSessionEntry() {
       <option value="fortune-telling">${t('categoryFortuneTelling')}</option>
       <option value="retreat">${t('categoryRetreat')}</option>
     </select>
-    <select class="mt-4">
-      <option value="">${t('applySessionDelivery')}</option>
-      <option value="in-person">${t('deliveryInPerson')}</option>
-      <option value="video">${t('deliveryVideo')}</option>
-      <option value="telephone">${t('deliveryTelephone')}</option>
-      <option value="email">${t('deliveryEmail')}</option>
-    </select>
+    <div class="mt-4" style="font-size:13px;color:var(--text-secondary);margin-bottom:4px">${t('applySessionDelivery')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="in-person"> ${t('deliveryInPerson')}</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="video"> ${t('deliveryVideo')}</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="telephone"> ${t('deliveryTelephone')}</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="email"> ${t('deliveryEmail')}</label>
+    </div>
   `;
   container.appendChild(entry);
   updateSessionLabel();
@@ -1702,7 +1891,7 @@ function renderApplySuccess(el, header) {
   renderHeaderSimple(header, t('appName'));
   el.innerHTML = `
     <div class="success-screen">
-      <div class="success-icon">🎉</div>
+      <div class="success-icon">${icons.successCelebrate}</div>
       <h2>${t('applySuccess')}</h2>
       <p>${t('applySuccessMsg')}</p>
       <button class="btn-primary" onclick="navigate('#/')">${t('bookingBackHome')}</button>
@@ -1877,6 +2066,35 @@ function onSwitchTherapistMode() {
   }
 }
 
+async function onToggleTherapistVisibility() {
+  const thId = therapistMode.therapistId;
+  if (!thId) return;
+  const th = getTherapist(thId);
+  if (!th) return;
+  const newStatus = th.status === 'hidden' ? 'active' : 'hidden';
+  try {
+    await supabase.from('therapists').update({ status: newStatus }).eq('id', String(thId));
+    th.status = newStatus;
+    showToast(newStatus === 'hidden' ? t('dashboardHideAccount') : t('dashboardUnhideAccount'));
+  } catch (e) {
+    console.warn('onToggleTherapistVisibility failed:', e);
+  }
+  navigate('#/therapist-dashboard');
+}
+
+async function onToggleContactVisibility(field, value) {
+  const thId = therapistMode.therapistId;
+  if (!thId) return;
+  const update = field === 'email' ? { show_email: value } : { show_phone: value };
+  try {
+    await supabase.from('therapists').update(update).eq('id', String(thId));
+    const th = getTherapist(thId);
+    if (th) field === 'email' ? th.show_email = value : th.show_phone = value;
+  } catch (e) {
+    console.warn('onToggleContactVisibility failed:', e);
+  }
+}
+
 // Settings
 function renderSettings(el, header) {
   renderHeaderWithBack(header, t('settingsTitle'), '#/profile');
@@ -1952,7 +2170,7 @@ function renderSignup(el, header) {
         <div class="login-divider"><span>${t('or')}</span></div>
 
         <button class="social-login-btn demo-btn" onclick="onDemoLogin()">⚡ ${t('demoLogin')}</button>
-        <p class="signup-notice">${t('signupNotice')}</p>
+        <p class="signup-notice">${t('signupNotice')}<br><a href="#/privacy" class="legal-link">${t('privacyPolicyTitle')}</a> · <a href="#/terms" class="legal-link">${t('termsOfServiceTitle')}</a></p>
       </div>
     </div>
   `;
@@ -2054,8 +2272,8 @@ function renderMessagesList(el, header) {
         <h1 class="page-title" style="margin:0">${t('messagesTitle')}</h1>
         <button class="btn-small" onclick="navigate('#/search')" style="white-space:nowrap">+ ${t('messagesNewChat')}</button>
       </div>
-      ${!authState.isLoggedIn ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesLoginRequired')}</p><button class="btn-primary mt-12" onclick="navigate('#/signup')">${t('signupSubmit')}</button></div>` :
-        conversations.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('messagesEmpty')}</p><button class="btn-primary mt-12" onclick="navigate('#/search')">${t('messagesStartConversation')}</button></div>` :
+      ${!authState.isLoggedIn ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyMessages}</div><p>${t('messagesLoginRequired')}</p><button class="btn-primary mt-12" onclick="navigate('#/signup')">${t('signupSubmit')}</button></div>` :
+        conversations.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyMessages}</div><p>${t('messagesEmpty')}</p><button class="btn-primary mt-12" onclick="navigate('#/search')">${t('messagesStartConversation')}</button></div>` :
         conversations.map(c => `
           <div class="conversation-item${c.unread ? ' conversation-unread' : ''}" onclick="navigate('#/chat/${c.therapistId}')">
             <div class="conversation-avatar" style="background-color:${c.avatarColor}">${c.initial}</div>
@@ -2556,32 +2774,38 @@ function renderTherapistDashboard(el, header) {
 
       <div class="dashboard-menu">
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/schedule')">
-          <span><span class="menu-icon">📅</span>${t('dashboardSchedule')}</span>
+          <span><span class="menu-icon">${icons.schedule}</span>${t('dashboardSchedule')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/sessions')">
-          <span><span class="menu-icon">🗂️</span>${t('dashboardSessions')}</span>
+          <span><span class="menu-icon">${icons.sessions}</span>${t('dashboardSessions')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/clients')">
-          <span><span class="menu-icon">👥</span>${t('dashboardClients')}</span>
+          <span><span class="menu-icon">${icons.clients}</span>${t('dashboardClients')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/earnings')">
-          <span><span class="menu-icon">💰</span>${t('dashboardEarningsMenu')}</span>
+          <span><span class="menu-icon">${icons.earnings}</span>${t('dashboardEarningsMenu')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/profile-edit')">
-          <span><span class="menu-icon">✏️</span>${t('dashboardProfileEdit')}</span>
+          <span><span class="menu-icon">${icons.editProfile}</span>${t('dashboardProfileEdit')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="dashboard-menu-item" onclick="navigate('#/therapist-dashboard/referrals')">
-          <span><span class="menu-icon">🔗</span>${t('dashboardReferrals')}</span>
+          <span><span class="menu-icon">${icons.referrals}</span>${t('dashboardReferrals')}</span>
           <span class="arrow">${icons.chevron}</span>
         </div>
       </div>
 
-      <div class="mt-20">
+      <div class="mt-20" style="display:flex;flex-direction:column;gap:10px">
+        ${th && th.status === 'hidden' ? `
+          <div style="background:var(--theme-warm-100);border:1px solid var(--theme-warm-300);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--theme-warm-700)">⚠️ ${t('dashboardAccountHiddenNote')}</div>
+          <button class="btn-secondary" style="max-width:100%" onclick="onToggleTherapistVisibility()">${t('dashboardUnhideAccount')}</button>
+        ` : `
+          <button class="btn-secondary" style="max-width:100%;color:var(--text-secondary)" onclick="onToggleTherapistVisibility()">${t('dashboardHideAccount')}</button>
+        `}
         <button class="btn-secondary" style="max-width:100%" onclick="onSwitchTherapistMode()">${t('back')} → ${t('navProfile')}</button>
       </div>
     </div>
@@ -2825,7 +3049,20 @@ function renderTherapistProfileEdit(el, header) {
         </div>
         <div class="form-group">
           <label>${t('applyLocation')}</label>
-          <input type="text" value="${location}">
+          <input type="text" id="profile-edit-location" value="${location}">
+        </div>
+        <div class="form-group">
+          <label>${t('profileVisibility')}</label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:400">
+              <input type="checkbox" id="profile-show-email" ${th.show_email ? 'checked' : ''} onchange="onToggleContactVisibility('email', this.checked)">
+              ${t('profileShowEmail')}
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:400">
+              <input type="checkbox" id="profile-show-phone" ${th.show_phone ? 'checked' : ''} onchange="onToggleContactVisibility('phone', this.checked)">
+              ${t('profileShowPhone')}
+            </label>
+          </div>
         </div>
         <button class="btn-primary" onclick="navigate('#/therapist-dashboard')">${t('profileEditSave')}</button>
       </div>
@@ -2899,7 +3136,7 @@ function renderReferralLanding(el, header, code) {
   el.innerHTML = `
     <div class="page">
       <div class="referral-landing">
-        <div class="landing-logo">🌿</div>
+        <div class="landing-logo">${icons.leaf}</div>
         <h1 class="landing-title" style="font-size:1.5rem">${t('referralLandingTitle')}</h1>
         ${referrer ? `
           <div class="referrer-info">
@@ -2924,7 +3161,7 @@ function renderFavorites(el, header) {
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('favorites')}</h1>
-      ${favTherapists.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">🤍</div><p>${t('favoritesEmpty')}</p></div>` : ''}
+      ${favTherapists.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyFavorites}</div><p>${t('favoritesEmpty')}</p></div>` : ''}
       ${favTherapists.map(th => renderTherapistCard(th)).join('')}
     </div>
   `;
@@ -3089,7 +3326,7 @@ function renderGiftCardSuccess(el, header) {
   renderHeaderSimple(header, t('appName'));
   el.innerHTML = `
     <div class="success-screen">
-      <div class="success-icon">🎁</div>
+      <div class="success-icon">${icons.successGift}</div>
       <h2>${t('giftCardSuccess')}</h2>
       <button class="btn-primary" onclick="navigate('#/')">${t('bookingBackHome')}</button>
     </div>
@@ -3102,6 +3339,7 @@ function renderBlog(el, header) {
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('blogTitle')}</h1>
+      ${blogArticles.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyBlog}</div><p>${t('resultsEmpty')}</p></div>` : ''}
       ${blogArticles.map(a => {
         const th = getTherapist(a.therapistId);
         return `
@@ -3180,6 +3418,7 @@ function renderDigitalProducts(el, header) {
     <div class="page">
       <h1 class="page-title">${t('digitalProductsTitle')}</h1>
       <p class="section-desc">${t('digitalProductsDesc')}</p>
+      ${digitalProducts.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyProducts}</div><p>${t('resultsEmpty')}</p></div>` : ''}
       ${digitalProducts.map(p => {
         const th = getTherapist(p.therapistId);
         return `
@@ -3206,7 +3445,7 @@ function renderJournal(el, header) {
     <div class="page">
       <h1 class="page-title">${t('journalTitle')}</h1>
       <button class="btn-primary mb-20" onclick="navigate('#/journal/new')">+ ${t('journalNew')}</button>
-      ${journalEntries.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">📓</div><p>${t('journalEmpty')}</p></div>` : ''}
+      ${journalEntries.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyJournal}</div><p>${t('journalEmpty')}</p></div>` : ''}
       ${journalEntries.map((e, i) => `
         <div class="journal-entry">
           <div class="journal-entry-header">
@@ -3334,7 +3573,7 @@ async function renderNotifications(el, header) {
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('notificationTitle')}</h1>
-      ${notifications.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">🔔</div><p>${t('notificationEmpty')}</p></div>` : ''}
+      ${notifications.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyNotifications}</div><p>${t('notificationEmpty')}</p></div>` : ''}
       ${notifications.map(n => `
         <div class="notification-item${n.isRead === false ? ' notification-unread' : ''}">
           <span class="notification-icon">${n.icon}</span>
@@ -3354,6 +3593,7 @@ function renderRetreats(el, header) {
       <h1 class="page-title">${t('retreatSectionTitle')}</h1>
       <p class="section-desc">${t('retreatSectionDesc')}</p>
       <p class="retreat-note">${t('retreatNote')}</p>
+      ${retreats.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyRetreat}</div><p>${t('resultsEmpty')}</p></div>` : ''}
       ${retreats.map(r => `
         <div class="retreat-card" onclick="navigate('#/retreats/${r.id}')">
           <div class="retreat-card-header">
@@ -3467,7 +3707,7 @@ function renderForum(el, header) {
         ? `<button class="btn-primary mb-16" onclick="navigate('#/forum/new')">+ ${t('forumNewThread')}</button>`
         : `<div class="info-box mb-16">${t('forumLoginRequired')}</div>`
       }
-      ${allThreads.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">💬</div><p>${t('forumEmpty')}</p></div>` : ''}
+      ${allThreads.length === 0 ? `<div class="empty-state-box"><div class="empty-state-icon">${icons.emptyMessages}</div><p>${t('forumEmpty')}</p></div>` : ''}
       ${allThreads.map(thread => {
         const replyCount = (thread.replies ? thread.replies.length : 0) + ((forumReplyData[thread.id] || []).length);
         return `
@@ -3647,6 +3887,107 @@ async function onForumReply(threadId) {
   router();
 }
 
+// ===== Privacy & Terms =====
+function renderPrivacy(el, header) {
+  renderHeaderWithBack(header, t('privacyPolicyTitle'), '#/');
+  const sections = [1, 2, 3, 4, 5].map(i => `
+    <div class="legal-section">
+      <h2>${t('privacySection' + i + 'Title')}</h2>
+      <p>${t('privacySection' + i)}</p>
+    </div>
+  `).join('');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('privacyPolicyTitle')}</h1>
+      <p class="legal-updated">${t('privacyLastUpdated')}</p>
+      <p class="legal-intro">${t('privacyIntro')}</p>
+      ${sections}
+    </div>
+  `;
+}
+
+function renderTerms(el, header) {
+  renderHeaderWithBack(header, t('termsOfServiceTitle'), '#/');
+  const sections = [1, 2, 3, 4, 5, 6].map(i => `
+    <div class="legal-section">
+      <h2>${t('termsSection' + i + 'Title')}</h2>
+      <p>${t('termsSection' + i)}</p>
+    </div>
+  `).join('');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('termsOfServiceTitle')}</h1>
+      <p class="legal-updated">${t('termsLastUpdated')}</p>
+      <p class="legal-intro">${t('termsIntro')}</p>
+      ${sections}
+    </div>
+  `;
+}
+
+// ===== Feedback =====
+function renderFeedback(el, header) {
+  renderHeaderWithBack(header, t('feedbackTitle'), '#/profile');
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('feedbackTitle')}</h1>
+      <p style="color:var(--text-secondary);margin-bottom:20px">${t('feedbackDesc')}</p>
+      <textarea id="feedback-text" class="magic-link-input" rows="6" placeholder="${t('feedbackPlaceholder')}" style="width:100%;resize:vertical;min-height:120px"></textarea>
+      <button class="btn-primary mt-12" onclick="onSubmitFeedback()" style="width:100%">${t('feedbackSubmit')}</button>
+      <div id="feedback-result"></div>
+    </div>
+  `;
+}
+
+async function onSubmitFeedback() {
+  const text = document.getElementById('feedback-text')?.value?.trim();
+  if (!text) return;
+  const btn = document.querySelector('#content .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '...';
+  try {
+    await supabase.from('feedback').insert({
+      user_id: authState.user?.id || null,
+      message: text,
+      user_agent: navigator.userAgent,
+      page: window.location.hash,
+    });
+  } catch (e) {
+    console.warn('Feedback insert failed, storing locally:', e);
+  }
+  document.getElementById('feedback-result').innerHTML = `
+    <div class="empty-state-box" style="margin-top:20px"><div class="empty-state-icon">${icons.thankYou}</div><p>${t('feedbackThanks')}</p></div>
+  `;
+  document.getElementById('feedback-text').value = '';
+  btn.disabled = false;
+  btn.textContent = t('feedbackSubmit');
+}
+
+// ===== Onboarding =====
+function showOnboarding() {
+  if (localStorage.getItem('iyashi-onboarded')) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'onboarding-overlay';
+  overlay.innerHTML = `
+    <div class="onboarding-card">
+      <div style="font-size:2.5rem;margin-bottom:12px">🌿</div>
+      <h2>${t('onboardingWelcome')}</h2>
+      <div class="onboarding-steps">
+        <div class="onboarding-step"><span class="onboarding-num">1</span>${t('onboardingStep1')}</div>
+        <div class="onboarding-step"><span class="onboarding-num">2</span>${t('onboardingStep2')}</div>
+        <div class="onboarding-step"><span class="onboarding-num">3</span>${t('onboardingStep3')}</div>
+      </div>
+      <button class="btn-primary" onclick="dismissOnboarding()" style="width:100%">${t('onboardingGotIt')}</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function dismissOnboarding() {
+  localStorage.setItem('iyashi-onboarded', '1');
+  const overlay = document.querySelector('.onboarding-overlay');
+  if (overlay) overlay.remove();
+}
+
 // ===== Init =====
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', async () => {
@@ -3679,4 +4020,32 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.warn('Init data load failed, using mock data:', e);
   }
   router();
+  showOnboarding();
+  // Feedback FAB
+  const fab = document.createElement('button');
+  fab.className = 'feedback-fab';
+  fab.textContent = t('feedbackButton');
+  fab.onclick = () => navigate('#/feedback');
+  document.body.appendChild(fab);
 });
+
+// ===== Scroll-triggered reveal =====
+const _revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      _revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+function observeReveals() {
+  document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
+}
+
+function applyStagger(selector, baseDelay = 50) {
+  document.querySelectorAll(selector).forEach((el, i) => {
+    el.classList.add('stagger-item');
+    el.style.animationDelay = `${i * baseDelay}ms`;
+  });
+}

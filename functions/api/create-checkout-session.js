@@ -25,7 +25,7 @@ export async function onRequestPost(context) {
   const STRIPE_SECRET_KEY = env.STRIPE_SECRET_KEY;
   const SUPABASE_URL = env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = env.SUPABASE_SERVICE_KEY;
-  const APP_URL = env.APP_URL || 'https://healing-garden-3w5.pages.dev';
+  const APP_URL = env.APP_URL || 'https://houseofinspirationtokyo.com';
 
   if (!STRIPE_SECRET_KEY) {
     return jsonResponse({ error: 'Stripe not configured' }, 500);

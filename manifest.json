@@ -1,0 +1,24 @@
+{
+  "name": "癒しの庭 / Healing Garden",
+  "short_name": "癒しの庭",
+  "description": "あなたにぴったりの癒しを見つけましょう / Find the perfect healing experience",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6EFEA",
+  "theme_color": "#A8CBB7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

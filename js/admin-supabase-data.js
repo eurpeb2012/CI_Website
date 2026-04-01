@@ -205,8 +205,11 @@ async function fetchAdminUsers(filters = {}) {
 
     return (data || []).map(row => ({
       id: row.id,
-      name: { ja: row.display_name || '匿名ユーザー', en: row.display_name || 'Anonymous' },
+      name: row.name || row.display_name || '—',
       email: row.email || '',
+      role: row.role || 'user',
+      plan: row.plan || 'free',
+      plan_expires_at: row.plan_expires_at || null,
       joinDate: row.created_at ? row.created_at.slice(0, 10) : '',
       bookingsCount: row.bookings_count || 0,
       status: row.status || 'active',

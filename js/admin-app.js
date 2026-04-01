@@ -368,7 +368,7 @@ function buildUserTable(users) {
         <tr>
           <td>${u.name || '—'}</td>
           <td>${u.email}</td>
-          <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
+          <td>${u.joinDate || u.created_at ? new Date(u.joinDate || u.created_at).toLocaleDateString() : '—'}</td>
           <td>${adminStatusBadge(u.status)}</td>
           <td><a href="#/admin/user/${u.id}" class="admin-btn admin-btn-sm">${t('adminActionView')}</a></td>
         </tr>
@@ -408,8 +408,21 @@ async function renderUserDetail(el, titleEl, userId) {
         <div class="admin-kv-list">
           <div class="admin-kv"><span>${t('adminColName')}</span><strong>${user.name || '—'}</strong></div>
           <div class="admin-kv"><span>${t('adminColEmail')}</span><strong>${user.email}</strong></div>
-          <div class="admin-kv"><span>${t('adminColJoinDate')}</span><strong>${user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</strong></div>
+          <div class="admin-kv"><span>${t('adminColJoinDate')}</span><strong>${user.joinDate || '—'}</strong></div>
           <div class="admin-kv"><span>${t('adminColStatus')}</span>${adminStatusBadge(user.status)}</div>
+          <div class="admin-kv"><span>Role</span>
+            <select onchange="onUpdateUserRole('${user.id}', this.value)" style="font-size:13px;padding:4px 8px;border-radius:4px;border:1px solid var(--border)">
+              <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
+              <option value="therapist" ${user.role === 'therapist' ? 'selected' : ''}>therapist</option>
+              <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
+            </select>
+          </div>
+          <div class="admin-kv"><span>Plan</span>
+            <span>${user.plan || 'free'}${user.plan_expires_at ? ` (expires ${new Date(user.plan_expires_at).toLocaleDateString()})` : ''}</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="admin-btn" onclick="onGrantBetaPremium('${user.id}')">🎁 Grant Beta Premium (3 mo)</button>
         </div>
       </div>
 
@@ -954,9 +967,59 @@ async function renderSystemHealth(el, titleEl) {
       <h3>${t('adminHealthActions')}</h3>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="admin-btn" onclick="renderSystemHealth(document.getElementById('admin-content'), document.getElementById('admin-page-title'))">🔄 ${t('adminRefresh')}</button>
+        <button class="admin-btn" onclick="onGrantBetaPremiumAll()">🎁 Grant Beta Premium to All Users</button>
+      </div>
+    </div>
+
+    <div class="admin-section mt-20">
+      <h3>⚠️ Beta Launch — Clear Demo Data</h3>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Run <code>sql/010_clear_demo_data.sql</code> in the Supabase SQL Editor to remove all seeded test data before going live. This is irreversible.</p>
+      <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:12px;font-size:13px">
+        ⚠️ This cannot be undone. Back up your database first via Supabase Dashboard → Settings → Database → Backups.
       </div>
     </div>
   `;
+}
+
+// --- User Actions ---
+async function onUpdateUserRole(userId, newRole) {
+  try {
+    const { error } = await supabase.from('users').update({ role: newRole }).eq('id', userId);
+    if (error) throw error;
+    showAdminToast(`Role updated to ${newRole}`);
+  } catch (e) {
+    console.error('onUpdateUserRole failed:', e);
+    showAdminToast('Failed to update role');
+  }
+}
+
+async function onGrantBetaPremium(userId) {
+  if (!confirm('Grant 3 months of Premium to this user?')) return;
+  const expiresAt = new Date();
+  expiresAt.setMonth(expiresAt.getMonth() + 3);
+  try {
+    const { error } = await supabase.from('users').update({ plan: 'premium', plan_expires_at: expiresAt.toISOString() }).eq('id', userId);
+    if (error) throw error;
+    showAdminToast('Beta Premium granted (3 months)');
+    window.location.reload();
+  } catch (e) {
+    console.error('onGrantBetaPremium failed:', e);
+    showAdminToast('Failed to grant premium');
+  }
+}
+
+async function onGrantBetaPremiumAll() {
+  if (!confirm('Grant 3 months of Premium to ALL users? This cannot be undone.')) return;
+  const expiresAt = new Date();
+  expiresAt.setMonth(expiresAt.getMonth() + 3);
+  try {
+    const { error } = await supabase.from('users').update({ plan: 'premium', plan_expires_at: expiresAt.toISOString() });
+    if (error) throw error;
+    showAdminToast('Beta Premium granted to all users');
+  } catch (e) {
+    console.error('onGrantBetaPremiumAll failed:', e);
+    showAdminToast('Failed — check Supabase RLS policies');
+  }
 }
 
 // --- Toast ---

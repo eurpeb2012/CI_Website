@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: 'Too many requests' }, 429);
   }
   const RESEND_API_KEY = env.RESEND_API_KEY;
-  const APP_URL = env.APP_URL || 'https://healing-garden-3w5.pages.dev';
+  const APP_URL = env.APP_URL || 'https://houseofinspirationtokyo.com';
 
   if (!RESEND_API_KEY) {
     return jsonResponse({ error: 'Email not configured' }, 500);
@@ -131,7 +131,7 @@ function emailWrapper(content, appUrl) {
     </div>
     <div style="padding:32px 24px">${content}</div>
     <div style="padding:16px 24px;background:#f9f9f6;text-align:center;font-size:0.8rem;color:#888">
-      <a href="${appUrl}" style="color:#3dba78;text-decoration:none">healing-garden-3w5.pages.dev</a>
+      <a href="${appUrl}" style="color:#3dba78;text-decoration:none">houseofinspirationtokyo.com</a>
     </div>
   </div>
 </body></html>`;

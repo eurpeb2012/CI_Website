@@ -7,7 +7,7 @@ export async function onRequestPost(context) {
   const SUPABASE_URL = env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = env.SUPABASE_SERVICE_KEY;
   const RESEND_API_KEY = env.RESEND_API_KEY;
-  const APP_URL = env.APP_URL || 'https://healing-garden-3w5.pages.dev';
+  const APP_URL = env.APP_URL || 'https://houseofinspirationtokyo.com';
 
   if (!STRIPE_WEBHOOK_SECRET) {
     return new Response('Webhook secret not configured', { status: 500 });
