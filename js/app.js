@@ -756,23 +756,23 @@ function renderLanding(el, header) {
 
       <div class="bento-grid">
         <button class="bento-tile bento-retreat" onclick="navigate('#/retreats')">
-          <span class="bento-icon">${icons.retreat}</span>
+          <span class="bento-emoji">🏕️</span>
           <span class="bento-label">${t('retreatSectionTitle')}</span>
         </button>
         <button class="bento-tile bento-forum" onclick="navigate('#/forum')">
-          <span class="bento-icon">${icons.feeling}</span>
+          <span class="bento-emoji">💬</span>
           <span class="bento-label">${t('forumTitle')}</span>
         </button>
         <button class="bento-tile bento-gift" onclick="navigate('#/gift-card')">
-          <span class="bento-icon">${icons.successGift}</span>
+          <span class="bento-emoji">🎁</span>
           <span class="bento-label">${t('giftCardTitle')}</span>
         </button>
         <button class="bento-tile bento-blog" onclick="navigate('#/blog')">
-          <span class="bento-icon">${icons.emptyBlog}</span>
+          <span class="bento-emoji">📝</span>
           <span class="bento-label">${t('blogTitle')}</span>
         </button>
         <button class="bento-tile bento-products bento-wide" onclick="navigate('#/digital-products')">
-          <span class="bento-icon">${icons.emptyProducts}</span>
+          <span class="bento-emoji">✨</span>
           <span class="bento-label">${t('digitalProductsTitle')}</span>
         </button>
       </div>
