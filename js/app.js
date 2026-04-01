@@ -128,7 +128,11 @@ async function initSupabaseAuth() {
         }
       }
       if (event === 'SIGNED_IN') {
-        navigate(window.location.hash || '#/profile');
+        if (_needsDob()) {
+          navigate('#/age-verify');
+        } else {
+          navigate(window.location.hash || '#/profile');
+        }
       }
     } else {
       authState.isLoggedIn = false;
@@ -148,8 +152,28 @@ function setAuthFromSession(session) {
     avatar_url: meta.avatar_url || meta.picture || '',
     provider: u.app_metadata?.provider || 'email',
     plan: 'free',
+    dob: meta.dob || localStorage.getItem('iyashi-dob') || null,
+    isMinor: false,
+    parentalConsent: meta.parental_consent || false,
   };
+  // Calculate age
+  if (authState.user.dob) {
+    authState.user.isMinor = _calculateAge(authState.user.dob) < 18;
+  }
   loadUserPlan();
+}
+
+function _calculateAge(dobStr) {
+  const dob = new Date(dobStr);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  return age;
+}
+
+function _needsDob() {
+  return authState.isLoggedIn && !authState.user?.dob;
 }
 
 async function loadUserPlan() {
@@ -483,6 +507,7 @@ const routes = [
   { pattern: /^\/profile$/, handler: 'userProfile', nav: 'profile' },
   { pattern: /^\/settings$/, handler: 'settings', nav: 'profile' },
   { pattern: /^\/signup$/, handler: 'signup', nav: 'profile' },
+  { pattern: /^\/age-verify$/, handler: 'ageVerify', nav: 'profile' },
   { pattern: /^\/messages$/, handler: 'messagesList', nav: 'profile' },
   { pattern: /^\/chat\/([a-f0-9-]+|\d+)$/, handler: 'chat', nav: 'profile' },
   { pattern: /^\/videocall\/([a-f0-9-]+|\d+)$/, handler: 'videocall', nav: 'profile' },
@@ -583,6 +608,7 @@ function renderRoute(handler, el, header, params) {
     userProfile: () => renderUserProfile(el, header),
     settings: () => renderSettings(el, header),
     signup: () => renderSignup(el, header),
+    ageVerify: () => renderAgeVerify(el, header),
     messagesList: () => renderMessagesList(el, header),
     chat: () => renderChat(el, header, params[0]),
     videocall: () => renderVideoCall(el, header, params[0]),
@@ -970,6 +996,7 @@ function renderTherapistCard(th) {
         </div>
         ${th.responseTime ? `<div class="card-response-time">💬 ${t('responseTime')}: ${th.responseTime}</div>` : ''}
         ${th.slidingScale ? `<div class="card-sliding-scale">💚 ${t('slidingScale')}</div>` : ''}
+        ${authState.user?.isMinor && !th.accepts_minors ? `<div class="card-minor-blocked">${t('minorBookingBlocked')}</div>` : ''}
       </div>
       <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${th.id}'); this.classList.add('pop')" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">
         <svg viewBox="0 0 24 24" class="heart-svg" fill="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'none'}" stroke="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'var(--gray-400)'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1186,8 +1213,12 @@ function renderTherapistProfile(el, header, id) {
 
       <div class="profile-section">
         <h2>${t('profileSessions')}</h2>
-        ${th.sessions.map(s => `
-          <div class="session-card">
+        ${authState.user?.isMinor && !th.accepts_minors ? `<div class="minor-notice">${t('minorBookingBlocked')}</div>` : ''}
+        ${th.sessions.map(s => {
+          const minorBlocked = authState.user?.isMinor && s.price > 3000;
+          const therapistBlocksMinor = authState.user?.isMinor && !th.accepts_minors;
+          return `
+          <div class="session-card${minorBlocked || therapistBlocksMinor ? ' session-card-blocked' : ''}">
             <h3>${getLocalizedText(s.name)}</h3>
             <p class="session-desc">${getLocalizedText(s.description)}</p>
             <div class="session-meta">
@@ -1197,9 +1228,10 @@ function renderTherapistProfile(el, header, id) {
                 ${s.delivery.map(d => `<span class="delivery-tag">${deliveryLabels[d] || d}</span>`).join('')}
               </div>
             </div>
-            <button class="session-book-btn" onclick="onBookSession('${th.id}', '${s.id}')">${t('profileBook')}</button>
+            ${minorBlocked ? `<div class="minor-price-note">${t('minorPriceExceeded')}</div>` : ''}
+            <button class="session-book-btn" ${minorBlocked || therapistBlocksMinor ? 'disabled' : ''} onclick="onBookSession('${th.id}', '${s.id}')">${t('profileBook')}</button>
           </div>
-        `).join('')}
+        `}).join('')}
       </div>
 
       ${thProducts.length > 0 ? `
@@ -1370,8 +1402,29 @@ function renderCalendar(availability) {
 
 function onBookSession(therapistId, sessionId) {
   requireAuth('book', () => {
+    // Check if user needs DOB first
+    if (_needsDob()) {
+      authState.pendingAction = { action: 'book', hash: '#/booking' };
+      saveAuth();
+      navigate('#/age-verify');
+      return;
+    }
+
     const th = getTherapist(therapistId);
     const session = th.sessions.find(s => String(s.id) === String(sessionId));
+
+    // Minor restrictions
+    if (authState.user?.isMinor) {
+      if (!th.accepts_minors) {
+        showToast(t('minorBookingBlocked'));
+        return;
+      }
+      if (session.price > 3000) {
+        showToast(t('minorPriceExceeded'));
+        return;
+      }
+    }
+
     state.bookingTherapist = th;
     state.bookingSession = session;
     state.bookingDate = null;
@@ -2031,11 +2084,20 @@ function renderUserProfile(el, header) {
 
 function onDemoLogin() {
   authState.isLoggedIn = true;
-  authState.user = { name: testUser.name, email: testUser.email };
+  const savedDob = localStorage.getItem('iyashi-dob');
+  authState.user = {
+    name: testUser.name,
+    email: testUser.email,
+    dob: savedDob || null,
+    isMinor: savedDob ? _calculateAge(savedDob) < 18 : false,
+    parentalConsent: savedDob ? JSON.parse(localStorage.getItem('iyashi-parental-consent') || 'false') : false,
+  };
   const pending = authState.pendingAction;
   authState.pendingAction = null;
   saveAuth();
-  if (pending && pending.hash) {
+  if (!authState.user.dob) {
+    navigate('#/age-verify');
+  } else if (pending && pending.hash) {
     navigate(pending.hash);
   } else {
     navigate('#/profile');
@@ -2093,6 +2155,42 @@ async function onToggleContactVisibility(field, value) {
   } catch (e) {
     console.warn('onToggleContactVisibility failed:', e);
   }
+}
+
+function onToggleAcceptsMinors(checked) {
+  const section = document.getElementById('minor-terms-section');
+  if (section) section.style.display = checked ? 'block' : 'none';
+}
+
+async function onSaveTherapistProfile() {
+  const thId = therapistMode.therapistId;
+  if (!thId) { navigate('#/therapist-dashboard'); return; }
+
+  const acceptsMinors = document.getElementById('accepts-minors')?.checked || false;
+  const minorTermsAgreed = document.getElementById('therapist-minor-terms')?.checked || false;
+
+  // If accepting minors, must agree to terms
+  if (acceptsMinors && !minorTermsAgreed) {
+    showToast(t('therapistMinorTermsAgree'));
+    return;
+  }
+
+  const th = getTherapist(thId);
+  if (th) {
+    th.accepts_minors = acceptsMinors;
+    th.minor_terms_agreed = acceptsMinors && minorTermsAgreed;
+  }
+
+  try {
+    await supabase.from('therapists').update({
+      accepts_minors: acceptsMinors,
+      minor_terms_agreed: acceptsMinors && minorTermsAgreed,
+    }).eq('id', String(thId));
+  } catch (e) {
+    console.warn('onSaveTherapistProfile failed:', e);
+  }
+
+  navigate('#/therapist-dashboard');
 }
 
 // Settings
@@ -2174,6 +2272,167 @@ function renderSignup(el, header) {
       </div>
     </div>
   `;
+}
+
+// ===== Age Verification =====
+function renderAgeVerify(el, header) {
+  renderHeaderSimple(header, t('dobLabel'));
+  if (!authState.isLoggedIn) { navigate('#/signup'); return; }
+
+  const now = new Date();
+  const years = [];
+  for (let y = now.getFullYear(); y >= now.getFullYear() - 100; y--) years.push(y);
+  const months = [];
+  for (let m = 1; m <= 12; m++) months.push(m);
+  const days = [];
+  for (let d = 1; d <= 31; d++) days.push(d);
+
+  el.innerHTML = `
+    <div class="page">
+      <h1 class="page-title">${t('dobLabel')}</h1>
+      <div class="age-verify-form">
+        <div class="dob-selects">
+          <div class="form-group">
+            <label>${t('dobYear')}</label>
+            <select id="dob-year" onchange="onDobChanged()">
+              <option value="">--</option>
+              ${years.map(y => `<option value="${y}">${y}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>${t('dobMonth')}</label>
+            <select id="dob-month" onchange="onDobChanged()">
+              <option value="">--</option>
+              ${months.map(m => `<option value="${m}">${m}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>${t('dobDay')}</label>
+            <select id="dob-day" onchange="onDobChanged()">
+              <option value="">--</option>
+              ${days.map(d => `<option value="${d}">${d}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div id="age-status" class="age-status" style="display:none"></div>
+        <div id="minor-section" style="display:none">
+          <div class="minor-consent-box">
+            <h3>${t('parentalConsentTitle')}</h3>
+            <p>${t('parentalConsentDesc')}</p>
+            <div class="form-group" style="margin-top:12px">
+              <label>${t('parentalConsentGuardian')}</label>
+              <input type="text" id="guardian-name" placeholder="${t('parentalConsentGuardianPlaceholder')}">
+            </div>
+            <div class="checkbox-group" style="margin-top:12px">
+              <input type="checkbox" id="parental-consent-check" onchange="updateAgeVerifyBtn()">
+              <label for="parental-consent-check">${t('parentalConsentCheck')}</label>
+            </div>
+          </div>
+          <div class="minor-terms-box">
+            <h3>${t('minorTermsTitle')}</h3>
+            <p class="minor-terms-text">${t('minorTermsContent')}</p>
+            <div class="checkbox-group" style="margin-top:12px">
+              <input type="checkbox" id="minor-terms-check" onchange="updateAgeVerifyBtn()">
+              <label for="minor-terms-check">${t('minorTermsAgree')}</label>
+            </div>
+          </div>
+        </div>
+
+        <button id="age-verify-btn" class="btn-primary" disabled onclick="onSubmitAgeVerify()">${t('signupSubmit')}</button>
+      </div>
+    </div>
+  `;
+}
+
+function onDobChanged() {
+  const y = document.getElementById('dob-year').value;
+  const m = document.getElementById('dob-month').value;
+  const d = document.getElementById('dob-day').value;
+  const statusEl = document.getElementById('age-status');
+  const minorEl = document.getElementById('minor-section');
+
+  if (!y || !m || !d) {
+    statusEl.style.display = 'none';
+    minorEl.style.display = 'none';
+    updateAgeVerifyBtn();
+    return;
+  }
+
+  const age = _calculateAge(`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`);
+  statusEl.style.display = 'block';
+
+  if (age < 0 || age > 120) {
+    statusEl.innerHTML = `<span class="age-badge age-invalid">${t('dobInvalid')}</span>`;
+    minorEl.style.display = 'none';
+  } else if (age < 18) {
+    statusEl.innerHTML = `<span class="age-badge age-minor">${t('ageMinor')} (${age})</span>`;
+    minorEl.style.display = 'block';
+  } else {
+    statusEl.innerHTML = `<span class="age-badge age-adult">${t('ageAdult')} (${age})</span>`;
+    minorEl.style.display = 'none';
+  }
+  updateAgeVerifyBtn();
+}
+
+function updateAgeVerifyBtn() {
+  const y = document.getElementById('dob-year')?.value;
+  const m = document.getElementById('dob-month')?.value;
+  const d = document.getElementById('dob-day')?.value;
+  const btn = document.getElementById('age-verify-btn');
+  if (!btn) return;
+
+  if (!y || !m || !d) { btn.disabled = true; return; }
+
+  const age = _calculateAge(`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`);
+  if (age < 0 || age > 120) { btn.disabled = true; return; }
+
+  if (age < 18) {
+    const consent = document.getElementById('parental-consent-check')?.checked;
+    const terms = document.getElementById('minor-terms-check')?.checked;
+    const guardian = document.getElementById('guardian-name')?.value.trim();
+    btn.disabled = !(consent && terms && guardian);
+  } else {
+    btn.disabled = false;
+  }
+}
+
+function onSubmitAgeVerify() {
+  const y = document.getElementById('dob-year').value;
+  const m = document.getElementById('dob-month').value;
+  const d = document.getElementById('dob-day').value;
+  const dob = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  const age = _calculateAge(dob);
+  const isMinor = age < 18;
+
+  // Store DOB
+  localStorage.setItem('iyashi-dob', dob);
+  authState.user.dob = dob;
+  authState.user.isMinor = isMinor;
+
+  if (isMinor) {
+    const guardian = document.getElementById('guardian-name').value.trim();
+    localStorage.setItem('iyashi-parental-consent', 'true');
+    localStorage.setItem('iyashi-guardian-name', guardian);
+    authState.user.parentalConsent = true;
+  }
+
+  // Update Supabase user metadata if available
+  if (authState.user.id) {
+    supabase.auth.updateUser({ data: { dob, parental_consent: isMinor } })
+      .catch(e => console.warn('Failed to update user metadata:', e));
+  }
+
+  // Navigate to pending action or profile
+  const pending = authState.pendingAction;
+  if (pending && pending.hash) {
+    authState.pendingAction = null;
+    saveAuth();
+    navigate(pending.hash);
+  } else {
+    navigate('#/profile');
+  }
+  showToast(isMinor ? t('ageMinor') : t('ageAdult'));
 }
 
 // ===== Messages List =====
@@ -3064,7 +3323,24 @@ function renderTherapistProfileEdit(el, header) {
             </label>
           </div>
         </div>
-        <button class="btn-primary" onclick="navigate('#/therapist-dashboard')">${t('profileEditSave')}</button>
+
+        <div class="minor-settings-box">
+          <h3>${t('therapistAcceptsMinors')}</h3>
+          <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:400;margin-bottom:12px">
+            <input type="checkbox" id="accepts-minors" ${th.accepts_minors ? 'checked' : ''} onchange="onToggleAcceptsMinors(this.checked)">
+            ${t('therapistAcceptsMinors')}
+          </label>
+          <div id="minor-terms-section" style="display:${th.accepts_minors ? 'block' : 'none'}">
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px">${t('therapistMinorTermsContent')}</p>
+            <div class="checkbox-group">
+              <input type="checkbox" id="therapist-minor-terms" ${th.minor_terms_agreed ? 'checked' : ''}>
+              <label for="therapist-minor-terms">${t('therapistMinorTermsAgree')}</label>
+            </div>
+            <div class="minor-price-note">${t('therapistMinorPriceNote')}</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="onSaveTherapistProfile()">${t('profileEditSave')}</button>
       </div>
     </div>
   `;

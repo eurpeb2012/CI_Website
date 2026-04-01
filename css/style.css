@@ -1753,6 +1753,142 @@ body::after {
   animation: pageEnter 0.5s 0.35s both;
 }
 
+/* ===== Age Verification ===== */
+.age-verify-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.dob-selects {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.age-status {
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+
+.age-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.age-badge.age-adult {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.age-badge.age-minor {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.age-badge.age-invalid {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.minor-consent-box,
+.minor-terms-box {
+  background: rgba(255,253,251,0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid #f59e0b;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.minor-consent-box h3,
+.minor-terms-box h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.minor-consent-box p,
+.minor-terms-box p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.minor-terms-text {
+  background: var(--theme-accent);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-2);
+}
+
+/* Therapist minor settings */
+.minor-settings-box {
+  background: rgba(255,253,251,0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--theme-primary-400);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.minor-settings-box h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.minor-price-note {
+  font-size: var(--text-xs);
+  color: #92400e;
+  background: #fef3c7;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-top: var(--space-2);
+  display: inline-block;
+}
+
+.minor-notice {
+  background: #fef3c7;
+  color: #92400e;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  border-left: 3px solid #f59e0b;
+}
+
+.session-card-blocked {
+  opacity: 0.55;
+  pointer-events: auto;
+}
+
+.session-card-blocked .session-book-btn:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.card-minor-blocked {
+  font-size: var(--text-xs);
+  color: #92400e;
+  background: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-top: var(--space-1);
+  display: inline-block;
+}
+
 /* ===== Apply Form ===== */
 .apply-form {
   display: flex;
