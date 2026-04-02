@@ -1,66 +1,68 @@
-// ===== SVG Icon System — Monoline, 24×24 grid, 1.5px stroke =====
-// Style: SF Symbols-inspired. No fills. Rounded caps. Slight asymmetry. #5F7F73 via currentColor.
+// ===== SVG Icon System — Organic monoline, 24×24, 1.5px, ≤4 strokes =====
+// Japanese minimalism: abstract symbols, slight asymmetry, no fills/faces.
+// Color: #5F7F73 at ~75% opacity via CSS. Each icon: 3–4 paths max.
+const _s = `fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
 const icons = {
-  // Brand — single stem with two asymmetric leaves
-  leaf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 11c0 0-5.5-.2-7-5.5 0 0 4.5-1.5 7 5.5z"/><path d="M12 14c0 0 6 .3 7.5-5 0 0-4.8-2-7.5 5z"/></svg>`,
+  // Brand — stem + single asymmetric leaf
+  leaf: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 21V10"/><path d="M12 10C6.5 10.5 5 4 5 4c4-.5 7 2.5 7 6"/><path d="M12 13.5c5.5-.8 7-6.5 7-6.5-3.5-.3-6 2-7 5.5"/></svg>`,
 
-  // Search — off-centre circle, angled line
-  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>`,
+  // Search — offset arc, trailing stroke
+  search: `<svg viewBox="0 0 24 24" ${_s}><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15.5L20.5 21"/></svg>`,
 
-  // Feeling — abstract awareness, two offset arcs
-  feeling: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14c1 1.8 2.5 2.5 3.5 2.5s2.5-.7 3.5-2.5"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2"/></svg>`,
+  // Feeling — open arc suggesting inner state (no face)
+  feeling: `<svg viewBox="0 0 24 24" ${_s}><path d="M5 12a7 7 0 0114 0"/><path d="M8.5 12a3.5 3.5 0 017 0"/><path d="M12 15.5v3"/></svg>`,
 
-  // Categories — abstract, minimal
-  physical: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M8 11h8"/><path d="M7 11l-2 9M17 11l2 9"/><path d="M10 11v10M14 11v10"/></svg>`,
-  mental: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-5"/><ellipse cx="12" cy="10" rx="8" ry="6"/><path d="M9 10h.01M12 8h.01M15 10h.01" stroke-width="2" opacity=".5"/></svg>`,
-  creative: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="7"/><path d="M12 17v4"/><path d="M9.5 21h5"/></svg>`,
-  spiritual: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>`,
-  retreat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M12 4l9 16H3L12 4z"/></svg>`,
+  // Categories — abstract, symbolic, ≤3 strokes
+  physical: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 3c-2.5 3-2.5 7 0 10"/><path d="M12 3c2.5 3 2.5 7 0 10"/><path d="M12 13v8"/></svg>`,
+  mental: `<svg viewBox="0 0 24 24" ${_s}><path d="M6 13c0-4.5 3-8 6-8s6 3.5 6 8"/><path d="M12 21v-4"/><path d="M9 21h6"/></svg>`,
+  creative: `<svg viewBox="0 0 24 24" ${_s}><path d="M7 17c0-6 3-12 8-14"/><path d="M15 3c1 4-1 9-5 13"/><path d="M6 20c3-1 7-1 10 0" opacity=".6"/></svg>`,
+  spiritual: `<svg viewBox="0 0 24 24" ${_s}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>`,
+  retreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 4.5L20.5 19"/><path d="M12 4.5L3.5 19"/><path d="M3 20h18"/></svg>`,
 
-  // Delivery — clean, geometric
-  inPerson: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="16" cy="7.5" r="2.5" opacity=".6"/><path d="M3 20c0-3.5 2.5-6 6-6s6 2.5 6 6"/><path d="M16 14c3 0 5 2 5 4.5" opacity=".6"/></svg>`,
-  video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10.5l5-2.5v8l-5-2.5"/></svg>`,
-  telephone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5c1 2 2.5 3.5 4.5 4.5L14.5 13l5 2v4c0 1-1 2-2 2C9 20.5 3.5 15 4 7c0-1.5.5-3 1-3z"/></svg>`,
-  email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>`,
+  // Delivery — symbolic, 2–3 strokes
+  inPerson: `<svg viewBox="0 0 24 24" ${_s}><circle cx="9.5" cy="7.5" r="3"/><path d="M4 20c0-3.5 2.5-6 5.5-6s5.5 2.5 5.5 6"/><path d="M16 9a2.5 2.5 0 010 0" opacity=".55"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" ${_s}><rect x="2.5" y="6.5" width="13" height="11" rx="2"/><path d="M15.5 10l5.5-2.5v9L15.5 14"/></svg>`,
+  telephone: `<svg viewBox="0 0 24 24" ${_s}><path d="M6.5 4C4 4 3 6 3 8c0 7 6.5 13 13 13 2 0 4-1 4-3.5"/><path d="M3 8l3.5 2L8 8.5"/><path d="M16 17.5l2 3.5 3.5-1.5"/></svg>`,
+  email: `<svg viewBox="0 0 24 24" ${_s}><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 7.5l9 5.5 9-5.5"/></svg>`,
 
-  // Empty states — quiet, monoline, larger canvas
-  emptySearch: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><circle cx="34" cy="34" r="16" opacity=".25"/><path d="M45 45l15 15" opacity=".25"/></svg>`,
-  emptyMessages: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M16 22h32c2 0 4 2 4 4v18c0 2-2 4-4 4H30l-8 7v-7h-6c-2 0-4-2-4-4V26c0-2 2-4 4-4z" opacity=".22"/><path d="M26 33h20M26 39h12" opacity=".18"/></svg>`,
-  emptyFavorites: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 62l-19-19c-5-5-5-13 0-18s13-5 18 0c5-5 13-5 18 0s5 13 0 18L40 62z" opacity=".2"/></svg>`,
-  emptyJournal: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="22" y="14" width="36" height="52" rx="3" opacity=".2"/><path d="M32 30h16M32 38h12M32 46h10" opacity=".18"/></svg>`,
-  emptyNotifications: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 18c-9 0-16 7-16 16v10l-4 6h40l-4-6V34c0-9-7-16-16-16z" opacity=".2"/><path d="M35 50c0 3 2.5 5 5 5s5-2 5-5" opacity=".22"/></svg>`,
-  emptyRetreat: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 16l22 40H18L40 16z" opacity=".18"/><path d="M12 60h56" opacity=".15"/></svg>`,
-  emptyBlog: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="18" y="18" width="44" height="44" rx="4" opacity=".18"/><path d="M28 32h24M28 40h18M28 48h20" opacity=".16"/></svg>`,
-  emptyProducts: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="20" y="24" width="40" height="32" rx="3" opacity=".2"/><path d="M20 34h40" opacity=".15"/></svg>`,
-  emptyForum: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><circle cx="30" cy="32" r="7" opacity=".18"/><circle cx="50" cy="32" r="7" opacity=".18"/><circle cx="40" cy="50" r="7" opacity=".18"/></svg>`,
+  // Empty states — 2–3 quiet strokes on 80×80 canvas
+  emptySearch: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><circle cx="34" cy="34" r="15" opacity=".2"/><path d="M44 44l14 14" opacity=".2"/></svg>`,
+  emptyMessages: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M18 24c0-2 2-4 4-4h28c2 0 4 2 4 4v16c0 2-2 4-4 4H32l-8 7v-7h-2c-2 0-4-2-4-4V24z" opacity=".2"/></svg>`,
+  emptyFavorites: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 60C28 50 20 42 20 33c0-6 5-10 10-10 4 0 7 2 10 6 3-4 6-6 10-6 5 0 10 4 10 10 0 9-8 17-20 27z" opacity=".18"/></svg>`,
+  emptyJournal: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="24" y="16" width="32" height="48" rx="3" opacity=".18"/><path d="M34 32h12M34 40h8" opacity=".15"/></svg>`,
+  emptyNotifications: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M26 48V34c0-8 6-14 14-14s14 6 14 14v14l4 4H22l4-4z" opacity=".18"/></svg>`,
+  emptyRetreat: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 18l20 38H20L40 18z" opacity=".16"/><path d="M14 58h52" opacity=".12"/></svg>`,
+  emptyBlog: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><rect x="20" y="20" width="40" height="40" rx="3" opacity=".16"/><path d="M30 34h20M30 42h14" opacity=".13"/></svg>`,
+  emptyProducts: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><circle cx="40" cy="40" r="18" opacity=".16"/><circle cx="40" cy="40" r="6" opacity=".12"/></svg>`,
+  emptyForum: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><circle cx="30" cy="34" r="6" opacity=".16"/><circle cx="50" cy="34" r="6" opacity=".16"/><path d="M36 34h8" opacity=".1"/></svg>`,
 
-  // Success — clean check, single circle
-  successCheck: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="22" opacity=".25"/><path d="M29 40l8 8 14-16" stroke-width="2"/></svg>`,
-  successCelebrate: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="20" opacity=".2"/><path d="M30 42l7 7 13-14" stroke-width="2"/></svg>`,
-  successGift: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><rect x="20" y="38" width="40" height="24" rx="2" opacity=".22"/><rect x="16" y="30" width="48" height="10" rx="2" opacity=".25"/><path d="M40 30v32"/></svg>`,
-  thankYou: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 58V34"/><path d="M40 34c-5-1-9-7-9-14 4 1 8 5 9 14z" opacity=".3"/><path d="M40 40c5-1 9-7 9-14-4 1-8 5-9 14z" opacity=".25"/></svg>`,
+  // Success — arc + check, nothing more
+  successCheck: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="22" opacity=".2"/><path d="M29 40l8 8 14-16" stroke-width="2"/></svg>`,
+  successCelebrate: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="20" opacity=".18"/><path d="M30 42l7 7 13-14" stroke-width="2"/></svg>`,
+  successGift: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><circle cx="40" cy="40" r="20" opacity=".18"/><path d="M32 40h16" stroke-width="1.8"/><path d="M40 32v16" stroke-width="1.8"/></svg>`,
+  thankYou: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40 56V32"/><path d="M40 32c-5 .5-9-5-9-12 4 0 8 4 9 12z" opacity=".25"/><path d="M40 38c5-.5 9-5 9-12-4 0-8 4-9 12z" opacity=".2"/></svg>`,
 
-  // Dashboard — refined monoline
-  schedule: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4M16 3v4"/><path d="M7.5 13h.01M12 13h.01M16.5 13h.01" stroke-width="2" opacity=".4"/></svg>`,
-  sessions: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h4v4H7zM13 7h4v4h-4zM7 13h4v4H7z" opacity=".35"/></svg>`,
-  clients: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.5-6 6-6s6 2.5 6 6"/><circle cx="17.5" cy="9" r="2.5" opacity=".5"/><path d="M16 14c2.5 0 5 1.5 5 4" opacity=".5"/></svg>`,
-  earnings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v12"/><path d="M8.5 9.5c0-1.2 1.5-2 3.5-2s3.5.8 3.5 2-1.5 1.8-3.5 2.5-3.5 1.2-3.5 2.5 1.5 2 3.5 2 3.5-.8 3.5-2"/></svg>`,
-  editProfile: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5l4 4L8 20H4v-4L16.5 3.5z"/></svg>`,
-  referrals: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3"/><circle cx="5.5" cy="18" r="2.5" opacity=".55"/><circle cx="18.5" cy="18" r="2.5" opacity=".55"/><path d="M10 8.5L7 15.5M14 8.5l3 7" opacity=".35"/></svg>`,
+  // Dashboard — symbolic, ≤3 strokes each
+  schedule: `<svg viewBox="0 0 24 24" ${_s}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9.5h18"/><path d="M8 3v4M16 3v4"/></svg>`,
+  sessions: `<svg viewBox="0 0 24 24" ${_s}><path d="M4 6h16"/><path d="M4 12h12"/><path d="M4 18h8"/></svg>`,
+  clients: `<svg viewBox="0 0 24 24" ${_s}><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><circle cx="17" cy="9.5" r="2" opacity=".5"/></svg>`,
+  earnings: `<svg viewBox="0 0 24 24" ${_s}><circle cx="12" cy="12" r="9"/><path d="M9 9.5c0-1 1.5-2 3-2s3 1 3 2c0 2-3 2-3 4 0 1 1.5 2 3 2s3-1 3-2"/></svg>`,
+  editProfile: `<svg viewBox="0 0 24 24" ${_s}><path d="M16.5 3.5l4 4-13 13H4v-4l12.5-13z"/></svg>`,
+  referrals: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 3v8"/><path d="M12 11L6 19"/><path d="M12 11l6 8"/></svg>`,
 
-  // Bento-specific — 24×24 monoline
-  bentoRetreat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M12 4l8 16H4L12 4z"/></svg>`,
-  bentoForum: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12c1 0 2 1 2 2v7c0 1-1 2-2 2H9l-3 3v-3H4c-1 0-2-1-2-2V8c0-1 1-2 2-2z"/><path d="M20 10h1c1 0 2 1 2 2v5c0 1-1 2-2 2h-1v3l-3-3h-3" opacity=".5"/></svg>`,
-  bentoGift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1.5"/><rect x="2.5" y="7" width="19" height="5" rx="1.5"/><path d="M12 7v14"/></svg>`,
-  bentoBlog: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h6M8 16h7"/></svg>`,
-  bentoProducts: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>`,
+  // Bento — abstract symbols, ≤3 strokes
+  bentoRetreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 5L20 19"/><path d="M12 5L4 19"/><path d="M3 20h18"/></svg>`,
+  bentoForum: `<svg viewBox="0 0 24 24" ${_s}><path d="M4 7c0-1 1-2 2-2h8c1 0 2 1 2 2v6c0 1-1 2-2 2H9l-3 2.5V15H5c-1 0-1-.5-1-1.5V7z"/><path d="M16 10h2c1 0 2 1 2 2v4c0 1-1 2-2 2h-1v2l-2.5-2" opacity=".5"/></svg>`,
+  bentoGift: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 3v18"/><path d="M7 8c-2-3 1-6 5-5"/><path d="M17 8c2-3-1-6-5-5"/></svg>`,
+  bentoBlog: `<svg viewBox="0 0 24 24" ${_s}><path d="M6 4v16c0 1 1 2 2 2h8c1 0 2-1 2-2V4"/><path d="M9 10h6"/><path d="M9 14h4"/></svg>`,
+  bentoProducts: `<svg viewBox="0 0 24 24" ${_s}><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>`,
 
-  // UI chrome — 24×24, 1.5px stroke, monoline
-  home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-6.5L20 10v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9z"/><path d="M9 21v-7h6v7"/></svg>`,
-  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-3.5 3-6.5 7-6.5s7 3 7 6.5"/></svg>`,
-  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`,
-  chevron: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`,
-  dashboard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>`,
+  // UI chrome — quiet, organic
+  home: `<svg viewBox="0 0 24 24" ${_s}><path d="M4 10.5l8-7 8 7V20c0 .5-.5 1-1 1H5c-.5 0-1-.5-1-1V10.5z"/><path d="M9.5 21v-6.5h5V21"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" ${_s}><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" ${_s}><path d="M15 18l-6-6 6-6"/></svg>`,
+  chevron: `<svg viewBox="0 0 24 24" ${_s}><path d="M9 18l6-6-6-6"/></svg>`,
+  dashboard: `<svg viewBox="0 0 24 24" ${_s}><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>`,
 };
 
 // Helper to render icon with size

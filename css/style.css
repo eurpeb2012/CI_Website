@@ -246,13 +246,13 @@ body::after {
 .menu-icon svg {
   width: 100%;
   height: 100%;
-  color: #5F7F73;
+  color: rgba(95,127,115,0.75);
 }
 
 .landing-logo svg {
   width: 56%;
   height: 56%;
-  color: #5F7F73;
+  color: rgba(95,127,115,0.75);
   animation: breathe 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
@@ -260,7 +260,7 @@ body::after {
 .empty-state-icon svg {
   width: 72px;
   height: 72px;
-  color: #5F7F73;
+  color: rgba(95,127,115,0.75);
   margin: 0 auto;
 }
 
@@ -268,7 +268,7 @@ body::after {
 .success-icon svg {
   width: 80px;
   height: 80px;
-  color: #5F7F73;
+  color: rgba(95,127,115,0.75);
   margin: 0 auto;
   animation: breathe 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
@@ -539,12 +539,12 @@ body::after {
   width: 22px;
   height: 22px;
   stroke-width: 1.5;
-  color: #96a092;
+  color: rgba(95,127,115,0.45);
 }
 
 .nav-item.active svg {
-  stroke-width: 1.8;
-  color: #5F7F73;
+  stroke-width: 1.5;
+  color: rgba(95,127,115,0.85);
   filter: drop-shadow(0 1px 3px rgba(95,127,115,0.2));
 }
 
@@ -3702,9 +3702,9 @@ body::after {
 }
 
 .bento-tile .bento-icon {
-  width: 28px;
-  height: 28px;
-  color: #5F7F73;
+  width: 26px;
+  height: 26px;
+  color: rgba(95,127,115,0.7);
   display: flex;
   align-items: center;
   justify-content: center;
