@@ -246,13 +246,13 @@ body::after {
 .menu-icon svg {
   width: 100%;
   height: 100%;
-  color: var(--theme-primary-700);
+  color: #5F7F73;
 }
 
 .landing-logo svg {
   width: 56%;
   height: 56%;
-  color: var(--theme-primary-700);
+  color: #5F7F73;
   animation: breathe 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
@@ -260,7 +260,7 @@ body::after {
 .empty-state-icon svg {
   width: 72px;
   height: 72px;
-  color: var(--theme-primary-400);
+  color: #5F7F73;
   margin: 0 auto;
 }
 
@@ -268,7 +268,7 @@ body::after {
 .success-icon svg {
   width: 80px;
   height: 80px;
-  color: var(--theme-primary-500);
+  color: #5F7F73;
   margin: 0 auto;
   animation: breathe 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
@@ -538,12 +538,14 @@ body::after {
 .nav-item svg {
   width: 22px;
   height: 22px;
-  stroke-width: 1.8;
+  stroke-width: 1.5;
+  color: #96a092;
 }
 
 .nav-item.active svg {
-  stroke-width: 2.2;
-  filter: drop-shadow(0 1px 2px rgba(168,203,183,0.3));
+  stroke-width: 1.8;
+  color: #5F7F73;
+  filter: drop-shadow(0 1px 3px rgba(95,127,115,0.2));
 }
 
 /* ===== Page Container ===== */
