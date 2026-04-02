@@ -66,8 +66,8 @@
 }
 
 /* ===== Accent Style Definitions ===== */
-/* Default: subtle-light-wood — hinoki / washed cedar */
-[data-accent="subtle-light-wood"], :root {
+/* subtle-light-wood — hinoki / washed cedar */
+[data-accent="subtle-light-wood"] {
   --accent-base: #E7D8C9;
   --accent-secondary: #D9C2A8;
   --accent-highlight: rgba(255,255,255,0.25);
@@ -79,10 +79,12 @@
   --accent-divider-bg: linear-gradient(90deg, transparent, #E7D8C9, #D9C2A8, transparent);
   --accent-divider-opacity: 0.35;
   --accent-grain-opacity: 0.035;
+  --accent-side-bar: linear-gradient(180deg, #E7D8C9, #D9C2A8);
+  --accent-side-opacity: 0.6;
 }
 
-/* warm-wood — richer natural warmth */
-[data-accent="warm-wood"] {
+/* Default: warm-wood — richer natural warmth */
+[data-accent="warm-wood"], :root {
   --accent-base: #DCC3A7;
   --accent-secondary: #CFAE8B;
   --accent-highlight: rgba(255,255,255,0.2);
@@ -94,6 +96,8 @@
   --accent-divider-bg: linear-gradient(90deg, transparent, #DCC3A7, #CFAE8B, transparent);
   --accent-divider-opacity: 0.4;
   --accent-grain-opacity: 0.05;
+  --accent-side-bar: linear-gradient(180deg, #DCC3A7, #CFAE8B);
+  --accent-side-opacity: 0.65;
 }
 
 /* very-subtle-mineral — warm stone / mineral paper */
@@ -109,6 +113,8 @@
   --accent-divider-bg: linear-gradient(90deg, transparent, rgba(217,194,168,0.3), transparent);
   --accent-divider-opacity: 0.3;
   --accent-grain-opacity: 0.015;
+  --accent-side-bar: linear-gradient(180deg, rgba(217,194,168,0.45), rgba(231,216,201,0.55));
+  --accent-side-opacity: 0.5;
 }
 
 /* ===== CSS Custom Properties — Shinrin Calm ===== */
@@ -1249,12 +1255,12 @@ body::after {
   content: '';
   position: absolute;
   left: 0;
-  top: 16px;
-  bottom: 16px;
+  top: 14px;
+  bottom: 14px;
   width: 3px;
-  background: var(--theme-gradient);
-  border-radius: 0 3px 3px 0;
-  opacity: 0.5;
+  background: var(--accent-side-bar);
+  border-radius: 0 2px 2px 0;
+  opacity: var(--accent-side-opacity);
   transition: opacity 0.3s;
 }
 
@@ -1590,19 +1596,21 @@ body::after {
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-4);
   box-shadow: var(--shadow-card);
-  border-left: 3px solid var(--theme-primary-300);
   position: relative;
+  overflow: hidden;
 }
 
-/* Inner highlight on session cards */
+/* Inner highlight + side accent on session cards */
 .session-card::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 12%;
-  right: 12%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
   pointer-events: none;
 }
 
@@ -2108,10 +2116,24 @@ body::after {
   background: rgba(255,253,251,0.8);
   backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-left: 3px solid #f59e0b;
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   margin-bottom: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.minor-consent-box::before,
+.minor-terms-box::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 
 .minor-consent-box h3,
@@ -2142,10 +2164,23 @@ body::after {
   background: rgba(255,253,251,0.8);
   backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-left: 3px solid var(--theme-primary-400);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   margin-top: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.minor-settings-box::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 
 .minor-settings-box h3 {
@@ -2169,12 +2204,25 @@ body::after {
 .minor-notice {
   background: #fef3c7;
   color: #92400e;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-weight: 600;
   margin-bottom: var(--space-4);
-  border-left: 3px solid #f59e0b;
+  position: relative;
+  overflow: hidden;
+}
+
+.minor-notice::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 
 .session-card-blocked {
@@ -4017,13 +4065,25 @@ body::after {
   backdrop-filter: blur(16px) saturate(1.1);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
   border: 1px solid var(--glass-border-warm);
-  border-left: 3px solid #b8b0cf;
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
   margin-bottom: var(--space-3);
   cursor: pointer;
   transition: all 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.blog-card-mini::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 .blog-card-mini:hover {
   box-shadow: var(--shadow-card-hover);
@@ -4105,10 +4165,24 @@ body::after {
   padding: var(--space-4);
   background: linear-gradient(135deg, rgba(249,228,236,0.25) 0%, var(--white) 100%);
   border: 1px solid var(--gray-200);
-  border-left: 3px solid #e8a0b8;
   border-radius: var(--radius-md);
   margin-bottom: var(--space-3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  padding-left: var(--space-5);
+}
+
+.digital-product-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 .dp-icon {
   width: 28px;
@@ -4333,7 +4407,7 @@ body::after {
 }
 .notification-unread {
   background: var(--green-50, #f0faf4);
-  border-left: 3px solid var(--green-500, #3dba78);
+  border-left: 3px solid var(--accent-base);
 }
 
 /* Gift Card Redeem */
@@ -4482,7 +4556,7 @@ body::after {
 /* ===== Subcategory Styling ===== */
 .category-card.subcategory {
   margin-left: 24px;
-  border-left: 3px solid var(--theme-primary-300);
+  border-left: 3px solid var(--accent-base);
   background: var(--theme-primary-50, #f0faf4);
 }
 
@@ -4503,10 +4577,24 @@ body::after {
   padding: var(--space-5);
   margin-bottom: var(--space-4);
   border: 1px solid var(--glass-border-warm);
-  border-left: 3px solid #d4b896;
   cursor: pointer;
   transition: all 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  padding-left: calc(var(--space-5) + 4px);
+}
+
+.retreat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  background: var(--accent-side-bar);
+  opacity: var(--accent-side-opacity);
+  border-radius: 0 2px 2px 0;
 }
 
 .retreat-card:active {

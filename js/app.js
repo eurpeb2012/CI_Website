@@ -469,7 +469,7 @@ function suggestThemeByTime() {
 
 // ===== Accent Style =====
 function getAccentStyle() {
-  return localStorage.getItem('iyashi-accent') || 'subtle-light-wood';
+  return localStorage.getItem('iyashi-accent') || 'warm-wood';
 }
 
 function setAccentStyle(style) {
