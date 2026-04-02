@@ -2,7 +2,7 @@
 const therapistTiers = {
   free: {
     key: 'free',
-    icon: '🌱',
+    icon: '·',
     nameKey: 'tierFreeName',
     descKey: 'tierFreeDesc',
     priceKey: 'tierFreePrice',
@@ -14,7 +14,7 @@ const therapistTiers = {
   },
   standard: {
     key: 'standard',
-    icon: '🌿',
+    icon: '○',
     nameKey: 'tierStandardName',
     descKey: 'tierStandardDesc',
     priceKey: 'tierStandardPrice',
@@ -26,7 +26,7 @@ const therapistTiers = {
   },
   premium: {
     key: 'premium',
-    icon: '🌳',
+    icon: '◉',
     nameKey: 'tierPremiumName',
     descKey: 'tierPremiumDesc',
     priceKey: 'tierPremiumPrice',

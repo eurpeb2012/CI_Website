@@ -657,7 +657,7 @@ function renderRoute(handler, el, header, params) {
     (handlers[handler] || handlers.landing)();
   } catch (e) {
     console.error('Render error [' + handler + ']:', e);
-    el.innerHTML = '<div class="page"><div class="empty-state-box"><div class="empty-state-icon">⚠️</div><p>Error loading page. <button class="btn-primary mt-12" onclick="navigate(\'#/\')">Back to Home</button></p></div></div>';
+    el.innerHTML = '<div class="page"><div class="empty-state-box"><div class="empty-state-icon">—</div><p>Error loading page. <button class="btn-primary mt-12" onclick="navigate(\'#/\')">Back to Home</button></p></div></div>';
   }
 }
 
@@ -1006,8 +1006,8 @@ function renderTherapistCard(th) {
           <span class="price">¥${minPrice.toLocaleString()} ${t('resultsFrom')}</span>
           ${avgRating ? `<span class="card-rating">★ ${avgRating} (${reviewCount})</span>` : ''}
         </div>
-        ${th.responseTime ? `<div class="card-response-time">💬 ${t('responseTime')}: ${th.responseTime}</div>` : ''}
-        ${th.slidingScale ? `<div class="card-sliding-scale">💚 ${t('slidingScale')}</div>` : ''}
+        ${th.responseTime ? `<div class="card-response-time">${t('responseTime')}: ${th.responseTime}</div>` : ''}
+        ${th.slidingScale ? `<div class="card-sliding-scale">${t('slidingScale')}</div>` : ''}
         ${authState.user?.isMinor && !th.accepts_minors ? `<div class="card-minor-blocked">${t('minorBookingBlocked')}</div>` : ''}
       </div>
       <button class="fav-btn${isFavorite(th.id) ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${th.id}'); this.classList.add('pop')" title="${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}">
@@ -1183,14 +1183,14 @@ function renderTherapistProfile(el, header, id) {
         <div class="mb-12">${renderTierBadge(th.tier, th.isFoundingMember)}</div>
         ${th.verified ? `<div class="verified-badge-full">✓ ${t('verifiedBadge')}</div>` : `<div class="unverified-badge">${t('unverifiedBadge')}</div>`}
         <p class="profile-location-text">${location}</p>
-        ${th.responseTime ? `<p class="profile-response-time">💬 ${t('responseTime')}: ${th.responseTime}</p>` : ''}
-        ${th.slidingScale ? `<p class="profile-sliding-scale">💚 ${t('slidingScale')}</p>` : ''}
+        ${th.responseTime ? `<p class="profile-response-time">${t('responseTime')}: ${th.responseTime}</p>` : ''}
+        ${th.slidingScale ? `<p class="profile-sliding-scale">${t('slidingScale')}</p>` : ''}
         <div class="profile-actions-row">
           <button class="btn-icon-action${isFavorite(th.id) ? ' active' : ''}" onclick="toggleFavorite('${th.id}')">
             <svg viewBox="0 0 24 24" class="heart-svg" width="16" height="16" fill="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'none'}" stroke="${isFavorite(th.id) ? 'var(--theme-primary-500)' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             ${isFavorite(th.id) ? t('removeFavorite') : t('addFavorite')}
           </button>
-          <button class="btn-icon-action" onclick="onShareTherapist('${th.id}')">📤 ${t('shareTherapist')}</button>
+          <button class="btn-icon-action" onclick="onShareTherapist('${th.id}')">${t('shareTherapist')}</button>
         </div>
       </div>
 
@@ -1198,7 +1198,7 @@ function renderTherapistProfile(el, header, id) {
       <div class="profile-section">
         <h2>${t('credentials')}</h2>
         <div class="credentials-list">
-          ${th.credentials.map(c => `<div class="credential-item">📜 ${getLocalizedText(c.name)} (${c.year})</div>`).join('')}
+          ${th.credentials.map(c => `<div class="credential-item">${getLocalizedText(c.name)} (${c.year})</div>`).join('')}
         </div>
       </div>
       ` : ''}
@@ -1218,7 +1218,7 @@ function renderTherapistProfile(el, header, id) {
       <div class="profile-section">
         <h2>${t('galleryTitle')}</h2>
         <div class="gallery-grid">
-          ${th.gallery.map(g => `<div class="gallery-item"><div class="gallery-placeholder">📷</div><p>${getLocalizedText(g.desc)}</p></div>`).join('')}
+          ${th.gallery.map(g => `<div class="gallery-item"><div class="gallery-placeholder"></div><p>${getLocalizedText(g.desc)}</p></div>`).join('')}
         </div>
       </div>
       ` : ''}
@@ -1251,7 +1251,7 @@ function renderTherapistProfile(el, header, id) {
         <h2>${t('digitalProductsTitle')}</h2>
         ${thProducts.map(p => `
           <div class="digital-product-card">
-            <div class="dp-icon">${p.type === 'pdf' ? '📄' : p.type === 'video' ? '🎬' : '🎵'}</div>
+            <div class="dp-icon">${p.type === 'pdf' ? 'PDF' : p.type === 'video' ? 'VID' : 'AUD'}</div>
             <div class="dp-info">
               <h3>${getLocalizedText(p.name)}</h3>
               <p>${getLocalizedText(p.description)}</p>
@@ -1266,7 +1266,7 @@ function renderTherapistProfile(el, header, id) {
       <div class="profile-section">
         <button class="btn-secondary" style="max-width:100%" onclick="onMessageTherapist('${th.id}')">${t('profileMessage')}</button>
         <button class="btn-outline-secondary mt-8" style="max-width:100%" onclick="onToggleWaitlist('${th.id}')">
-          ${onWaitlist ? `✓ ${t('waitlistJoined')}` : `🔔 ${t('waitlistJoin')}`}
+          ${onWaitlist ? `✓ ${t('waitlistJoined')}` : t('waitlistJoin')}
         </button>
         <p class="help-text mt-4">${t('waitlistDesc')}</p>
       </div>
@@ -1735,8 +1735,8 @@ function renderBookingSuccess(el, header) {
       <div class="success-icon">${icons.successCheck}</div>
       <h2>${t('bookingSuccess')}</h2>
       <p>${t('bookingSuccessMsg')}</p>
-      ${stripeSessionId ? `<p class="payment-confirmed-msg">💳 ${t('paymentConfirmed')}</p>` : ''}
-      ${authState.isLoggedIn && state.bookingSession ? `<p class="points-earned-msg">🎯 +${Math.floor(state.bookingSession.price / 100)} ${t('points')} ${t('pointsEarned')}!</p>` : ''}
+      ${stripeSessionId ? `<p class="payment-confirmed-msg">${t('paymentConfirmed')}</p>` : ''}
+      ${authState.isLoggedIn && state.bookingSession ? `<p class="points-earned-msg">+${Math.floor(state.bookingSession.price / 100)} ${t('points')} ${t('pointsEarned')}</p>` : ''}
       <button class="btn-primary" onclick="navigate('#/')">${t('bookingBackHome')}</button>
     </div>
   `;
@@ -1750,7 +1750,7 @@ function renderApply(el, header) {
       <h1 class="page-title">${t('applyTitle')}</h1>
       <div class="apply-form">
         <div class="photo-upload">
-          <div class="photo-placeholder" id="apply-photo-preview">📷</div>
+          <div class="photo-placeholder" id="apply-photo-preview"></div>
           <button class="photo-upload-btn" onclick="createFileInput(async (file) => { const url = await uploadAvatar(file, 'avatars', 'applicants'); if(url) document.getElementById('apply-photo-preview').innerHTML = '<img src=&quot;'+url+'&quot; style=&quot;width:100px;height:100px;border-radius:50%;object-fit:cover&quot;>'; })">${t('applyUpload')}</button>
         </div>
         <div class="form-group">
@@ -1758,7 +1758,7 @@ function renderApply(el, header) {
           <input type="text" id="apply-display-name" placeholder="${t('applyNamePlaceholder')}">
         </div>
         <div class="form-group">
-          <label>${t('applyLegalName')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">🔒 ${t('applyLegalNameNote')}</span></label>
+          <label>${t('applyLegalName')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">${t('applyLegalNameNote')}</span></label>
           <input type="text" id="apply-legal-name" placeholder="${t('applyLegalNamePlaceholder')}">
         </div>
         <div class="form-group">
@@ -1797,7 +1797,7 @@ function renderApply(el, header) {
           </div>
         </div>
         <div class="form-group">
-          <label>${t('applyBirthday')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">🔒 ${t('applyDobPrivacy')}</span></label>
+          <label>${t('applyBirthday')} * <span style="font-size:11px;color:var(--theme-primary-600);font-weight:400">${t('applyDobPrivacy')}</span></label>
           <div style="display:flex;gap:8px">
             <select id="apply-dob-year" style="flex:2">
               <option value="">${t('applyDobYear')}</option>
@@ -1982,7 +1982,7 @@ function renderUserProfile(el, header) {
       <div class="user-profile-header">
         ${isLoggedIn && authState.user.avatar_url
           ? `<img class="user-avatar" src="${authState.user.avatar_url}" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;cursor:pointer" onclick="onUploadUserAvatar()" title="${t('applyUpload')}">`
-          : `<div class="user-avatar" style="cursor:pointer" onclick="onUploadUserAvatar()" title="${t('applyUpload')}">👤</div>`}
+          : `<div class="user-avatar" style="cursor:pointer" onclick="onUploadUserAvatar()" title="${t('applyUpload')}">${userName ? userName.charAt(0).toUpperCase() : '·'}</div>`}
         <div class="user-info">
           <h2>${userName}</h2>
           <p>${userIdDisplay}</p>
@@ -2048,23 +2048,23 @@ function renderUserProfile(el, header) {
       ` : ''}
 
       <div class="profile-menu-item" onclick="navigate('#/messages')">
-        <span>💬 ${t('messagesTitle')}</span>
+        <span>${t('messagesTitle')}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/favorites')">
-        <span>❤️ ${t('favorites')} (${favorites.length})</span>
+        <span>${t('favorites')} (${favorites.length})</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/points')">
-        <span>🎯 ${t('pointsBalance')}: ${pointsData.balance} ${t('points')}</span>
+        <span>${t('pointsBalance')}: ${pointsData.balance} ${t('points')}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/journal')">
-        <span>📓 ${t('journalTitle')}</span>
+        <span>${t('journalTitle')}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/notifications')">
-        <span>🔔 ${t('notificationTitle')}${notificationsData.filter(n => !n.isRead).length > 0 ? ` <span style="background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:0.75rem;margin-left:4px">${notificationsData.filter(n => !n.isRead).length}</span>` : ''}</span>
+        <span>${t('notificationTitle')}${notificationsData.filter(n => !n.isRead).length > 0 ? ` <span style="background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:0.75rem;margin-left:4px">${notificationsData.filter(n => !n.isRead).length}</span>` : ''}</span>
         <span class="arrow">${icons.chevron}</span>
       </div>
       <div class="profile-menu-item" onclick="navigate('#/settings')">
@@ -2086,7 +2086,7 @@ function renderUserProfile(el, header) {
           <span class="arrow">${icons.chevron}</span>
         </div>
         <div class="profile-menu-item" onclick="onDemoLogin()" style="color:var(--theme-primary-600)">
-          <span>⚡ ${t('demoLogin')}</span>
+          <span>${t('demoLogin')}</span>
           <span class="arrow" style="font-size:0.75rem;color:var(--text-muted)">${t('demoLoginDesc')}</span>
         </div>
       `}
@@ -2273,13 +2273,13 @@ function renderSignup(el, header) {
         <div class="magic-link-form">
           <input type="email" id="magic-link-email" placeholder="${t('magicLinkPlaceholder')}" class="magic-link-input">
           <button id="magic-link-btn" class="social-login-btn magic-link-btn" onclick="signInWithMagicLink(document.getElementById('magic-link-email').value)">
-            ✉️ ${t('signInMagicLink')}
+            ${t('signInMagicLink')}
           </button>
         </div>
 
         <div class="login-divider"><span>${t('or')}</span></div>
 
-        <button class="social-login-btn demo-btn" onclick="onDemoLogin()">⚡ ${t('demoLogin')}</button>
+        <button class="social-login-btn demo-btn" onclick="onDemoLogin()">${t('demoLogin')}</button>
         <p class="signup-notice">${t('signupNotice')}<br><a href="#/privacy" class="legal-link">${t('privacyPolicyTitle')}</a> · <a href="#/terms" class="legal-link">${t('termsOfServiceTitle')}</a></p>
       </div>
     </div>
@@ -2787,16 +2787,16 @@ async function renderChat(el, header, therapistId) {
       </div>
       <div class="chat-info-bar">${t('chatInfoWindow')}</div>
       <div class="chat-actions-bar">
-        <button class="chat-action-btn" onclick="navigate('#/videocall/${therapistId}')">📹 ${t('chatStartVideo')}</button>
-        <button class="chat-action-btn" onclick="navigate('#/therapist/${therapistId}')">👤 ${t('chatViewProfile')}</button>
-        <button class="chat-action-btn" onclick="onBookFromChat('${therapistId}')">📅 ${t('chatBookSession')}</button>
+        <button class="chat-action-btn" onclick="navigate('#/videocall/${therapistId}')">${t('chatStartVideo')}</button>
+        <button class="chat-action-btn" onclick="navigate('#/therapist/${therapistId}')">${t('chatViewProfile')}</button>
+        <button class="chat-action-btn" onclick="onBookFromChat('${therapistId}')">${t('chatBookSession')}</button>
       </div>
       <div class="chat-messages">
         <div class="chat-loading">${t('chatLoadingMessages')}</div>
       </div>
       <div class="chat-input-bar">
         <input type="text" placeholder="${t('chatPlaceholder')}" onkeydown="if(event.key==='Enter'){event.preventDefault();onSendChatMessage('${therapistId}');}">
-        <button class="chat-send-btn" onclick="onSendChatMessage('${therapistId}')">➤</button>
+        <button class="chat-send-btn" onclick="onSendChatMessage('${therapistId}')">→</button>
       </div>
     </div>
   `;
@@ -2874,7 +2874,7 @@ async function renderVideoCall(el, header, therapistId) {
         </div>
       </div>
       <div class="videocall-controls">
-        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">×<br><span>${t('videoEnd')}</span></button>
       </div>
     </div>
   `;
@@ -2908,7 +2908,7 @@ async function renderVideoCall(el, header, therapistId) {
         <iframe id="daily-frame" src="${roomUrl}" allow="camera;microphone;fullscreen;display-capture"
           style="width:100%;height:100%;border:none;position:absolute;top:0;left:0"></iframe>
         <div class="videocall-controls" style="position:absolute;bottom:0;left:0;right:0;z-index:10">
-          <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
+          <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">×<br><span>${t('videoEnd')}</span></button>
         </div>
       </div>
     `;
@@ -2930,10 +2930,10 @@ function renderVideoCallPlaceholder(el, th, name, therapistId) {
       </div>
       <div class="videocall-self">${t('videoSelfView')}</div>
       <div class="videocall-controls">
-        <button class="vc-btn vc-mute" onclick="toggleVCBtn(this)">🎤<br><span>${t('videoMute')}</span></button>
-        <button class="vc-btn vc-camera" onclick="toggleVCBtn(this)">📷<br><span>${t('videoCamera')}</span></button>
-        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">📞<br><span>${t('videoEnd')}</span></button>
-        <button class="vc-btn vc-blur" onclick="toggleVCBtn(this)">🌫️<br><span>${t('videoBlur')}</span></button>
+        <button class="vc-btn vc-mute" onclick="toggleVCBtn(this)">◐<br><span>${t('videoMute')}</span></button>
+        <button class="vc-btn vc-camera" onclick="toggleVCBtn(this)"><span style="font-size:1.2rem">⦿</span><br><span>${t('videoCamera')}</span></button>
+        <button class="vc-btn vc-end" onclick="endVideoCall('${therapistId}')">×<br><span>${t('videoEnd')}</span></button>
+        <button class="vc-btn vc-blur" onclick="toggleVCBtn(this)">◌<br><span>${t('videoBlur')}</span></button>
       </div>
     </div>
   `;
@@ -3072,7 +3072,7 @@ function renderTherapistDashboard(el, header) {
 
       <div class="mt-20" style="display:flex;flex-direction:column;gap:10px">
         ${th && th.status === 'hidden' ? `
-          <div style="background:var(--theme-warm-100);border:1px solid var(--theme-warm-300);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--theme-warm-700)">⚠️ ${t('dashboardAccountHiddenNote')}</div>
+          <div style="background:var(--theme-warm-100);border:1px solid var(--theme-warm-300);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--theme-warm-700)">${t('dashboardAccountHiddenNote')}</div>
           <button class="btn-secondary" style="max-width:100%" onclick="onToggleTherapistVisibility()">${t('dashboardUnhideAccount')}</button>
         ` : `
           <button class="btn-secondary" style="max-width:100%;color:var(--text-secondary)" onclick="onToggleTherapistVisibility()">${t('dashboardHideAccount')}</button>
@@ -3227,7 +3227,7 @@ function renderTherapistClients(el, header) {
       <h1 class="page-title">${t('clientsTitle')}</h1>
       ${data.clients.map((c, i) => `
         <div class="client-item">
-          <div class="client-avatar-sm">👤</div>
+          <div class="client-avatar-sm">○</div>
           <div class="client-info">
             <h3>${getLocalizedText(c.name)}</h3>
             <p>${t('clientLastBooking')}: ${c.lastBooking}</p>
@@ -3491,7 +3491,7 @@ function renderGiftCard(el, header) {
   el.innerHTML = `
     <div class="page">
       <div class="gift-card-hero">
-        <div class="gift-card-icon">🎁</div>
+        <div class="gift-card-icon">${icons.bentoGift}</div>
         <h1 class="page-title">${t('giftCardTitle')}</h1>
         <p class="gift-card-desc">${t('giftCardDesc')}</p>
       </div>
@@ -3711,7 +3711,7 @@ function renderDigitalProducts(el, header) {
         const th = getTherapist(p.therapistId);
         return `
           <div class="digital-product-card">
-            <div class="dp-icon">${p.type === 'pdf' ? '📄' : p.type === 'video' ? '🎬' : '🎵'}</div>
+            <div class="dp-icon">${p.type === 'pdf' ? 'PDF' : p.type === 'video' ? 'VID' : 'AUD'}</div>
             <div class="dp-info">
               <h3>${getLocalizedText(p.name)}</h3>
               <p>${getLocalizedText(p.description)}</p>
@@ -3750,11 +3750,11 @@ function renderJournal(el, header) {
 function renderJournalNew(el, header) {
   renderHeaderWithBack(header, t('journalNew'), '#/journal');
   const moods = [
-    { key: 'great', emoji: '😊', label: t('journalMoodGreat') },
-    { key: 'good', emoji: '🙂', label: t('journalMoodGood') },
-    { key: 'okay', emoji: '😐', label: t('journalMoodOkay') },
-    { key: 'low', emoji: '😔', label: t('journalMoodLow') },
-    { key: 'bad', emoji: '😢', label: t('journalMoodBad') },
+    { key: 'great', emoji: '◉', label: t('journalMoodGreat') },
+    { key: 'good', emoji: '◎', label: t('journalMoodGood') },
+    { key: 'okay', emoji: '○', label: t('journalMoodOkay') },
+    { key: 'low', emoji: '◌', label: t('journalMoodLow') },
+    { key: 'bad', emoji: '·', label: t('journalMoodBad') },
   ];
   el.innerHTML = `
     <div class="page">
@@ -3816,7 +3816,7 @@ async function loadNotifications() {
     if (!error && data) {
       notificationsData = data.map(n => ({
         id: n.id,
-        icon: n.type === 'booking' ? '📅' : n.type === 'gift_card' ? '🎁' : n.type === 'waitlist' ? '🔔' : n.type === 'points' ? '🎯' : '📢',
+        icon: n.type === 'booking' ? '◉' : n.type === 'gift_card' ? '◈' : n.type === 'waitlist' ? '○' : n.type === 'points' ? '◎' : '·',
         text: n.body || n.title || '',
         date: n.created_at ? n.created_at.slice(0, 10) : '',
         isRead: n.is_read,
@@ -3843,7 +3843,7 @@ async function renderNotifications(el, header) {
   if (notifications.length === 0 && authState.isLoggedIn) {
     mockBookingHistory.filter(b => b.status === 'upcoming').forEach(b => {
       notifications.push({
-        icon: '📅',
+        icon: '◉',
         text: `${t('reminderTitle')}: ${getLocalizedText(b.sessionName)} - ${b.date} ${b.time}`,
         date: b.date,
         isRead: true,
@@ -3852,7 +3852,7 @@ async function renderNotifications(el, header) {
     if (waitlistIds.length > 0) {
       waitlistIds.forEach(id => {
         const th = getTherapist(id);
-        if (th) notifications.push({ icon: '🔔', text: `${t('waitlistJoined')}: ${getLocalizedText(th.name)}`, date: '', isRead: true });
+        if (th) notifications.push({ icon: '○', text: `${t('waitlistJoined')}: ${getLocalizedText(th.name)}`, date: '', isRead: true });
       });
     }
   }
@@ -3885,15 +3885,15 @@ function renderRetreats(el, header) {
       ${retreats.map(r => `
         <div class="retreat-card" onclick="navigate('#/retreats/${r.id}')">
           <div class="retreat-card-header">
-            <div class="retreat-card-icon">🏕️</div>
+            <div class="retreat-card-icon">${icons.retreat}</div>
             <div class="retreat-card-info">
               <h3>${getLocalizedText(r.title)}</h3>
-              <p class="retreat-location">📍 ${getLocalizedText(r.location)}</p>
+              <p class="retreat-location">${getLocalizedText(r.location)}</p>
             </div>
           </div>
           <p class="retreat-card-desc">${getLocalizedText(r.description)}</p>
           <div class="retreat-card-meta">
-            <span class="retreat-duration">📅 ${r.duration}${t('retreatDays')}</span>
+            <span class="retreat-duration">${r.duration}${t('retreatDays')}</span>
             <span class="retreat-price">¥${r.price.toLocaleString()}</span>
           </div>
           <div class="retreat-tags">${r.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}</div>
@@ -3911,9 +3911,9 @@ function renderRetreatDetail(el, header, id) {
   el.innerHTML = `
     <div class="page">
       <div class="retreat-detail-hero">
-        <div class="retreat-hero-icon">🏕️</div>
+        <div class="retreat-hero-icon">${icons.retreat}</div>
         <h1 class="page-title">${getLocalizedText(retreat.title)}</h1>
-        <p class="retreat-location-lg">📍 ${getLocalizedText(retreat.location)}</p>
+        <p class="retreat-location-lg">${getLocalizedText(retreat.location)}</p>
       </div>
       <div class="profile-section">
         <p class="retreat-detail-desc">${getLocalizedText(retreat.description)}</p>
@@ -4005,7 +4005,7 @@ function renderForum(el, header) {
             <div class="forum-thread-meta">
               <span class="forum-author">${t('forumPostedBy')}: ${getLocalizedText(thread.author)}</span>
               <span class="forum-date">${thread.date}</span>
-              <span class="forum-reply-count">💬 ${replyCount} ${t('forumReplies')}</span>
+              <span class="forum-reply-count">${replyCount} ${t('forumReplies')}</span>
             </div>
             ${thread.tags ? `<div class="forum-tags">${thread.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}</div>` : ''}
           </div>
@@ -4257,7 +4257,7 @@ function showOnboarding() {
   overlay.className = 'onboarding-overlay';
   overlay.innerHTML = `
     <div class="onboarding-card">
-      <div style="font-size:2.5rem;margin-bottom:12px">🌿</div>
+      <div style="width:40px;height:40px;margin:0 auto 12px;color:rgba(95,127,115,0.75)">${icons.leaf}</div>
       <h2>${t('onboardingWelcome')}</h2>
       <div class="onboarding-steps">
         <div class="onboarding-step"><span class="onboarding-num">1</span>${t('onboardingStep1')}</div>
