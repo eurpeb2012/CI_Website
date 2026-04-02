@@ -1,30 +1,32 @@
-// ===== SVG Icon System — Organic monoline with subtle imperfection =====
-// All paths hand-adjusted: no <circle>, no <rect>, no perfect geometry.
-// Slight offset centers, asymmetric curves, organic line weight variation.
-// 24×24 grid, 1.5px stroke, ≤4 paths, #5F7F73 at 75% via CSS.
+// ===== SVG Icon System — Authored monoline with signature imperfection =====
+// Design DNA: one stroke per icon is 5-8% shorter than "correct".
+// No <circle>, no <rect>. Organic paths only. Slight asymmetry throughout.
+// 24×24 grid, 1.5px base / 1.6px nav, ≤4 paths, #5F7F73 at 75% via CSS.
 const _s = `fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
 const icons = {
-  // Brand — stem with two unequal leaves, stem slightly off-center
-  leaf: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.8 21V10.5"/><path d="M11.8 10.5C6.2 11 4.8 4.5 4.8 4.5c4.2-.3 7 2.8 7 6"/><path d="M11.8 14c5.8-1 7.2-6.8 7.2-6.8-3.8-.2-6.2 2.2-7.2 5.8"/></svg>`,
+  // Brand — stem with two unequal leaves, right leaf 8% shorter
+  leaf: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.8 21V10.5"/><path d="M11.8 10.5C6.2 11 4.8 4.5 4.8 4.5c4.2-.3 7 2.8 7 6"/><path d="M11.8 14c5.2-.8 6.5-5.8 6.8-6.2-3.5-.2-5.8 2-6.8 5.2"/></svg>`,
 
-  // Search — slightly squashed oval, angled tail
-  search: `<svg viewBox="0 0 24 24" ${_s}><path d="M16.2 10.3c0 3.4-2.8 6.2-6.3 5.9-3.2-.3-5.5-3-5.2-6.2.3-3 2.8-5.3 5.8-5.3 3.2 0 5.7 2.4 5.7 5.6z"/><path d="M14.8 15.2L20.5 21"/></svg>`,
+  // Search — squashed oval (X scaled 98%), handle at 43° not 45°
+  search: `<svg viewBox="0 0 24 24" ${_s}><path d="M16 10.3c0 3.4-2.7 6.1-6.2 5.8-3.2-.3-5.4-3-5.1-6.1.3-3 2.7-5.2 5.7-5.3 3.1 0 5.6 2.4 5.6 5.6z"/><path d="M14.6 15.4L20 21"/></svg>`,
 
-  // Feeling — nested asymmetric arcs, no face
-  feeling: `<svg viewBox="0 0 24 24" ${_s}><path d="M4.5 12.5c.5-4 3.5-7.2 7.8-7 4 .2 7 3.5 6.8 7.5"/><path d="M8.2 12.8c.3-2.2 2-3.8 4.2-3.6 2 .2 3.5 2 3.3 3.8"/><path d="M12.2 16v3.5"/></svg>`,
+  // Feeling — breath, not signal: inner gap tight, outer gap wide, stem off-center, outer arc broken
+  feeling: `<svg viewBox="0 0 24 24" ${_s}><path d="M4.2 13c.8-4.5 4-7.5 8-7.2"/><path d="M12.5 5.8c3.5.5 6 3.5 5.8 7"/><path d="M8 13.2c.5-2 2.2-3.2 4.2-3 1.8.2 3.2 1.8 3 3.5"/><path d="M12.5 16.5v3"/></svg>`,
 
-  // Categories — abstract, each ≤3 asymmetric strokes
-  physical: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.5 3.5c-2.8 3.2-2.5 7 .2 10"/><path d="M12.5 3.5c2.5 3 2.2 6.8-.2 10"/><path d="M11.8 13.5v7.5"/></svg>`,
-  mental: `<svg viewBox="0 0 24 24" ${_s}><path d="M5.5 13.5c.2-4.8 3.2-8.2 6.2-8.2s6.3 3.2 6.5 8"/><path d="M11.8 21v-4.5"/><path d="M8.5 21h7"/></svg>`,
-  creative: `<svg viewBox="0 0 24 24" ${_s}><path d="M7.5 17.5c-.2-6.2 3-12.5 8-14.2"/><path d="M15 3.5c1.2 4.2-.8 9.2-5 13"/><path d="M5.5 20.5c3.2-1.2 7.2-.8 10.5.2" opacity=".55"/></svg>`,
-  spiritual: `<svg viewBox="0 0 24 24" ${_s}><path d="M21 12.2c-.1 5-4.2 8.8-9 8.8-5 0-9-3.8-9-8.8s3.8-9.2 8.8-9.2c5.2 0 9.3 4 9.2 9.2z"/><path d="M15 12.5c-.2 1.8-1.5 3-3.2 3-1.8 0-3.2-1.5-3-3.3.2-1.6 1.5-2.8 3.2-2.7 1.6.1 3 1.4 3 3z"/></svg>`,
-  retreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.8 4.5L20.8 19.2"/><path d="M12.2 4.5L3.2 19"/><path d="M2.5 20h19"/></svg>`,
+  // Categories — signature flaw: one stroke shorter per icon
+  physical: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.5 3.5c-2.8 3.2-2.5 7 .2 9.5"/><path d="M12.5 3.5c2.5 3 2.2 6.8-.2 10"/><path d="M11.8 13.5v7"/></svg>`,
+  mental: `<svg viewBox="0 0 24 24" ${_s}><path d="M5.5 13.5c.2-4.8 3.2-8.2 6.2-8.2s6.3 3.2 6.5 7.5"/><path d="M11.8 21v-4.5"/><path d="M8.8 21h6.5"/></svg>`,
+  creative: `<svg viewBox="0 0 24 24" ${_s}><path d="M7.5 17c-.2-5.8 3-12 7.5-13.8"/><path d="M15 3.5c1.2 4.2-.8 9.2-5 13"/><path d="M5.5 20.5c3.2-1.2 6.8-.8 10 .2" opacity=".55"/></svg>`,
+  spiritual: `<svg viewBox="0 0 24 24" ${_s}><path d="M20.8 12.2c-.1 4.8-4 8.5-8.8 8.8-5 .2-9.2-3.5-9.2-8.5s3.8-9.2 8.8-9.2c5 0 9.2 3.8 9.2 8.9z"/><path d="M14.8 12.5c-.2 1.6-1.4 2.8-3 2.8-1.8 0-3-1.5-2.8-3.2.2-1.5 1.4-2.6 3-2.5 1.5.1 2.8 1.3 2.8 2.9z"/></svg>`,
 
-  // Delivery — symbolic, 2–3 organic strokes
-  inPerson: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.2 7.5c0 1.8-1.2 3.2-3 3.2s-3-1.2-3-3c0-1.8 1.2-3.2 2.8-3.2 1.8 0 3.2 1.2 3.2 3z"/><path d="M3.5 20.5c.2-3.8 2.8-6.2 5.8-6.2s5.5 2.5 5.5 6"/><path d="M16.5 9c1.2-.2 2.2.8 2.2 2" opacity=".5"/></svg>`,
-  video: `<svg viewBox="0 0 24 24" ${_s}><path d="M2.5 8.5c0-1.2.8-2 2-2h10c1 0 1.8.8 2 1.8v7.5c0 1-.8 1.8-1.8 2H4.5c-1.2 0-2-.8-2-2V8.5z"/><path d="M16 10.2l5.2-2.5v8.8L16 14"/></svg>`,
-  telephone: `<svg viewBox="0 0 24 24" ${_s}><path d="M6.5 3.5c-2.2.2-3.5 2-3.5 4.5.2 7 6.8 13.2 13.2 13 2 0 3.8-1 3.8-3.2"/><path d="M3.2 8l3.2 1.8 1.8-2"/><path d="M16.2 17.5l1.8 3.5 3.5-1.2"/></svg>`,
-  email: `<svg viewBox="0 0 24 24" ${_s}><path d="M3 7.5c0-1.2.8-2 2-2h14c1 0 2 .8 2 1.8v10.5c0 1-.8 2-1.8 2H5c-1.2 0-2-1-2-2V7.5z"/><path d="M3.2 7.5l8.5 5.8 9.3-5.5"/></svg>`,
+  // Retreat — asymmetric mountain: left side longer, apex off-center-right
+  retreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.5 4.2L21 19.5"/><path d="M12.5 4.2L3 19"/><path d="M2.5 19.8h18.5"/></svg>`,
+
+  // Delivery — one stroke shorter per icon
+  inPerson: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 7.5c0 1.8-1.2 3-2.8 3-1.8 0-3-1.2-3-2.8 0-1.8 1.2-3.2 2.8-3.2 1.7 0 3 1.2 3 3z"/><path d="M3.5 20c.2-3.5 2.8-5.8 5.8-5.8 2.8 0 5.2 2.2 5.5 5.5"/><path d="M16.5 9.2c1-.2 2 .5 2 1.5" opacity=".5"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" ${_s}><path d="M2.5 8.5c0-1.2.8-2 2-2h9.5c1 0 1.8.8 2 1.8v7c0 1-.8 1.8-1.8 2H4.5c-1.2 0-2-.8-2-2V8.5z"/><path d="M15.5 10.2l5.2-2.5v8.5L15.5 14"/></svg>`,
+  telephone: `<svg viewBox="0 0 24 24" ${_s}><path d="M6.5 3.5c-2.2.2-3.5 2-3.5 4.5.2 7 6.8 13.2 13.2 13 2 0 3.8-1 3.8-3"/><path d="M3.2 8l3 1.8 1.8-1.8"/><path d="M16.2 17.5l1.8 3.2 3.2-1"/></svg>`,
+  email: `<svg viewBox="0 0 24 24" ${_s}><path d="M3 7.5c0-1.2.8-2 2-2h14c1 0 2 .8 2 1.8v10c0 1-.8 2-1.8 2H5c-1.2 0-2-1-2-2V7.5z"/><path d="M3.2 7.5l8.5 5.5 9-5.2"/></svg>`,
 
   // Empty states — hand-drawn paths on 80×80 canvas
   emptySearch: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="empty-svg"><path d="M49 33c0 8.5-7 15.2-15.5 15-8-.2-14.5-7-14.2-15 .3-8 7-14.5 15-14.5 8.2 0 14.8 6.2 14.7 14.5z" opacity=".2"/><path d="M44 44l15 15" opacity=".2"/></svg>`,
@@ -43,27 +45,27 @@ const icons = {
   successGift: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-svg"><path d="M60.5 40.2c-.2 11.2-9.2 20-20.2 20-11.2 0-20.2-9-20.2-20 0-11 9-20.2 20-20.2 11.2 0 20.5 9 20.4 20.2z" opacity=".18"/><path d="M31.5 40.5h17" stroke-width="1.8"/><path d="M40.2 32v16.5" stroke-width="1.8"/></svg>`,
   thankYou: `<svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M40.2 56.5V32"/><path d="M40.2 32c-5.2.5-9.2-5-9.2-12.2 4.2 0 8.2 4.2 9.2 12.2z" opacity=".25"/><path d="M40 38.5c5.2-.5 9.2-5.2 9.2-12.5-4.2.2-8 4.5-9.2 12.5z" opacity=".2"/></svg>`,
 
-  // Dashboard — organic paths, no <rect>
-  schedule: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.2 7c0-1 .8-1.8 1.8-2h14c1 .2 1.8 1 2 2v12.5c-.2 1-1 1.8-2 2H5c-1-.2-1.8-1-1.8-2V7z"/><path d="M3.2 9.8h17.8"/><path d="M8 3.2v3.8M16 3v4"/></svg>`,
-  sessions: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.5 6.2h16.5"/><path d="M3.5 12h12.5"/><path d="M3.5 17.8h8.5"/></svg>`,
-  clients: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 7.8c0 1.8-1.2 3.2-2.8 3.2-1.8 0-3.2-1.2-3.2-3 0-1.8 1.2-3.2 3-3.2 1.8 0 3 1.2 3 3z"/><path d="M3 20.5c.2-3.5 2.8-6 6-5.8 3 .2 5.8 2.5 5.8 6"/><path d="M17 9.8c1-.2 2 .8 2 1.8" opacity=".5"/></svg>`,
-  earnings: `<svg viewBox="0 0 24 24" ${_s}><path d="M21 12.2c-.1 5-4.2 8.8-9 8.8-5 0-9-3.8-9-8.8s3.8-9.2 8.8-9.2c5.2 0 9.3 4 9.2 9.2z"/><path d="M9 9.8c.2-1.2 1.5-2 3.2-2 1.5 0 2.8.8 3 2 .2 1.8-2.8 2-3 4-.2 1 1.5 2 3 2 1.5 0 2.8-.8 3-2"/></svg>`,
-  editProfile: `<svg viewBox="0 0 24 24" ${_s}><path d="M16.2 3.8l4.2 3.8L7.8 20.2H3.8v-4L16.2 3.8z"/></svg>`,
-  referrals: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.2 3v8.2"/><path d="M12 11.2L5.8 19.5"/><path d="M12.2 11l6.2 8.2"/></svg>`,
+  // Dashboard — signature flaw on each (one stroke shorter)
+  schedule: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.2 7c0-1 .8-1.8 1.8-2h14c1 .2 1.8 1 2 2v12c-.2 1-1 1.8-2 2H5c-1-.2-1.8-1-1.8-2V7z"/><path d="M3.2 9.8h17.2"/><path d="M8 3.2v3.5M16 3v3.8"/></svg>`,
+  sessions: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.5 6.2h16"/><path d="M3.5 12h12"/><path d="M3.5 17.8h8"/></svg>`,
+  clients: `<svg viewBox="0 0 24 24" ${_s}><path d="M12 7.8c0 1.6-1.2 3-2.8 3-1.8 0-3-1.2-3-2.8 0-1.8 1.2-3.2 3-3.2 1.6 0 2.8 1.2 2.8 3z"/><path d="M3 20c.2-3.2 2.8-5.5 6-5.5 2.8 0 5.5 2.2 5.5 5.5"/><path d="M17 9.8c1-.2 1.8.5 1.8 1.5" opacity=".5"/></svg>`,
+  earnings: `<svg viewBox="0 0 24 24" ${_s}><path d="M20.8 12.2c-.1 4.8-4 8.5-8.8 8.5-5 0-9-3.5-9-8.5s3.8-9.2 8.8-9.2c5 0 9.2 3.8 9 9.2z"/><path d="M9 9.8c.2-1.2 1.5-1.8 3-1.8 1.5 0 2.8.8 3 1.8.2 1.8-2.8 2-3 3.8-.2 1 1.5 1.8 3 1.8 1.5 0 2.5-.8 2.8-1.8"/></svg>`,
+  editProfile: `<svg viewBox="0 0 24 24" ${_s}><path d="M16.2 3.8l3.8 3.8L7.8 19.8H4v-3.8L16.2 3.8z"/></svg>`,
+  referrals: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.2 3.2v7.8"/><path d="M12 11L5.8 19"/><path d="M12.2 11l5.8 7.8"/></svg>`,
 
-  // Bento — abstract organic symbols
-  bentoRetreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M11.8 5L20.2 19.2"/><path d="M12.2 5L3.5 19"/><path d="M2.5 20.2h19"/></svg>`,
-  bentoForum: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.5 7.2c0-1 1-1.8 2-2h8.2c1 .2 1.8 1 2 2v5.8c-.2 1-1 1.8-2 2H9l-3.2 2.8V15h-1c-1 0-1.5-.5-1.3-1.5V7.2z"/><path d="M16 10.2h2.2c1 0 1.8.8 2 1.8v4c-.2 1-1 2-2 2h-1.2v2.2l-2.5-2.2" opacity=".5"/></svg>`,
-  bentoGift: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.2 3.5v17.5"/><path d="M7 8.2c-2.2-3 .8-6.2 5.2-5"/><path d="M17 8c2.2-3-1-6-5.2-5"/></svg>`,
-  bentoBlog: `<svg viewBox="0 0 24 24" ${_s}><path d="M6.2 4.2v15.5c0 1.2.8 2 2 2.2h7.8c1.2 0 2-.8 2.2-2V4"/><path d="M9.2 10.2h5.8"/><path d="M9.2 14h4.2"/></svg>`,
-  bentoProducts: `<svg viewBox="0 0 24 24" ${_s}><path d="M20.5 12.2c-.1 4.8-4 8.5-8.5 8.5-4.8 0-8.5-3.5-8.5-8.5s3.5-8.8 8.3-8.8c5 0 8.8 3.8 8.7 8.8z"/><path d="M15 12.5c-.2 1.8-1.5 3-3.2 2.8-1.5-.2-2.8-1.5-2.8-3 0-1.8 1.2-3 2.8-3 1.8 0 3.2 1.2 3.2 3.2z"/></svg>`,
+  // Bento — signature flaw: retreat left line shorter, gift right branch shorter
+  bentoRetreat: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.5 4.5L21 19.5"/><path d="M12.5 4.5L3.5 18.5"/><path d="M2.5 19.8h18.5"/></svg>`,
+  bentoForum: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.5 7.2c0-1 1-1.8 2-2h8c1 .2 1.8 1 2 2v5.5c-.2 1-1 1.8-2 2H9l-3.2 2.5V15h-1c-1 0-1.3-.5-1.3-1.5V7.2z"/><path d="M15.8 10.2h2c1 0 1.8.8 2 1.8v3.8c-.2 1-1 1.8-2 1.8h-1v2l-2.5-2" opacity=".5"/></svg>`,
+  bentoGift: `<svg viewBox="0 0 24 24" ${_s}><path d="M12.2 3.5v17"/><path d="M7 8.2c-2.2-3 .8-6.2 5.2-5"/><path d="M17 8c2-2.8-.8-5.5-4.8-4.8"/></svg>`,
+  bentoBlog: `<svg viewBox="0 0 24 24" ${_s}><path d="M6.2 4.2v15c0 1.2.8 2 2 2.2h7.5c1.2 0 2-.8 2.2-2V4.2"/><path d="M9.2 10.2h5.5"/><path d="M9.2 14h3.8"/></svg>`,
+  bentoProducts: `<svg viewBox="0 0 24 24" ${_s}><path d="M20.5 12.2c-.1 4.8-4 8.3-8.5 8.3-4.5 0-8.2-3.5-8.5-8.2-.2-5 3.5-8.8 8.3-8.8 4.8 0 8.8 3.5 8.7 8.7z"/><path d="M14.8 12.5c-.2 1.5-1.2 2.5-2.8 2.5-1.5 0-2.8-1.2-2.8-2.8 0-1.5 1.2-2.8 2.8-2.8 1.5 0 2.8 1.2 2.8 3.1z"/></svg>`,
 
-  // UI chrome — organic, slightly off-center
-  home: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.8 10.5l8.2-7 8 7v9.2c0 .8-.5 1.2-1.2 1.2H5c-.5 0-1.2-.5-1.2-1V10.5z"/><path d="M9.2 21v-6.8h5.2V21"/></svg>`,
-  user: `<svg viewBox="0 0 24 24" ${_s}><path d="M15.5 8c0 2-1.5 3.5-3.3 3.5-2 0-3.5-1.5-3.5-3.3 0-2 1.5-3.5 3.3-3.5 2 0 3.5 1.5 3.5 3.3z"/><path d="M5.2 21.2c.2-3.8 3-6.2 6.8-6.2 3.5 0 6.5 2.5 6.5 6"/></svg>`,
-  back: `<svg viewBox="0 0 24 24" ${_s}><path d="M15 18l-6.2-6L15 6"/></svg>`,
-  chevron: `<svg viewBox="0 0 24 24" ${_s}><path d="M9 18l6.2-6L9 6"/></svg>`,
-  dashboard: `<svg viewBox="0 0 24 24" ${_s}><path d="M3 4.5c0-.8.5-1.5 1.2-1.5h5.5c.8 0 1.5.5 1.5 1.2v5.5c0 .8-.5 1.5-1.2 1.5H4.5c-.8 0-1.5-.5-1.5-1.2V4.5z"/><path d="M13.2 4.5c0-.8.5-1.3 1.2-1.5h5.5c.8.2 1.3.8 1.3 1.5v5.5c0 .8-.5 1.5-1.2 1.5h-5.5c-.8 0-1.5-.5-1.3-1.5V4.5z"/><path d="M3 14.5c0-.8.5-1.3 1.2-1.5h5.5c.8.2 1.3.8 1.5 1.5v5.2c0 .8-.5 1.5-1.2 1.5H4.5c-.8 0-1.5-.5-1.5-1.2V14.5z"/><path d="M13.2 14.2c0-.8.5-1.2 1.2-1.2h5.5c.8 0 1.3.5 1.3 1.2v5.5c0 .8-.5 1.5-1.2 1.5h-5.5c-.8 0-1.5-.5-1.3-1.5V14.2z"/></svg>`,
+  // UI chrome — home base slightly wider, user head slightly smaller
+  home: `<svg viewBox="0 0 24 24" ${_s}><path d="M3.5 10.5l8.5-7 8 7v9.2c0 .8-.5 1.2-1.2 1.2H4.8c-.5 0-1.2-.5-1.3-1V10.5z"/><path d="M9 21v-6.5h5.2V21"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" ${_s}><path d="M15.2 8.2c0 1.8-1.3 3.2-3.2 3.2-1.8 0-3.2-1.5-3.2-3 0-1.8 1.3-3.2 3-3.2 1.8 0 3.4 1.2 3.4 3z"/><path d="M5.2 21c.2-3.5 3-6 6.8-6 3.5 0 6.2 2.5 6.5 5.8"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" ${_s}><path d="M15 18l-6.2-6L15 6.2"/></svg>`,
+  chevron: `<svg viewBox="0 0 24 24" ${_s}><path d="M9 18l6.2-6L9 6.2"/></svg>`,
+  dashboard: `<svg viewBox="0 0 24 24" ${_s}><path d="M3 4.5c0-.8.5-1.5 1.2-1.5h5.3c.8 0 1.5.5 1.5 1.2v5.3c0 .8-.5 1.5-1.2 1.5H4.5c-.8 0-1.5-.5-1.5-1.2V4.5z"/><path d="M13.2 4.5c0-.8.5-1.3 1.2-1.5h5.3c.8.2 1.3.8 1.3 1.5v5.3c0 .8-.5 1.3-1.2 1.5h-5.3c-.8 0-1.5-.5-1.3-1.5V4.5z"/><path d="M3 14.5c0-.8.5-1.3 1.2-1.5h5.3c.8.2 1.3.8 1.5 1.5v5c0 .8-.5 1.5-1.2 1.5H4.5c-.8 0-1.5-.5-1.5-1.2V14.5z"/><path d="M13.2 14.2c0-.8.5-1.2 1.2-1.2h5.3c.8 0 1.3.5 1.3 1.2v5.3c0 .8-.5 1.3-1.2 1.5h-5.3c-.8 0-1.5-.5-1.3-1.5V14.2z"/></svg>`,
 };
 
 // Helper to render icon with size
