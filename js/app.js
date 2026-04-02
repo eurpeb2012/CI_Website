@@ -48,6 +48,13 @@ const icons = {
   editProfile: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5l4 4L8 20H4v-4L16.5 3.5z"/></svg>`,
   referrals: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3"/><circle cx="5.5" cy="18" r="2.5" opacity=".55"/><circle cx="18.5" cy="18" r="2.5" opacity=".55"/><path d="M10 8.5L7 15.5M14 8.5l3 7" opacity=".35"/></svg>`,
 
+  // Bento-specific — 24×24 monoline
+  bentoRetreat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M12 4l8 16H4L12 4z"/></svg>`,
+  bentoForum: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12c1 0 2 1 2 2v7c0 1-1 2-2 2H9l-3 3v-3H4c-1 0-2-1-2-2V8c0-1 1-2 2-2z"/><path d="M20 10h1c1 0 2 1 2 2v5c0 1-1 2-2 2h-1v3l-3-3h-3" opacity=".5"/></svg>`,
+  bentoGift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1.5"/><rect x="2.5" y="7" width="19" height="5" rx="1.5"/><path d="M12 7v14"/></svg>`,
+  bentoBlog: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h6M8 16h7"/></svg>`,
+  bentoProducts: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>`,
+
   // UI chrome — 24×24, 1.5px stroke, monoline
   home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-6.5L20 10v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9z"/><path d="M9 21v-7h6v7"/></svg>`,
   user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-3.5 3-6.5 7-6.5s7 3 7 6.5"/></svg>`,
@@ -759,23 +766,23 @@ function renderLanding(el, header) {
 
       <div class="bento-grid">
         <button class="bento-tile bento-retreat" onclick="navigate('#/retreats')">
-          <span class="bento-emoji">🏕️</span>
+          <span class="bento-icon">${icons.bentoRetreat}</span>
           <span class="bento-label">${t('retreatSectionTitle')}</span>
         </button>
         <button class="bento-tile bento-forum" onclick="navigate('#/forum')">
-          <span class="bento-emoji">💬</span>
+          <span class="bento-icon">${icons.bentoForum}</span>
           <span class="bento-label">${t('forumTitle')}</span>
         </button>
         <button class="bento-tile bento-gift" onclick="navigate('#/gift-card')">
-          <span class="bento-emoji">🎁</span>
+          <span class="bento-icon">${icons.bentoGift}</span>
           <span class="bento-label">${t('giftCardTitle')}</span>
         </button>
         <button class="bento-tile bento-blog" onclick="navigate('#/blog')">
-          <span class="bento-emoji">📝</span>
+          <span class="bento-icon">${icons.bentoBlog}</span>
           <span class="bento-label">${t('blogTitle')}</span>
         </button>
         <button class="bento-tile bento-products bento-wide" onclick="navigate('#/digital-products')">
-          <span class="bento-emoji">✨</span>
+          <span class="bento-icon">${icons.bentoProducts}</span>
           <span class="bento-label">${t('digitalProductsTitle')}</span>
         </button>
       </div>
