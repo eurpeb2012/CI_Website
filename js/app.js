@@ -467,8 +467,19 @@ function suggestThemeByTime() {
   return 'evening';
 }
 
-// Initialize theme
+// ===== Accent Style =====
+function getAccentStyle() {
+  return localStorage.getItem('iyashi-accent') || 'subtle-light-wood';
+}
+
+function setAccentStyle(style) {
+  localStorage.setItem('iyashi-accent', style);
+  document.documentElement.setAttribute('data-accent', style);
+}
+
+// Initialize theme + accent
 setTheme(getTheme());
+setAccentStyle(getAccentStyle());
 
 // ===== Router =====
 let _prevRoute = '/';
@@ -2212,12 +2223,19 @@ async function onSaveTherapistProfile() {
 function renderSettings(el, header) {
   renderHeaderWithBack(header, t('settingsTitle'), '#/profile');
   const currentTheme = getTheme();
+  const currentAccent = getAccentStyle();
   const suggested = suggestThemeByTime();
 
   const themes = [
     { key: 'spring', name: t('themeSpring'), desc: t('themeSpringDesc'), color: 'linear-gradient(135deg, #a8e0c0, #5ac78d)' },
     { key: 'summer', name: t('themeSummer'), desc: t('themeSummerDesc'), color: 'linear-gradient(135deg, #fbd5a0, #f59e42)' },
     { key: 'evening', name: t('themeEvening'), desc: t('themeEveningDesc'), color: 'linear-gradient(135deg, #bdb3e0, #7e6bc7)' },
+  ];
+
+  const accents = [
+    { key: 'subtle-light-wood', name: t('accentLightWood'), desc: t('accentLightWoodDesc'), swatch: 'linear-gradient(90deg, #E7D8C9, #D9C2A8)' },
+    { key: 'warm-wood', name: t('accentWarmWood'), desc: t('accentWarmWoodDesc'), swatch: 'linear-gradient(90deg, #DCC3A7, #CFAE8B)' },
+    { key: 'very-subtle-mineral', name: t('accentMineral'), desc: t('accentMineralDesc'), swatch: 'linear-gradient(90deg, rgba(217,194,168,0.5), rgba(231,216,201,0.6))' },
   ];
 
   el.innerHTML = `
@@ -2238,12 +2256,32 @@ function renderSettings(el, header) {
           `).join('')}
         </div>
       </div>
+      <div class="profile-section">
+        <h2>${t('settingsAccent')}</h2>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px">${t('settingsAccentDesc')}</p>
+        <div class="theme-cards">
+          ${accents.map(a => `
+            <div class="theme-card ${currentAccent === a.key ? 'active' : ''}" onclick="onSelectAccent('${a.key}')">
+              <div class="theme-swatch accent-swatch" style="background:${a.swatch}"></div>
+              <div class="theme-card-info">
+                <h3>${a.name}</h3>
+                <p>${a.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
     </div>
   `;
 }
 
 function onSelectTheme(theme) {
   setTheme(theme);
+  router();
+}
+
+function onSelectAccent(style) {
+  setAccentStyle(style);
   router();
 }
 

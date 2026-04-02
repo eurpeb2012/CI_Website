@@ -65,6 +65,52 @@
   --theme-glow: rgba(189,179,224,0.12);
 }
 
+/* ===== Accent Style Definitions ===== */
+/* Default: subtle-light-wood — hinoki / washed cedar */
+[data-accent="subtle-light-wood"], :root {
+  --accent-base: #E7D8C9;
+  --accent-secondary: #D9C2A8;
+  --accent-highlight: rgba(255,255,255,0.25);
+  --accent-bar-bg: linear-gradient(90deg, #E7D8C9, #D9C2A8);
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.55;
+  --accent-bar-inset: 14px;
+  --accent-divider-bg: linear-gradient(90deg, transparent, #E7D8C9, #D9C2A8, transparent);
+  --accent-divider-opacity: 0.35;
+  --accent-grain-opacity: 0.035;
+}
+
+/* warm-wood — richer natural warmth */
+[data-accent="warm-wood"] {
+  --accent-base: #DCC3A7;
+  --accent-secondary: #CFAE8B;
+  --accent-highlight: rgba(255,255,255,0.2);
+  --accent-bar-bg: linear-gradient(90deg, #DCC3A7, #CFAE8B);
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.6;
+  --accent-bar-inset: 14px;
+  --accent-divider-bg: linear-gradient(90deg, transparent, #DCC3A7, #CFAE8B, transparent);
+  --accent-divider-opacity: 0.4;
+  --accent-grain-opacity: 0.05;
+}
+
+/* very-subtle-mineral — warm stone / mineral paper */
+[data-accent="very-subtle-mineral"] {
+  --accent-base: rgba(217,194,168,0.35);
+  --accent-secondary: rgba(231,216,201,0.45);
+  --accent-highlight: rgba(255,255,255,0.15);
+  --accent-bar-bg: linear-gradient(90deg, rgba(217,194,168,0.4), rgba(231,216,201,0.5));
+  --accent-bar-height: 2px;
+  --accent-bar-radius: 1.5px;
+  --accent-bar-opacity: 0.5;
+  --accent-bar-inset: 16px;
+  --accent-divider-bg: linear-gradient(90deg, transparent, rgba(217,194,168,0.3), transparent);
+  --accent-divider-opacity: 0.3;
+  --accent-grain-opacity: 0.015;
+}
+
 /* ===== CSS Custom Properties — Shinrin Calm ===== */
 :root {
   /* Desaturated earth/forest palette — no pure black */
@@ -1350,15 +1396,131 @@ body::after {
 }
 
 /* ===== Therapist Profile ===== */
+/* ===== Natural Accent System ===== */
+/* Accent bar — applied to feature panels via .accent-panel */
+.accent-panel {
+  position: relative;
+}
+
+.accent-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--accent-bar-inset);
+  right: var(--accent-bar-inset);
+  height: var(--accent-bar-height);
+  background: var(--accent-bar-bg);
+  border-radius: var(--accent-bar-radius);
+  opacity: var(--accent-bar-opacity);
+  pointer-events: none;
+}
+
+/* Inner highlight on accent panels */
+.accent-panel::before {
+  content: '';
+  position: absolute;
+  bottom: var(--accent-bar-height);
+  left: calc(var(--accent-bar-inset) + 8px);
+  right: calc(var(--accent-bar-inset) + 8px);
+  height: 1px;
+  background: var(--accent-highlight);
+  opacity: var(--accent-bar-opacity);
+  pointer-events: none;
+}
+
+/* Section divider accent */
+.accent-divider {
+  border: none;
+  height: 1.5px;
+  background: var(--accent-divider-bg);
+  opacity: var(--accent-divider-opacity);
+  margin: var(--space-6) 0;
+  border-radius: 1px;
+}
+
+/* Grain overlay for accent surfaces — ultra-subtle */
+.accent-grain::after {
+  background-image:
+    var(--accent-bar-bg),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8 0.02' numOctaves='3' seed='2'/%3E%3C/filter%3E%3Crect width='200' height='4' filter='url(%23g)' opacity='.15'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 200px var(--accent-bar-height);
+  background-blend-mode: overlay;
+}
+
+/* Auto-apply accent bar to key panels */
+.profile-section h2 {
+  position: relative;
+}
+
+.profile-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 30%;
+  height: 1.5px;
+  background: var(--accent-bar-bg);
+  opacity: calc(var(--accent-bar-opacity) * 0.6);
+  border-radius: var(--accent-bar-radius);
+}
+
+/* Grounding line on highlighted cards */
+.session-card {
+  position: relative;
+}
+
+.session-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--accent-bar-inset);
+  right: var(--accent-bar-inset);
+  height: var(--accent-bar-height);
+  background: var(--accent-bar-bg);
+  border-radius: var(--accent-bar-radius);
+  opacity: calc(var(--accent-bar-opacity) * 0.45);
+  pointer-events: none;
+}
+
+/* Booking summary accent grounding */
+.booking-summary {
+  position: relative;
+}
+
+.booking-summary::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--accent-bar-inset);
+  right: var(--accent-bar-inset);
+  height: var(--accent-bar-height);
+  background: var(--accent-bar-bg);
+  border-radius: var(--accent-bar-radius);
+  opacity: calc(var(--accent-bar-opacity) * 0.4);
+  pointer-events: none;
+}
+
 .profile-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding-bottom: var(--space-5);
-  border-bottom: 2px solid transparent;
-  border-image: linear-gradient(90deg, transparent, var(--theme-primary-200), transparent) 1;
+  border-bottom: none;
   margin-bottom: var(--space-6);
+  position: relative;
+}
+
+.profile-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--accent-bar-inset);
+  right: var(--accent-bar-inset);
+  height: var(--accent-bar-height);
+  background: var(--accent-bar-bg);
+  border-radius: var(--accent-bar-radius);
+  opacity: var(--accent-bar-opacity);
 }
 
 .profile-avatar {
@@ -1406,10 +1568,11 @@ body::after {
   font-weight: 400;
   color: var(--theme-primary-700);
   margin-bottom: var(--space-4);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid rgba(var(--theme-shadow-color, 140,180,155),0.12);
+  padding-bottom: var(--space-3);
+  border-bottom: none;
   letter-spacing: 0.04em;
   line-height: 1.3;
+  /* accent underline via ::after in accent system above */
 }
 
 .profile-intro-text {
@@ -2270,6 +2433,13 @@ body::after {
   height: 48px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.theme-swatch.accent-swatch {
+  border-radius: var(--radius-sm);
+  height: 12px;
+  width: 64px;
+  align-self: center;
 }
 
 .theme-card-info h3 {
@@ -3730,12 +3900,24 @@ body::after {
   letter-spacing: 0.02em;
 }
 
-/* Bento color accents */
-.bento-tile.bento-retreat { border-bottom: 2px solid #d4b896; }
-.bento-tile.bento-forum { border-bottom: 2px solid var(--theme-primary-400); }
-.bento-tile.bento-gift { border-bottom: 2px solid #e8a0b8; }
-.bento-tile.bento-blog { border-bottom: 2px solid #b8b0cf; }
-.bento-tile.bento-products { border-bottom: 2px solid #9dc4d8; }
+/* Bento accent bars — natural material grounding */
+.bento-tile {
+  overflow: hidden;
+}
+
+.bento-tile::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--accent-bar-inset);
+  right: var(--accent-bar-inset);
+  height: var(--accent-bar-height);
+  background: var(--accent-bar-bg);
+  border-radius: var(--accent-bar-radius);
+  opacity: calc(var(--accent-bar-opacity) * 0.5);
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* Full-width bento tile */
 .bento-tile.bento-wide {
