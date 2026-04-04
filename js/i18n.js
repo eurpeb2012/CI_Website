@@ -14,9 +14,10 @@ const translations = {
     // Landing
     landingTitle: '癒しの庭',
     landingSubtitle: 'Healing Garden',
-    landingTagline: 'あなたにぴったりの癒しを見つけましょう',
-    landingCTA: 'セッションを探す',
-    landingSecondary: 'セラピストとして申し込む',
+    landingTagline: '今のあなたに寄り添う癒しがここにあります',
+    landingEmpathy: 'ストレスや不安を抱えていても、ひとりで抱え込まなくて大丈夫。あなたに合ったセラピストが、ここで待っています。',
+    landingCTA: '自分に合う癒しを見つける',
+    landingSecondary: 'セラピストとして参加する',
 
     // Search Entry
     searchTitle: 'どのように探しますか？',
@@ -67,7 +68,7 @@ const translations = {
 
     // Results
     resultsTitle: 'おすすめのセラピスト',
-    resultsEmpty: '条件に合うセラピストが見つかりませんでした',
+    resultsEmpty: 'ぴったりのセラピストがまだ見つかっていません。条件を広げて、もう一度探してみませんか？',
     resultsFrom: '〜から',
 
     // Criteria Search
@@ -81,19 +82,20 @@ const translations = {
     criteriaSearch: '検索する',
 
     // Therapist Profile
-    profileIntro: '自己紹介',
+    profileIntro: 'わたしについて',
     profileLocation: '所在地',
     profileSessions: '提供セッション',
     profileAvailability: '空き状況',
     profileReviews: 'レビュー',
-    profileBook: 'このセッションを予約',
+    profileBook: 'このセッションを受ける',
     profilePerSession: '/ セッション',
     profileMinutes: '分',
-    profileMessage: 'メッセージを送る',
-    profileSuggested: 'おすすめのセラピスト',
+    profileMessage: 'まずは話してみる',
+    profileSuggested: 'こちらのセラピストもおすすめです',
 
     // Booking
-    bookingTitle: '予約確認',
+    bookingTitle: 'セッションの予約',
+    bookingReassurance: '大切な一歩を踏み出そうとしているあなたへ。安心してご予約ください。',
     bookingSession: 'セッション',
     bookingTherapist: 'セラピスト',
     bookingDate: '日時',
@@ -104,7 +106,8 @@ const translations = {
     bookingCancel3d: '3日前まで：80%',
     bookingCancelSame: '当日：100%',
     bookingAgree: '利用規約とキャンセルポリシーに同意します',
-    bookingConfirm: '確認して支払う',
+    bookingConfirm: 'セッションを予約する',
+    bookingRescheduleNote: '予定が変わっても大丈夫。事前にご連絡いただければ変更できます。',
     bookingSelectDate: '日付を選択',
     bookingSelectTime: '時間を選択',
     bookingNoSlots: 'この日は空きがありません',
@@ -113,8 +116,9 @@ const translations = {
     bookingNextMonth: '翌月',
     bookingLoading: '予約中...',
     bookingError: '予約に失敗しました。もう一度お試しください。',
-    bookingSuccess: '予約が完了しました！',
-    bookingSuccessMsg: '確認メールをお送りしました。',
+    bookingSuccess: '大切な一歩を踏み出しました',
+    bookingSuccessMsg: 'セラピストがあなたとのセッションを楽しみにしています。確認メールをお送りしました。',
+    bookingSuccessEncourage: '自分を大切にすることは、とても勇気のいることです。',
     paymentProcessing: 'お支払い処理中...',
     paymentError: '決済に失敗しました。もう一度お試しください。',
     paymentConfirmed: 'お支払いが確認されました',
@@ -206,9 +210,9 @@ const translations = {
     userProfileId: 'ユーザーID',
     userProfileAnon: '匿名ユーザー',
     userProfileHistory: '予約履歴',
-    userProfileNoHistory: 'まだ予約はありません',
+    userProfileNoHistory: '最初のセッションが、あなたの癒しの旅の始まりです',
     userProfileReviews: 'あなたのレビュー',
-    userProfileNoReviews: 'まだレビューはありません',
+    userProfileNoReviews: 'セッション後に体験を振り返ってみましょう',
     userProfileSettings: '設定',
     userProfileLogout: 'ログアウト',
     userProfileReceivedReviews: 'セラピストからのレビュー',
@@ -216,7 +220,7 @@ const translations = {
     userProfileSwitchTherapist: 'セラピストモードに切り替え',
 
     // Signup
-    signupTitle: 'アカウント作成',
+    signupTitle: 'はじめましょう',
     signupName: '名前',
     signupNamePlaceholder: 'お名前を入力',
     signupEmail: 'メールアドレス',
@@ -226,7 +230,7 @@ const translations = {
     signupAddress: '住所',
     signupAddressPlaceholder: '例：東京都渋谷区1-2-3',
     signupSubmit: '登録する',
-    signupNotice: '登録は無料です。閲覧はログインなしでもできます。',
+    signupNotice: 'あなたの情報は安全に守られます。まずは気軽にどうぞ。',
     // Age Verification
     dobLabel: '生年月日',
     dobYear: '年',
@@ -253,8 +257,8 @@ const translations = {
     therapistMinorTermsContent: '18歳未満のクライアントとのセッションについて：保護者の同意確認を行うこと、セッション料金は¥3,000以下であること、未成年者保護に関する法令を遵守することに同意します。',
     therapistMinorTermsAgree: '未成年者セッション規約に同意します',
     therapistMinorPriceNote: '※ 18歳未満向けセッションの料金上限は¥3,000です',
-    signupRequired: 'この操作にはアカウント登録が必要です',
-    signupSocialHint: 'お持ちのアカウントで簡単ログイン',
+    signupRequired: 'あなた専用のスペースを作るために、ログインをお願いしています',
+    signupSocialHint: 'お持ちのアカウントですぐ始められます',
     signInLine: 'LINEでログイン',
     signInGoogle: 'Googleでログイン',
     signInApple: 'Appleでログイン',
@@ -290,8 +294,8 @@ const translations = {
 
     // Messages
     messagesTitle: 'メッセージ',
-    messagesEmpty: 'メッセージはまだありません',
-    messagesNoMessages: 'まだメッセージはありません',
+    messagesEmpty: 'セラピストとのつながりがここから始まります',
+    messagesNoMessages: 'セラピストとのつながりがここから始まります',
     messagesLoginRequired: 'メッセージを見るにはログインしてください',
     messagesNewChat: '新しいメッセージ',
     messagesStartConversation: 'セラピストを探す',
@@ -300,9 +304,9 @@ const translations = {
     chatTitle: 'チャット',
     chatViewProfile: 'プロフィール',
     chatBookSession: '予約する',
-    chatEmptyPrompt: 'メッセージを送って会話を始めましょう！',
-    chatInfoWindow: 'メッセージは3日間有効です',
-    chatPlaceholder: 'メッセージを入力...',
+    chatEmptyPrompt: 'このスペースはあなたとセラピストのためのものです。気軽にメッセージを送ってみてください。',
+    chatInfoWindow: 'あなたのプライバシーは守られています',
+    chatPlaceholder: 'ここに気持ちを...',
     chatStartVideo: 'ビデオ通話を開始',
     chatToday: '今日',
     chatJustNow: 'たった今',
@@ -327,7 +331,7 @@ const translations = {
     reviewSubmitTitle: 'レビューを書く',
     reviewRating: '評価',
     reviewText: 'コメント',
-    reviewTextPlaceholder: 'あなたの体験を教えてください...',
+    reviewTextPlaceholder: 'この体験があなたにとってどんな意味がありましたか...',
     reviewSubmit: 'レビューを投稿',
     reviewSuccess: 'レビューを投稿しました！',
 
@@ -464,7 +468,7 @@ const translations = {
     favorites: 'お気に入り',
     addFavorite: 'お気に入りに追加',
     removeFavorite: 'お気に入りから削除',
-    favoritesEmpty: 'お気に入りはまだありません',
+    favoritesEmpty: 'あなたの癒しの輪を作りましょう',
     navFavorites: 'お気に入り',
 
     // Points / Loyalty
@@ -490,7 +494,7 @@ const translations = {
     shareCopied: 'リンクをコピーしました！',
 
     // Trending / Popular
-    trendingTitle: '今週の人気',
+    trendingTitle: '多くの方に選ばれています',
     trendingTherapists: '人気のセラピスト',
     trendingSessions: '人気のセッション',
 
@@ -518,15 +522,15 @@ const translations = {
     giftCardExpired: 'このギフトカードは有効期限切れです',
 
     // Waitlist
-    waitlistJoin: 'キャンセル待ちに登録',
-    waitlistJoined: 'キャンセル待ち登録済み',
-    waitlistDesc: '空きが出た場合にお知らせします',
+    waitlistJoin: '空きが出たら教えてほしい',
+    waitlistJoined: '空き待ち登録済み',
+    waitlistDesc: 'ご縁があればお知らせします',
 
     // Blog / Articles
     blogTitle: '癒しのコラム',
     blogReadMore: '続きを読む',
     blogByTherapist: '著者',
-    blogEmpty: 'まだ記事はありません',
+    blogEmpty: '新しい記事を準備中です。もうしばらくお待ちください',
 
     // Digital Products
     digitalProductsTitle: 'デジタルコンテンツ',
@@ -537,19 +541,19 @@ const translations = {
     digitalProductAudio: '音声',
 
     // Journal / Mood Tracking
-    journalTitle: 'セッション日記',
-    journalNew: '新しい記録',
-    journalMood: '今の気分',
+    journalTitle: 'こころの記録',
+    journalNew: '今の気持ちを書く',
+    journalMood: '今の気持ちは？',
     journalMoodGreat: 'とても良い',
     journalMoodGood: '良い',
     journalMoodOkay: 'まあまあ',
     journalMoodLow: '低い',
     journalMoodBad: '悪い',
-    journalNotes: '振り返りメモ',
-    journalNotesPlaceholder: 'セッションで感じたこと、気づき...',
-    journalSave: '保存する',
-    journalSaved: '保存しました',
-    journalEmpty: 'まだ記録はありません',
+    journalNotes: '心に浮かんだこと',
+    journalNotesPlaceholder: 'セッションで感じたこと、気づいたこと、自分への言葉...',
+    journalSave: 'この気持ちを残す',
+    journalSaved: '大切な記録として残しました',
+    journalEmpty: 'あなたの癒しの旅はここから始まります',
     journalHistory: '過去の記録',
 
     // Insurance
@@ -569,7 +573,7 @@ const translations = {
 
     // Notifications
     notificationTitle: 'お知らせ',
-    notificationEmpty: '新しいお知らせはありません',
+    notificationEmpty: '今は静かな時間です。ゆっくりお過ごしください',
 
     // Retreat Section
     retreatSectionTitle: 'リトリート',
@@ -596,7 +600,7 @@ const translations = {
     forumReplyPlaceholder: '返信を入力...',
     forumReplies: '件の返信',
     forumPostedBy: '投稿者',
-    forumEmpty: 'まだトピックはありません',
+    forumEmpty: '最初の声を聞かせてください。あなたの言葉が誰かの支えになるかもしれません',
     forumLoginRequired: 'トピックの投稿にはログインが必要です',
     forumRules: 'コミュニティガイドライン：敬意を持って交流しましょう。',
 
@@ -771,9 +775,10 @@ const translations = {
     // Landing
     landingTitle: '癒しの庭',
     landingSubtitle: 'Healing Garden',
-    landingTagline: 'Find the perfect healing experience for you',
-    landingCTA: 'Find a Session',
-    landingSecondary: 'Apply as Therapist',
+    landingTagline: 'Healing that meets you where you are',
+    landingEmpathy: 'Whether you\'re carrying stress, uncertainty, or simply need space to breathe — you don\'t have to do this alone. A therapist who understands is here for you.',
+    landingCTA: 'Find your healing match',
+    landingSecondary: 'Join as a therapist',
 
     // Search Entry
     searchTitle: 'How would you like to search?',
@@ -824,7 +829,7 @@ const translations = {
 
     // Results
     resultsTitle: 'Recommended Therapists',
-    resultsEmpty: 'No therapists found matching your criteria',
+    resultsEmpty: 'We haven\'t found your match yet. Try broadening your search — the right person is out there.',
     resultsFrom: 'from',
 
     // Criteria Search
@@ -838,19 +843,20 @@ const translations = {
     criteriaSearch: 'Search',
 
     // Therapist Profile
-    profileIntro: 'About Me',
+    profileIntro: 'My Story',
     profileLocation: 'Location',
     profileSessions: 'Sessions Offered',
     profileAvailability: 'Availability',
     profileReviews: 'Reviews',
-    profileBook: 'Book This Session',
+    profileBook: 'Begin this session',
     profilePerSession: '/ session',
     profileMinutes: 'min',
-    profileMessage: 'Send Message',
-    profileSuggested: 'Suggested Therapists',
+    profileMessage: 'Start a conversation',
+    profileSuggested: 'You might also connect with',
 
     // Booking
-    bookingTitle: 'Booking Confirmation',
+    bookingTitle: 'Your Session',
+    bookingReassurance: 'You\'re taking an important step. We\'re here to support you.',
     bookingSession: 'Session',
     bookingTherapist: 'Therapist',
     bookingDate: 'Date & Time',
@@ -861,7 +867,8 @@ const translations = {
     bookingCancel3d: '3 days before: 80%',
     bookingCancelSame: 'Same day: 100%',
     bookingAgree: 'I agree to the terms of service and cancellation policy',
-    bookingConfirm: 'Confirm & Pay',
+    bookingConfirm: 'Book this session',
+    bookingRescheduleNote: 'Plans change — that\'s okay. Contact us in advance to reschedule.',
     bookingSelectDate: 'Select a date',
     bookingSelectTime: 'Select a time',
     bookingNoSlots: 'No availability on this day',
@@ -870,8 +877,9 @@ const translations = {
     bookingNextMonth: 'Next',
     bookingLoading: 'Booking...',
     bookingError: 'Booking failed. Please try again.',
-    bookingSuccess: 'Booking Confirmed!',
-    bookingSuccessMsg: 'A confirmation email has been sent.',
+    bookingSuccess: 'You\'ve taken an important step',
+    bookingSuccessMsg: 'Your therapist is looking forward to your session. A confirmation email has been sent.',
+    bookingSuccessEncourage: 'Taking care of yourself takes courage. We\'re glad you\'re here.',
     paymentProcessing: 'Processing payment...',
     paymentError: 'Payment failed. Please try again.',
     paymentConfirmed: 'Payment confirmed',
@@ -963,9 +971,9 @@ const translations = {
     userProfileId: 'User ID',
     userProfileAnon: 'Anonymous User',
     userProfileHistory: 'Booking History',
-    userProfileNoHistory: 'No bookings yet',
+    userProfileNoHistory: 'Your first session is the beginning of your healing journey',
     userProfileReviews: 'Your Reviews',
-    userProfileNoReviews: 'No reviews yet',
+    userProfileNoReviews: 'After a session, take a moment to reflect on your experience',
     userProfileSettings: 'Settings',
     userProfileLogout: 'Log Out',
     userProfileReceivedReviews: 'Reviews from Therapists',
@@ -973,7 +981,7 @@ const translations = {
     userProfileSwitchTherapist: 'Switch to Therapist Mode',
 
     // Signup
-    signupTitle: 'Create Account',
+    signupTitle: 'Welcome',
     signupName: 'Name',
     signupNamePlaceholder: 'Enter your name',
     signupEmail: 'Email',
@@ -983,7 +991,7 @@ const translations = {
     signupAddress: 'Address',
     signupAddressPlaceholder: 'e.g., 1-2-3 Shibuya, Tokyo',
     signupSubmit: 'Sign Up',
-    signupNotice: 'Registration is free. You can browse without logging in.',
+    signupNotice: 'Your information is safe with us. Take your time.',
     // Age Verification
     dobLabel: 'Date of Birth',
     dobYear: 'Year',
@@ -1010,8 +1018,8 @@ const translations = {
     therapistMinorTermsContent: 'For sessions with clients under 18: You agree to verify parental consent, keep session prices at ¥3,000 or below, and comply with all applicable minor protection regulations.',
     therapistMinorTermsAgree: 'I agree to the minor client session terms',
     therapistMinorPriceNote: '* Session prices for minor clients are capped at ¥3,000',
-    signupRequired: 'This action requires an account',
-    signupSocialHint: 'Sign in with your existing account',
+    signupRequired: 'Sign in to create your personal space',
+    signupSocialHint: 'Get started with an account you already have',
     signInLine: 'Sign in with LINE',
     signInGoogle: 'Sign in with Google',
     signInApple: 'Sign in with Apple',
@@ -1047,7 +1055,7 @@ const translations = {
 
     // Messages
     messagesTitle: 'Messages',
-    messagesEmpty: 'No messages yet',
+    messagesEmpty: 'Your connection with a therapist starts here',
     messagesNoMessages: 'No messages yet',
     messagesLoginRequired: 'Please log in to view messages',
     messagesNewChat: 'New Message',
@@ -1057,9 +1065,9 @@ const translations = {
     chatTitle: 'Chat',
     chatViewProfile: 'Profile',
     chatBookSession: 'Book',
-    chatEmptyPrompt: 'Send a message to start the conversation!',
-    chatInfoWindow: 'Messages are available for 3 days',
-    chatPlaceholder: 'Type a message...',
+    chatEmptyPrompt: 'This space is yours and your therapist\'s. Say what feels right.',
+    chatInfoWindow: 'Your privacy is protected',
+    chatPlaceholder: 'Share what\'s on your mind...',
     chatStartVideo: 'Start Video Call',
     chatToday: 'Today',
     chatJustNow: 'Just now',
@@ -1084,7 +1092,7 @@ const translations = {
     reviewSubmitTitle: 'Write a Review',
     reviewRating: 'Rating',
     reviewText: 'Comment',
-    reviewTextPlaceholder: 'Tell us about your experience...',
+    reviewTextPlaceholder: 'What did this experience mean to you...',
     reviewSubmit: 'Submit Review',
     reviewSuccess: 'Review submitted!',
 
@@ -1221,7 +1229,7 @@ const translations = {
     favorites: 'Favorites',
     addFavorite: 'Add to Favorites',
     removeFavorite: 'Remove from Favorites',
-    favoritesEmpty: 'No favorites yet',
+    favoritesEmpty: 'Start building your healing circle',
     navFavorites: 'Favorites',
 
     // Points / Loyalty
@@ -1247,7 +1255,7 @@ const translations = {
     shareCopied: 'Link copied!',
 
     // Trending / Popular
-    trendingTitle: 'Popular This Week',
+    trendingTitle: 'Trusted by many',
     trendingTherapists: 'Popular Therapists',
     trendingSessions: 'Popular Sessions',
 
@@ -1275,15 +1283,15 @@ const translations = {
     giftCardExpired: 'This gift card has expired',
 
     // Waitlist
-    waitlistJoin: 'Join Waitlist',
+    waitlistJoin: 'Let me know when there\'s an opening',
     waitlistJoined: 'On Waitlist',
-    waitlistDesc: 'We\'ll notify you when a spot opens up',
+    waitlistDesc: 'We\'ll reach out when the time is right',
 
     // Blog / Articles
     blogTitle: 'Wellness Articles',
     blogReadMore: 'Read More',
     blogByTherapist: 'By',
-    blogEmpty: 'No articles yet',
+    blogEmpty: 'New articles are on the way. Check back soon.',
 
     // Digital Products
     digitalProductsTitle: 'Digital Content',
@@ -1294,19 +1302,19 @@ const translations = {
     digitalProductAudio: 'Audio',
 
     // Journal / Mood Tracking
-    journalTitle: 'Session Journal',
-    journalNew: 'New Entry',
-    journalMood: 'Current Mood',
-    journalMoodGreat: 'Great',
+    journalTitle: 'Your Reflections',
+    journalNew: 'Write how you feel',
+    journalMood: 'How are you feeling?',
+    journalMoodGreat: 'Thriving',
     journalMoodGood: 'Good',
     journalMoodOkay: 'Okay',
-    journalMoodLow: 'Low',
-    journalMoodBad: 'Bad',
-    journalNotes: 'Reflection Notes',
-    journalNotesPlaceholder: 'What you felt during the session, insights...',
-    journalSave: 'Save',
-    journalSaved: 'Saved',
-    journalEmpty: 'No entries yet',
+    journalMoodLow: 'Struggling',
+    journalMoodBad: 'In pain',
+    journalNotes: 'What\'s on your mind',
+    journalNotesPlaceholder: 'What you noticed, what helped, a kind word for yourself...',
+    journalSave: 'Save this moment',
+    journalSaved: 'This moment has been saved',
+    journalEmpty: 'Your healing journey starts here',
     journalHistory: 'Past Entries',
 
     // Insurance
@@ -1326,7 +1334,7 @@ const translations = {
 
     // Notifications
     notificationTitle: 'Notifications',
-    notificationEmpty: 'No new notifications',
+    notificationEmpty: 'A quiet moment. Take your time.',
 
     // Retreat Section
     retreatSectionTitle: 'Retreats',
@@ -1353,7 +1361,7 @@ const translations = {
     forumReplyPlaceholder: 'Write a reply...',
     forumReplies: 'replies',
     forumPostedBy: 'Posted by',
-    forumEmpty: 'No topics yet',
+    forumEmpty: 'Be the first to share. Your words might be exactly what someone needs to hear.',
     forumLoginRequired: 'Login required to post topics',
     forumRules: 'Community guidelines: Be respectful in all interactions.',
 

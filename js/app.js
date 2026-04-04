@@ -777,6 +777,7 @@ function renderLanding(el, header) {
       <h1 class="landing-title">${t('landingTitle')}</h1>
       <p class="landing-subtitle">${t('landingSubtitle')}</p>
       <p class="landing-tagline">${t('landingTagline')}</p>
+      <p class="landing-empathy">${t('landingEmpathy')}</p>
       <button class="btn-primary" onclick="navigate('#/search')">${t('landingCTA')}</button>
       <button class="btn-secondary" onclick="navigate('#/apply')">${t('landingSecondary')}</button>
 
@@ -1706,6 +1707,7 @@ function renderBooking(el, header) {
   el.innerHTML = `
     <div class="page">
       <h1 class="page-title">${t('bookingTitle')}</h1>
+      <p class="booking-reassurance">${t('bookingReassurance')}</p>
       <div class="booking-summary">
         <div class="booking-row"><span class="booking-label">${t('bookingSession')}</span><span class="booking-value">${sessionName}</span></div>
         <div class="booking-row"><span class="booking-label">${t('bookingTherapist')}</span><span class="booking-value">${name}</span></div>
@@ -1721,6 +1723,7 @@ function renderBooking(el, header) {
           <li>${t('bookingCancel2w')}</li><li>${t('bookingCancel1w')}</li>
           <li>${t('bookingCancel3d')}</li><li>${t('bookingCancelSame')}</li>
         </ul>
+        <p class="reschedule-note">${t('bookingRescheduleNote')}</p>
       </div>
       <div class="checkbox-group">
         <input type="checkbox" id="agree-check" onchange="updateBookingConfirmBtn()">
@@ -1749,8 +1752,8 @@ function renderBookingSuccess(el, header) {
       <div class="success-icon">${icons.successCheck}</div>
       <h2>${t('bookingSuccess')}</h2>
       <p>${t('bookingSuccessMsg')}</p>
+      <p class="success-encourage">${t('bookingSuccessEncourage')}</p>
       ${stripeSessionId ? `<p class="payment-confirmed-msg">${t('paymentConfirmed')}</p>` : ''}
-      ${authState.isLoggedIn && state.bookingSession ? `<p class="points-earned-msg">+${Math.floor(state.bookingSession.price / 100)} ${t('points')} ${t('pointsEarned')}</p>` : ''}
       <button class="btn-primary" onclick="navigate('#/')">${t('bookingBackHome')}</button>
     </div>
   `;
@@ -3792,11 +3795,11 @@ function renderJournal(el, header) {
 function renderJournalNew(el, header) {
   renderHeaderWithBack(header, t('journalNew'), '#/journal');
   const moods = [
-    { key: 'great', emoji: '◉', label: t('journalMoodGreat') },
-    { key: 'good', emoji: '◎', label: t('journalMoodGood') },
-    { key: 'okay', emoji: '○', label: t('journalMoodOkay') },
-    { key: 'low', emoji: '◌', label: t('journalMoodLow') },
-    { key: 'bad', emoji: '·', label: t('journalMoodBad') },
+    { key: 'great', emoji: '', label: t('journalMoodGreat') },
+    { key: 'good', emoji: '', label: t('journalMoodGood') },
+    { key: 'okay', emoji: '', label: t('journalMoodOkay') },
+    { key: 'low', emoji: '', label: t('journalMoodLow') },
+    { key: 'bad', emoji: '', label: t('journalMoodBad') },
   ];
   el.innerHTML = `
     <div class="page">
