@@ -67,29 +67,21 @@
 
 /* ===== Accent Style Definitions ===== */
 
-/* Organic edge masks — irregular top edge for natural material feel.
-   Wood grain: gentle horizontal undulation. Bamboo: slightly tighter rhythm.
-   Mineral uses none (smooth). These are applied via --accent-bar-mask. */
-
 /* subtle-light-wood — hinoki / washed cedar */
 [data-accent="subtle-light-wood"] {
   --accent-base: #E7D8C9;
   --accent-secondary: #D9C2A8;
   --accent-highlight: rgba(255,255,255,0.25);
   --accent-bar-bg: linear-gradient(90deg, #E7D8C9, #D9C2A8);
-  --accent-bar-height: 5px;
-  --accent-bar-radius: 0;
-  --accent-bar-opacity: 0.65;
-  --accent-bar-inset: 12px;
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.55;
+  --accent-bar-inset: 14px;
   --accent-divider-bg: linear-gradient(90deg, transparent, #E7D8C9, #D9C2A8, transparent);
-  --accent-divider-opacity: 0.4;
+  --accent-divider-opacity: 0.35;
   --accent-grain-opacity: 0.035;
   --accent-side-bar: linear-gradient(180deg, #E7D8C9, #D9C2A8);
-  --accent-side-opacity: 0.7;
-  --accent-side-height: 4px;
-  /* Wood grain: wavy top edge on horizontal bars, wavy right edge on side bars */
-  --accent-bar-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 2.5C15 1 35 3.5 60 1.8 85 .3 110 3 145 2 180 .8 210 3.5 245 2.2 280 .8 310 3.2 350 1.5 380 .5 395 2.8 400 2.2V6H0Z' fill='white'/%3E%3C/svg%3E");
-  --accent-side-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='200' preserveAspectRatio='none'%3E%3Cpath d='M0 0C0 0 0 200 0 200H3.5C3.8 0 4.5 15 3.8 35 3 55 4.2 75 3.5 100 3 125 4.5 145 4 170 3.2 190 4 200 4 200H0Z' fill='white'/%3E%3C/svg%3E");
+  --accent-side-opacity: 0.6;
 }
 
 /* Default: warm-wood — richer natural warmth */
@@ -98,22 +90,18 @@
   --accent-secondary: #CFAE8B;
   --accent-highlight: rgba(255,255,255,0.2);
   --accent-bar-bg: linear-gradient(90deg, #DCC3A7, #CFAE8B);
-  --accent-bar-height: 5px;
-  --accent-bar-radius: 0;
-  --accent-bar-opacity: 0.7;
-  --accent-bar-inset: 12px;
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.6;
+  --accent-bar-inset: 14px;
   --accent-divider-bg: linear-gradient(90deg, transparent, #DCC3A7, #CFAE8B, transparent);
-  --accent-divider-opacity: 0.45;
+  --accent-divider-opacity: 0.4;
   --accent-grain-opacity: 0.05;
   --accent-side-bar: linear-gradient(180deg, #DCC3A7, #CFAE8B);
-  --accent-side-opacity: 0.75;
-  --accent-side-height: 4px;
-  /* Warm wood: more pronounced wavy top/right edges */
-  --accent-bar-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 2C20 3.5 45 .5 75 2.5 105 4 135 .8 170 2.2 205 3.8 230 .5 265 2.8 300 4 335 1 370 2.5 395 .8 400 2V6H0Z' fill='white'/%3E%3C/svg%3E");
-  --accent-side-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='200' preserveAspectRatio='none'%3E%3Cpath d='M0 0V200H3.2C3.5 0 4.8 18 3.5 42 2.8 68 5 95 3.8 125 2.5 152 4.8 175 3.5 195 3 200H0Z' fill='white'/%3E%3C/svg%3E");
+  --accent-side-opacity: 0.65;
 }
 
-/* very-subtle-mineral — warm stone / mineral paper (smooth, no mask) */
+/* very-subtle-mineral — warm stone / mineral paper */
 [data-accent="very-subtle-mineral"] {
   --accent-base: rgba(217,194,168,0.35);
   --accent-secondary: rgba(231,216,201,0.45);
@@ -128,30 +116,23 @@
   --accent-grain-opacity: 0.015;
   --accent-side-bar: linear-gradient(180deg, rgba(217,194,168,0.45), rgba(231,216,201,0.55));
   --accent-side-opacity: 0.5;
-  --accent-side-height: 2px;
-  --accent-bar-mask: none;
-  --accent-side-mask: none;
 }
 
-/* bamboo — fresh, alive, tighter organic rhythm */
+/* bamboo — fresh, alive, soft green clarity */
 [data-accent="bamboo"] {
   --accent-base: #8DB592;
   --accent-secondary: #7AA680;
   --accent-highlight: rgba(255,255,255,0.2);
   --accent-bar-bg: linear-gradient(90deg, #8DB592, #7AA680);
-  --accent-bar-height: 5px;
-  --accent-bar-radius: 0;
-  --accent-bar-opacity: 0.9;
-  --accent-bar-inset: 12px;
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.85;
+  --accent-bar-inset: 14px;
   --accent-divider-bg: linear-gradient(90deg, transparent, rgba(141,181,146,0.5), rgba(122,166,128,0.45), transparent);
-  --accent-divider-opacity: 0.4;
-  --accent-grain-opacity: 0.03;
+  --accent-divider-opacity: 0.35;
+  --accent-grain-opacity: 0.025;
   --accent-side-bar: linear-gradient(180deg, #8DB592, #7AA680);
-  --accent-side-opacity: 0.9;
-  --accent-side-height: 4px;
-  /* Bamboo: tight rhythm wavy top/right edges */
-  --accent-bar-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 2.2C10 1 22 3.2 40 1.5 58 .2 74 3 98 1.8 122 .5 140 3.2 165 2 190 .8 208 3 235 1.5 262 .2 280 3.2 308 2 336 .5 355 3 382 1.8 398 .8 400 2V6H0Z' fill='white'/%3E%3C/svg%3E");
-  --accent-side-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='200' preserveAspectRatio='none'%3E%3Cpath d='M0 0V200H3C3.5 0 4.2 10 3.2 28 2.5 46 4.5 62 3.5 82 2.5 102 4.5 118 3.5 140 2.5 158 4.2 175 3.5 192 3 200H0Z' fill='white'/%3E%3C/svg%3E");
+  --accent-side-opacity: 0.85;
 }
 
 /* ===== CSS Custom Properties — Shinrin Calm ===== */
@@ -1441,41 +1422,6 @@ body::after {
 /* ===== Therapist Profile ===== */
 /* ===== Natural Accent System ===== */
 
-/* Organic edge mask — applied to all horizontal accent bars.
-   Wood/bamboo get wavy top edges from SVG mask; mineral stays smooth. */
-.accent-panel::after,
-.profile-section h2::after,
-.session-card::before,
-.booking-summary::after,
-.bento-tile::before,
-.profile-header::after {
-  -webkit-mask-image: var(--accent-bar-mask, none);
-  mask-image: var(--accent-bar-mask, none);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-}
-
-/* Organic edge — vertical side bars use irregular RIGHT edge only.
-   Left edge stays flush against card. Mask carves the inner edge. */
-.therapist-card::before,
-.session-card::after,
-.blog-card-mini::before,
-.retreat-card::before,
-.digital-product-card::before,
-.minor-consent-box::before,
-.minor-terms-box::before,
-.minor-settings-box::before,
-.minor-notice::before {
-  -webkit-mask-image: var(--accent-side-mask, none);
-  mask-image: var(--accent-side-mask, none);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-}
-
 /* Accent bar — applied to feature panels via .accent-panel */
 .accent-panel {
   position: relative;
@@ -1537,7 +1483,7 @@ body::after {
   bottom: -1px;
   left: 0;
   right: 30%;
-  height: var(--accent-bar-height);
+  height: 1.5px;
   background: var(--accent-bar-bg);
   opacity: calc(var(--accent-bar-opacity) * 0.6);
   border-radius: var(--accent-bar-radius);
@@ -1680,7 +1626,7 @@ body::after {
   left: 0;
   top: 10px;
   bottom: 10px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -2203,7 +2149,7 @@ body::after {
   left: 0;
   top: 8px;
   bottom: 8px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -2250,7 +2196,7 @@ body::after {
   left: 0;
   top: 8px;
   bottom: 8px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -2292,7 +2238,7 @@ body::after {
   left: 0;
   top: 6px;
   bottom: 6px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -4153,7 +4099,7 @@ body::after {
   left: 0;
   top: 8px;
   bottom: 8px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -4252,7 +4198,7 @@ body::after {
   left: 0;
   top: 6px;
   bottom: 6px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
@@ -4664,7 +4610,7 @@ body::after {
   left: 0;
   top: 10px;
   bottom: 10px;
-  width: var(--accent-side-height, 4px);
+  width: 3px;
   background: var(--accent-side-bar);
   opacity: var(--accent-side-opacity);
   border-radius: 0 2px 2px 0;
