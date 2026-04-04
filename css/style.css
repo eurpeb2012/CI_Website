@@ -135,19 +135,19 @@
 
 /* bamboo — fresh, alive, tighter organic rhythm */
 [data-accent="bamboo"] {
-  --accent-base: #B7D0B8;
-  --accent-secondary: #9FBEA3;
+  --accent-base: #8DB592;
+  --accent-secondary: #7AA680;
   --accent-highlight: rgba(255,255,255,0.2);
-  --accent-bar-bg: linear-gradient(90deg, #B7D0B8, #9FBEA3);
+  --accent-bar-bg: linear-gradient(90deg, #8DB592, #7AA680);
   --accent-bar-height: 5px;
   --accent-bar-radius: 0;
-  --accent-bar-opacity: 0.85;
+  --accent-bar-opacity: 0.9;
   --accent-bar-inset: 12px;
-  --accent-divider-bg: linear-gradient(90deg, transparent, rgba(183,208,184,0.4), rgba(159,190,163,0.35), transparent);
-  --accent-divider-opacity: 0.35;
-  --accent-grain-opacity: 0.025;
-  --accent-side-bar: linear-gradient(180deg, #B7D0B8, #9FBEA3);
-  --accent-side-opacity: 0.8;
+  --accent-divider-bg: linear-gradient(90deg, transparent, rgba(141,181,146,0.5), rgba(122,166,128,0.45), transparent);
+  --accent-divider-opacity: 0.4;
+  --accent-grain-opacity: 0.03;
+  --accent-side-bar: linear-gradient(180deg, #8DB592, #7AA680);
+  --accent-side-opacity: 0.9;
   --accent-side-height: 4px;
   /* Bamboo: tight, alive rhythm — shorter wavelength, 1.5-2px amplitude */
   --accent-bar-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 2.2C10 1 22 3.2 40 1.5 58 .2 74 3 98 1.8 122 .5 140 3.2 165 2 190 .8 208 3 235 1.5 262 .2 280 3.2 308 2 336 .5 355 3 382 1.8 398 .8 400 2V6H0Z' fill='white'/%3E%3C/svg%3E");
