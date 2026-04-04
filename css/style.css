@@ -117,6 +117,23 @@
   --accent-side-opacity: 0.5;
 }
 
+/* bamboo — fresh, alive, soft green clarity */
+[data-accent="bamboo"] {
+  --accent-base: #B7D0B8;
+  --accent-secondary: #9FBEA3;
+  --accent-highlight: rgba(255,255,255,0.2);
+  --accent-bar-bg: linear-gradient(90deg, #B7D0B8, #9FBEA3);
+  --accent-bar-height: 2.5px;
+  --accent-bar-radius: 2px;
+  --accent-bar-opacity: 0.82;
+  --accent-bar-inset: 14px;
+  --accent-divider-bg: linear-gradient(90deg, transparent, rgba(183,208,184,0.4), rgba(159,190,163,0.35), transparent);
+  --accent-divider-opacity: 0.3;
+  --accent-grain-opacity: 0.025;
+  --accent-side-bar: linear-gradient(180deg, #B7D0B8, #9FBEA3);
+  --accent-side-opacity: 0.7;
+}
+
 /* ===== CSS Custom Properties — Shinrin Calm ===== */
 :root {
   /* Desaturated earth/forest palette — no pure black */

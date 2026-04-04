@@ -1,5 +1,5 @@
 // Service Worker for Healing Garden PWA
-const CACHE_NAME = 'healing-garden-v10';
+const CACHE_NAME = 'healing-garden-v11';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

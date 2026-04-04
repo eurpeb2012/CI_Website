@@ -2236,6 +2236,7 @@ function renderSettings(el, header) {
     { key: 'subtle-light-wood', name: t('accentLightWood'), desc: t('accentLightWoodDesc'), swatch: 'linear-gradient(90deg, #E7D8C9, #D9C2A8)' },
     { key: 'warm-wood', name: t('accentWarmWood'), desc: t('accentWarmWoodDesc'), swatch: 'linear-gradient(90deg, #DCC3A7, #CFAE8B)' },
     { key: 'very-subtle-mineral', name: t('accentMineral'), desc: t('accentMineralDesc'), swatch: 'linear-gradient(90deg, rgba(217,194,168,0.5), rgba(231,216,201,0.6))' },
+    { key: 'bamboo', name: t('accentBamboo'), desc: t('accentBambooDesc'), swatch: 'linear-gradient(90deg, #B7D0B8, #9FBEA3)' },
   ];
 
   el.innerHTML = `
